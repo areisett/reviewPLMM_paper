@@ -1,0 +1,61 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{tikz}
+\allowdisplaybreaks
+%\usepackage{biblatex}
+%\AtEveryCitekey{%
+%  \clearfield{note}%
+%}
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\usetikzlibrary{arrows}
+\providecommand{\note}[1]{\textcolor{red}{#1}}
+\providecommand{\anna}[1]{\textcolor{blue}{#1}}
+\newcommand{\bbeta}{\boldsymbol{\beta}}
+\newcommand{\bbetaT}{\widetilde{\boldsymbol{\beta}}}
+\newcommand{\bbetaHat}{\widehat{\boldsymbol{\beta}}}
+\newcommand{\bgamma}{\boldsymbol{\gamma}}
+\newcommand{\beps}{\boldsymbol{\varepsilon}}
+\newcommand{\bepsT}{\widetilde{\boldsymbol{\varepsilon}}}
+\newcommand{\bX}{\textbf{X}}
+\newcommand{\bXT}{\widetilde{\textbf{X}}}
+\newcommand{\bZ}{\textbf{Z}}
+\newcommand{\bZT}{\widetilde{\textbf{Z}}}
+\newcommand{\by}{\textbf{y}}
+\newcommand{\byT}{\widetilde{\textbf{y}}}
+\newcommand{\bD}{\textbf{D}}
+\newcommand{\bK}{\textbf{K}}
+\newcommand{\bI}{\textbf{I}}
+\newcommand{\bV}{\textbf{V}}
+\newcommand{\bU}{\textbf{U}}
+\newcommand{\bR}{\textbf{R}}
+\newcommand{\bW}{\textbf{W}} 
+\newcommand{\sigmaee}{\sigma^2_e}
+\newcommand{\sigmagg}{\sigma^2_g}
+
+\title{Review Paper Draft}
+\author{Anna Reisetter}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\note{Needs rewriting?}
+\anna{Yes, probably, but I'd like to get a better sense of how the rest of the paper shakes out before trying to summarize it.}
+Many genetic studies that aim to identify genetic variants associated with complex phenotypes are subject to confounding due to unobserved factors. This poses a challenge to the detection of multivariate associations of interest and is known to induce spurious associations when left unaccounted for. Linear mixed models (LMMs) are an attractive method to correct for unobserved confounding. These methods simultaneously correct for relatedness and population structure by modeling it as a random effect with a covariance structure estimated from observed genetic data. However, population structure itself does not confound the phenotype-genotype relationship, rather differential environmental exposures among subgroups do. Population structure may or may not serve as a good proxy for such differences. Given these subtle distinctions in confounding sources, the ability of LMMs to accurately estimate fixed, sparse genetic effects has not been well studied. Considering this, we evaluate the performance of penalized LMMs in terms of MSE and false positive rates in the presence of confounding due to varying levels of environmental heterogeneity and relatedness.
+\end{abstract}
+
+\input{main}
+
+\newpage
+
+\bibliographystyle{abbrv}
+\bibliography{references}
+
+\end{document}
