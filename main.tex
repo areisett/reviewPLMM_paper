@@ -209,7 +209,7 @@ Modeling population structure using a random effect, as opposed to fixed effects
 
 We have so far used the term $\bW$ to describe the general LMM-Lasso method. However, the form of $\bW$ and method of variance component estimation differs between LMM-Lasso-Rakitsch and LMM-Lasso-ggmix.
 
-LMM-Lasso-Rakitsch \cite{Rakitsch2012} uses a two-step procedure for estimating the variance components, in which the variance components and corresponding weights are estimated once under the assumption of a null model. A Lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \anna{glmnet citation} or \texttt{ncvreg} \anna{ncvreg citation}. LMM-Lasso-ggmix \cite{bhatnagar2019simultaneous} proposes iteratively updating $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm. This iterative update scheme necessitates the use of the corresponding \texttt{R} package \texttt{ggmix} \cite{bhatnagar2019simultaneous}. \anna{We postpone our discussion of the differences in performance of each method to the results section.}
+LMM-Lasso-Rakitsch \cite{Rakitsch2012} uses a two-step procedure for estimating the variance components, in which the variance components and corresponding weights are estimated once under the assumption of a null model. A Lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \cite{glmnet} or \texttt{ncvreg} \cite{ncvreg}. LMM-Lasso-ggmix \cite{bhatnagar2019simultaneous} proposes iteratively updating $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm. This iterative update scheme necessitates the use of the corresponding \texttt{R} package \texttt{ggmix} \cite{ggmix, bhatnagar2019simultaneous}. \anna{We postpone our discussion of the differences in performance of each method to the results section.}
 
 %------------------------------%
 \subsubsection{\anna{Intuition from GLS (?) p-values and SEs in response to rotation?}}
@@ -225,7 +225,7 @@ Thus, whether modeled as a fixed or random effect, the underlying effect of $\bZ
 
 %------------------------------%
 \subsection{Simulating environmental confounding}
-Based on the LMM regression model \ref{eqn:lmm_reg}, many simulation studies of the performance of LMMs \cite{Rakitsch2012, bhatnagar2019simultaneous} \anna{cite more} simulate the quantity $\bX\bgamma$ as a random draw from a $N(\boldsymbol{0}, \sigmagg \bK)$. However, simulating environmental confounding according to this framework, where $\bgamma$ is a random quantity, "washes out" bias in $\hat{\bbeta}$ while inflating the variance. This is due to the fact that the sign of any element of the vector $\bX\bgamma$ will change from one simulation to the next. We can see this by considering the expectation and variance of low-dimensional OLS estimates of $\hat{\bbeta}$ based on model \ref{eqn:lmm_reg}:
+Based on the LMM regression model \ref{eqn:lmm_reg}, numerous simulation studies of the performance of LMMs \cite{Rakitsch2012, bhatnagar2019simultaneous} simulate the quantity $\bX\bgamma$ as a random draw from a $N(\boldsymbol{0}, \sigmagg \bK)$. However, simulating environmental confounding according to this framework, where $\bgamma$ is a random quantity, "washes out" bias in $\hat{\bbeta}$ while inflating the variance. This is due to the fact that the sign of any element of the vector $\bX\bgamma$ will change from one simulation to the next. We can see this by considering the expectation and variance of low-dimensional OLS estimates of $\hat{\bbeta}$ based on model \ref{eqn:lmm_reg}:
 
 \begin{align*}
     \mathbb{E}(\hat{\bbeta}) &= (\bX^T \bX)^{-1} \bX^T \mathbb{E}(\by)\\
@@ -236,7 +236,7 @@ Based on the LMM regression model \ref{eqn:lmm_reg}, many simulation studies of 
     &=  (\bX^T \bX)^{-1} \bX^T \mathbb{V}(\bX\bgamma + \beps) \bX  (\bX^T \bX)^{-1}
 \end{align*}
 
-Under the assumption that $\bgamma \sim N(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p)$, $\mathbb{E}(\hat{\bbeta}) = \bbeta, \mathbb{V}(\hat{\bbeta}) = \frac{\sigmagg}{p}\bI + \sigmaee (\bX^T \bX)^{-1}$. Considered in the context of our air quality example, such an assumption would be akin to subpopulation A being exposed to good air quality in one simulation, and bad air quality in the next. Instead, considering $\bgamma$ as a fixed quantity is more consistent with environmental heterogeneity and allows us to explore the bias in $\hat{\bbeta}$. Specifically, in the low-dimensional OLS setting, under the assumption that the quantity $\bgamma$ is fixed, $\mathbb{E}(\hat{\bbeta}) = \bbeta + \bgamma, \mathbb{V}(\hat{\bbeta}) = \sigmaee (\bX^T \bX)^{-1}$. Given the nature of environmental confounding in our setting of interest, and in order to assess these methodological performance in terms of estimation accuracy, we simulate according to a fixed $\bgamma$ framework. 
+Under the assumption that $\bgamma \sim N(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p)$, $\mathbb{E}(\hat{\bbeta}) = \bbeta, \mathbb{V}(\hat{\bbeta}) = \frac{\sigmagg}{p}\bI + \sigmaee (\bX^T \bX)^{-1}$. Considered in the context of our air quality example, such an assumption would be akin to subpopulation A being exposed to good air quality in one simulation, and bad air quality in the next. Instead, considering $\bgamma$ as a fixed quantity is more consistent with environmental heterogeneity and allows us to explore the bias in $\hat{\bbeta}$. Specifically, in the low-dimensional OLS setting, under the assumption that the quantity $\bgamma$ is fixed, $\mathbb{E}(\hat{\bbeta}) = \bbeta + \bgamma, \mathbb{V}(\hat{\bbeta}) = \sigmaee (\bX^T \bX)^{-1}$. 
 
 Although we derive these quantities under model \ref{eqn:lmm_reg}, where $\bZ = \bX$, as our assumed data-generating model, these results also hold for the more general model \ref{eqn:model}, where $\bZ \ne \bX$, by decomposing $\bZ \bgamma$ into components in and orthogonal to the column space of $\bX$. Assume $\exists \boldsymbol{\tau, \psi}: \bZ \bgamma = \bX \boldsymbol{\tau + \psi}$ where $\boldsymbol{P}_{\bX} = \bX (\bX^T \bX)^{-1} \bX^T$, $\boldsymbol{\tau} \in \mathcal{C}(\boldsymbol{P}_{\bX})$, and $\boldsymbol{\psi} \in \mathcal{N}(\boldsymbol{P}_{\bX})$. Then,
 
@@ -246,38 +246,23 @@ Although we derive these quantities under model \ref{eqn:lmm_reg}, where $\bZ = 
     &=  \bX \bbeta' + \beps'
 \end{align*}
 
-where $\boldsymbol{\tau}$ quantifies bias in the estimated $\boldsymbol{\hat{\beta}'}$ and $\boldsymbol{\psi}$ is absorbed by the error term.
+where $\boldsymbol{\tau}$ quantifies bias in the estimated $\boldsymbol{\hat{\beta}'}$ and $\boldsymbol{\psi}$ is absorbed by the error term. Thus, given the nature of environmental confounding in our setting of interest, and in order to assess these methodological performance in terms of estimation accuracy, we simulate according to a fixed $\bgamma$ framework and using the following data-generating model
 
+\begin{equation}
+    \label{eqn:sim}
+    \by = a \bX \bbeta + b \bZ \bgamma + c \beps 
+\end{equation}
 
-%------------------------------%
-\subsection{Simulation study}
+where $\by$ is a pseudophenotype, and $a, b, c$ are scaling factors determined such that the variance of $\by$ is equal to 1, and is partitioned into signal, environmental confounding, and random noise components,
 
-%------------------------------%
-\subsubsection{Data generation}
-We generate pseudophenotypes using three types of $\bX$ matrices:
-\begin{enumerate}
-    \item Simulated genetic data from 4 independent subpopulations \cite{ochoa2019simulate}
-    \item Simulateed genetic data from 4 admixed subpopulations \cite{ochoa2019simulate}
-    \item Real genetic data from 4 subpopulations (African, African American, European, Japanese) \cite{efron2016computer}
-\end{enumerate}
+\begin{equation}
+    \label{eqn:parition_y}
+    \mathbb{V}(\by) = \eta + (1 - \eta) \xi + (1-\eta)(1-\xi).
+\end{equation}
 
-%------------------------------%
-\subsubsection{Pseudophenotype generation}
-\begin{itemize}
-    \item We generate pseudophenotypes as follows
-    \begin{equation}
-        \label{eqn:sim}
-        \by = a \bX \bbeta + b \bZ \bgamma + c \beps \notag
-    \end{equation}
-    \item Where $a, b, c$ are scaling factors such that the variance of $\by$ is equal to 1, and is partitioned as follows:
-    \begin{equation}
-        \label{eqn:parition_y}
-        \mathbb{V}(\by) = \eta + (1 - \eta) \xi + (1-\eta)(1-\xi) \notag
-    \end{equation}
-    \item $\eta$ is the proportion of the variance of $\by$ attributable to genetic factors, commonly referred to as the narrow-sense heritability
-    \item $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise
-    \item We note that this is similar to the simulation technique employed by THAT 2020 PAPER FIND IT....
-\end{itemize}
+where $\eta$ is the proportion of the variance of $\by$ attributable to genetic factors, commonly referred to as the narrow-sense heritability \anna{also SNR...} and $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. \anna{We note that this is similar to the simulation technique employed by THAT 2020 PAPER FIND IT...}
+
+We generate these pseudophenotypes using three types of high-dimensional ($p > n$) $\bX$ matrices: (1) simulated SNP data from independent subpopulations, (2) simulated SNP data from admixed subpopulations, and (3) real genome-wide SNP data from known caucasian, African American, and Hispanic populations. \anna{cite Vanderwas data somehow, add n = ??? for all three groups).} For each $\bX$ matrix, $\bZ$ is a corresponding incidence matrix of 1s and 0s identifying subpopulation membership. Several structures of the fixed $\bgamma$ were considered. \anna{We give more details about this in the results section.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
@@ -286,22 +271,6 @@ We generate pseudophenotypes using three types of $\bX$ matrices:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%------------------------------%
-\subsection{Re-estimation of $\eta$ may, in some cases, slightly improve our estimate of $\hat{\eta}$, but does not improve the estimation of $\beta$, and takes a long time}
-Put this at the end of results
-%------------------------------%
-
-\anna{We have been unable to find a scenario where ggmix outperforms the LMM-Lasso method implemented by \cite{Rakitsch2012}. Ggmix performs poorly in a low-dimensional setting due to the ill-conditioning of the matrix K. Although it is primarily intended for use in high dimensional settings, where it performs on par with LMM-Lasso, this is also the scenario where it is ~100 times slower than LMM-Lasso. }\\
-
-\anna{ggmix vs lmmlasso eta-hat plot} - I have this, make it pretty\\
-
-\anna{ggmix vs lmmlasso MSE plot}- I have this, make it pretty\\
-
-\anna{ggmix vs lmmlasso prc plot (?)}\\
-
-\anna{ggmix vs. lmmlasso time plot}- I have this, make it pretty\\
-
 
 
 %------------------------------%
@@ -373,7 +342,20 @@ Put this at the end of results
     \label{fig:my_label}
 \end{figure}
 
+%------------------------------%
+\subsection{Re-estimation of $\eta$ may, in some cases, slightly improve our estimate of $\hat{\eta}$, but does not improve the estimation of $\beta$, and takes a long time}
+Put this at the end of results
+%------------------------------%
 
+\anna{We have been unable to find a scenario where ggmix outperforms the LMM-Lasso method implemented by \cite{Rakitsch2012}. Ggmix performs poorly in a low-dimensional setting due to the ill-conditioning of the matrix K. Although it is primarily intended for use in high dimensional settings, where it performs on par with LMM-Lasso, this is also the scenario where it is ~100 times slower than LMM-Lasso. }\\
+
+\anna{ggmix vs lmmlasso eta-hat plot} - I have this, make it pretty\\
+
+\anna{ggmix vs lmmlasso MSE plot}- I have this, make it pretty\\
+
+\anna{ggmix vs lmmlasso prc plot (?)}\\
+
+\anna{ggmix vs. lmmlasso time plot}- I have this, make it pretty\\
 
 
 
