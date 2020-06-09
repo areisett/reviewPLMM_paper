@@ -7,6 +7,7 @@
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{subcaption}
+\usepackage{url}
 \allowdisplaybreaks
 %\usepackage{biblatex}
 %\AtEveryCitekey{%
@@ -47,9 +48,8 @@
 \maketitle
 
 \begin{abstract}
-\note{Needs rewriting?}
-\anna{Yes, probably, but I'd like to get a better sense of how the rest of the paper shakes out before trying to summarize it.}
-Many genetic studies that aim to identify genetic variants associated with complex phenotypes are subject to confounding due to unobserved factors. This poses a challenge to the detection of multivariate associations of interest and is known to induce spurious associations when left unaccounted for. Linear mixed models (LMMs) are an attractive method to correct for unobserved confounding. These methods simultaneously correct for relatedness and population structure by modeling it as a random effect with a covariance structure estimated from observed genetic data. However, population structure itself does not confound the phenotype-genotype relationship, rather differential environmental exposures among subgroups do. Population structure may or may not serve as a good proxy for such differences. Given these subtle distinctions in confounding sources, the ability of LMMs to accurately estimate fixed, sparse genetic effects has not been well studied. Considering this, we evaluate the performance of penalized LMMs in terms of MSE and false positive rates in the presence of confounding due to varying levels of environmental heterogeneity and relatedness.
+Many genetic studies that aim to identify genetic variants associated with complex phenotypes are subject to confounding due to unobserved factors. This poses a challenge to the detection of multivariate associations of interest and is known to induce spurious associations when left unaccounted for. Penalized linear mixed models (LMMs) are an attractive method to correct for unobserved confounding. These methods correct for varying levels of relatedness and population structure by modeling it as a random effect with a covariance structure estimated from observed genetic data. Despite extensive discussion and simulation studies of penalized LMMs in the literature, the non-genetic mechanism by which population stratification confounds the phenotype-genotype relationship is rarely discussed or treated explicitly. As such, the ability of LMMs to accurately estimate fixed, sparse genetic effects in the presence of environmental heterogeneity, for which population structure may serve as a proxy, has not been well studied. Considering this, we evaluate the performance of several penalized regression methods in terms of MSE in presence of a number of confounding structures.
+% in the presence of confounding due to varying levels of environmental heterogeneity and relatedness.
 \end{abstract}
 
 \input{main}

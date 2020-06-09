@@ -20,7 +20,7 @@ Lasso penalized regression models assume independent observations and uncorrelat
 One reason that population stratification warrants such concern in genetic studies is that due to ethnic and geographic segregation, population stratification tends to be associated with differing environmental exposures and cultural practices.  In other words, random genetic variation is likely to be associated with non-genetic factors that also influence the trait of interest, thereby confounding the genotype-phenotype relationship and leading to spurious associations and biased estimates of SNP effects. Biased estimates of this nature severely hinder prediction and understanding differences among populations \cite{barton2019population}. Although bias at individual loci may be small, this bias may become magnified when aggregated across thousands of SNPs, as is done when calculating polygenic risk scores \cite{barton2019population}.
 
 
-In order to clarify and emphasize the importance of this subtle distinction, we present a detailed review of relevant concepts and methods. The remainder of this paper is organized as follows. In section \ref{structureSources} we provide a summary of the causes and consequences of structure in the genetic data of seemingly unrelated individuals and formally define terminology used throughout this paper. We emphasize that confounding due to population structure, frequently cited as a driver of spurious associations \cite{Sillanpaeae2011, sul2018population} \anna{other papers? NB: re-read Sul, 2018 paper - a lot of similar review concepts}, is a function of environmental heterogeneity, where genetic data serves as a proxy for differential environmental exposures. In so doing, we refine the definition of confounding due to population structure in terms of a non-genetic mechanism. In section \ref{methodsHistorical} we briefly review historical methods of correcting for population stratification and relatedness. In section \ref{methodsFixedRandom} we review methods of correcting for population stratification as a fixed versus random effect. These correspond to PCA adjusted lasso penalized regression and lasso penalized multivariate LMMs, respectively, the two most prevalent multivariate methods of adjusting for population stratification and relatedness at present. In addition, we review the statistical details of the consequences of population structure and heterogeneous environmental exposures for these methods. In sections \ref{simulation} and \ref{results}, we illustrate the concepts described in section \ref{methodsFixedRandom} via simulation studies, where the data-generating mechanism formally differentiates between population structure and environmental heterogeneity. These simulation results are used to illustrate the importance of distinguishing between population structure and heterogeneous environmental exposures in penalized LMMs.
+In order to clarify and emphasize the importance of this subtle distinction, we present a detailed review of relevant concepts and methods. The remainder of this paper is organized as follows. In section 2 we provide a summary of the causes and consequences of structure in the genetic data of seemingly unrelated individuals and formally define terminology used throughout this paper. We emphasize that confounding due to population structure, frequently cited as a driver of spurious associations \cite{Sillanpaeae2011, sul2018population}, is a function of environmental heterogeneity, where genetic data serves as a proxy for differential environmental exposures. In so doing, we refine the definition of confounding due to population structure in terms of a non-genetic mechanism. In addition, we briefly review historical methods of correcting for population stratification and relatedness. In section 3 we provide a detailed review of the two most prevalent multivariate methods of adjusting for population stratification and relatedness at present: PCA adjusted lasso penalized regression (PC-Lasso) and lasso penalized multivariate LMMs (LMM-Lasso). We review the statistical details of these methods as well as the consequences of the ways in which they attempt to correct for population structure and environmental heterogeneity. In section 4, we illustrate the concepts described in section 3 via simulation studies, where the data-generating mechanism formally differentiates between population structure and environmental heterogeneity. These simulation results are used to illustrate the importance of distinguishing between population structure and heterogeneous environmental exposures in penalized regression methods. In addition, these results identify scenarios where particular methods may be most and least effective in accurately estimating the effect sizes of observed SNPs in the presence of unobserved confounding.
 
 
 
@@ -43,7 +43,7 @@ Relatedness describes how genetically similar individuals are, and can refer to 
 
 Pedigree-based methods may be used to explicitly model recent relatedness if familial relationships are known. However, in this review we focus on methods to account for unobserved relatedness. Throughout this paper, the terms \textbf{population structure} and \textbf{structured population} will be used to describe a sample of individuals in which population stratification, cryptic relatedness, or both are be present. Population stratification in particular has been of great concern in genetic studies due to its potential to lead to spurious associations. This phenomenon is commonly described as \textbf{confounding due to population stratification}. However, the mechanism of this phenomenon warrants some discussion. In particular, it is often overlooked that population structure itself does not confound the genotype-phenotype relationship in the classical sense, rather there must exist some non-genetic mechanism by which population stratification affects both the phenotype and genotype \cite{barton2019population, vilhjalmsson2012nature}. \\
 
-\anna{DAG here with only population stratification, observed snps, and phenotype ... maybe an arrow from population stratification to phenotype with a question mark (?)}
+% \anna{DAG here with only population stratification, observed snps, and phenotype ... maybe an arrow from population stratification to phenotype with a question mark (?)}
 
 
 %------------------------------%
@@ -51,7 +51,7 @@ Pedigree-based methods may be used to explicitly model recent relatedness if fam
 
 As an example, consider a genetic study to assess genetic variants associated with lung cancer in a sample comprised of subjects from two distinct subpopulationsk A and B. Assume the major allele of SNP $X$ is present with higher frequency in subpopulation A compared to subpopulation B, but it has no direct effect on lung cancer. Now suppose these subpopulations are geographically segregated in a such a way that subpopulation A is exposed to good air quality, and subpopulation B to poor air quality. A GWAS analysis of data from these subpopulations would find SNP $X$ to be significantly associated with lung cancer. This spurious association is not identified because of the presence of population stratification itself, but because that stratification is related to a causal environmental exposure. Indeed, if subpopulations A and B were not subject to different air qualities, all else being equal, SNP $X$ would not be found to be associated with the phenotype.\\
 
-\anna{description of DAG below, in reference to previous one}
+% \anna{description of DAG below, in reference to previous one}
 
 The mechanism of environmental confounding is summarized in the directed acyclic graph displayed in figure \ref{fig:ps_env}. The undirected dashed line between population stratification and environmental exposure indicates that while we assume these elements are correlated, we do not assume any causal direction. Otherwise stated, we do not assume that environmental factors influence population-specific allele frequencies, or vice versa, only that the two may be related. Additionally, we assume that the environmental exposure has no effect on on observed SNPs.
 
@@ -70,12 +70,7 @@ circ/.style={draw, shape=circle, node distance=1cm, line width=1pt}]%Define the 
 \label{fig:ps_env}
 \end{figure}
 
-\anna{An additional consideration in genetic studies that we briefly review  is that of genetic background. Genetic background describes when SNPs that have a causal relationship with the phenotype of interest are not directly observed, but are correlated with SNPs that are observed. As \cite{vilhjalmsson2012nature} note, any trait that has some genetic basis will be subject to genetic background effects, just as traits that are influenced by the environment may be subject to environmental confounding. Given the importance of both genetic and environmental contributions to many complex phenotypes, both genetic background and environmental confounding are important factors in our ability to identify true causal genetic relationships between SNPs and phenotype. }
-
-\anna{
-This work will focus on environmental confounding, however, we wish to acknowledge and describe genetic background as a potential confounder for the sake of completeness. 
-}
-
+An additional consideration in genetic studies that we will briefly mention is that of genetic background. Genetic background describes when SNPs that have a causal relationship with the phenotype of interest are not directly observed, but are correlated with SNPs that are observed. As \cite{vilhjalmsson2012nature} note, any trait that has some genetic basis will be subject to genetic background effects, just as traits that are influenced by the environment may be subject to environmental confounding. Given the importance of both genetic and environmental contributions to many complex phenotypes, both genetic background and environmental confounding are important factors in our ability to identify true causal genetic relationships between SNPs and phenotype. While we acknowledge the challenges presented by genetic background, this work will focus on correction methods for confounding due to environmental heterogeneity, for which genetic similarity may serve as a proxy.
 
 
 %------------------------------%
@@ -91,23 +86,17 @@ Another approach is to create an approximation of population structure using sur
 
 Like PC-adjustment methods, LMMs rely on a pair-wise similarity matrix to estimate and subsequently correct for relatedness among subjects. However, the term LMM has been used to describe a number of distinct procedures for analyzing structured genetic data which differ in their objectives and methods. There are two main objectives of LMMs used in a structured genetic context: estimating narrow-sense heritability, and estimating individual SNP effects.
 
-Among LMM methods that aim to estimate heritability, the most well-known example is genome-wide complex trait analysis (GCTA) \cite{yang2011gcta}. In this framework, all observed SNPs are treated as random effects. These effects are integrated out in order to estimate a genetic variance component, which in turn, is used to quantify the total narrow-sense heritability of a trait \cite{yang2010common}. \anna{We will briefly return to a discussion of GCTA and related methods later, though techniques for estimating heritability are not the focus of this paper.}
+Among LMM methods that aim to estimate heritability, the most well-known example is genome-wide complex trait analysis (GCTA) \cite{yang2011gcta}. In this framework, all observed SNPs are treated as random effects. These effects are integrated out in order to estimate a genetic variance component, which in turn, is used to quantify the total narrow-sense heritability of a trait \cite{yang2010common}. 
 
 Within the category of LMMs that aim to estimate SNP effects are univariate and multivariate approaches. Univariate approaches attempt to estimate univariate SNP effects on phenotype and assess the statistical significance of SNP-phenotype associations while controlling for population structure using a genetic similarity matrix \cite{yu2006unified, kang2010variance, kang2008efficient}. However, as with all univariate testing approaches univariate LMM implementations may still produce spurious associations and biased effect estimates in the presence of LD. 
 
-Multivariate mixed model approaches reduce these problems by assessing the relationship between a phenotype of interest and all SNPs simultaneously via penalized regression, while controlling for environmental confounding  \cite{Rakitsch2012, bhatnagar2019simultaneous}. This approach assumes there are a relatively small number of SNPs associated with the phenotype of interest that have large effect sizes. These SNPs will be included in the model as both fixed and random effects, while SNPs with smaller effect sizes are modeled only as part of the random effect in order to control for environmental confounding. \\
+Multivariate mixed model approaches reduce these problems by assessing the relationship between a phenotype of interest and all SNPs simultaneously via penalized regression, while controlling for environmental confounding  \cite{Rakitsch2012, bhatnagar2019simultaneous}. This approach assumes there are a relatively small number of SNPs associated with the phenotype of interest that have large effect sizes. These SNPs will be included in the model as both fixed and random effects, while SNPs with smaller effect sizes are modeled only as part of the random effect in order to control for environmental confounding. 
 
-\anna{say more about logistic?}\\
 The remainder of this review will focus on the performance of multivariate Lasso-penalized methods for the analysis of continuous, normally distributed outcomes. Specifically, PC-adjustment and LMM methods, which we will refer to as PC-Lasso and LMM-Lasso, respectively. We consider two similar implementations of the LMM-Lasso method, one developed by \cite{Rakitsch2012} and a more recent implementation from \cite{bhatnagar2019simultaneous}. Subsequent references to LMM-Lasso apply to both implementations, unless otherwise stated. Where necessary, we will differentiate between these implementations as LMM-Lasso-Rakitsch and LMM-Lasso-ggmix, respectively. 
 
-Using simulations, we compare the performance of PC-Lasso and LMM-Lasso in terms of their abilities to accurately estimate SNP effects and in terms of their true sign rates in the presence of varying levels of relatedness and environmental confounding. \\
-
-\anna{Do we want to include the sign rate stuff?}
+Using simulations, we compare the performance of PC-Lasso and LMM-Lasso in terms of their abilities to accurately estimate SNP effects and in terms of their true sign rates in the presence of varying levels of relatedness and environmental confounding. 
 
 Although several studies have shown that LMMs outperform PC-adjustment methods in the univariate framework \cite{wang2013analytical, kang2010variance, zhao2007arabidopsis}, to the best of our knowledge this is the only comprehensive review and comparison of these methods in a penalized multivariate framework and using a simulation scheme motivated by human genetic relatedness and which formalizes the non-genetic confounding mechanism of population stratification.\\
-
-\anna{find that 2020 paper that simulates the data sort of similarly}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
@@ -159,15 +148,12 @@ where $\bU_{1:k}$ is the $n \times k$ matrix of principal component vectors, $\b
     Q(\boldsymbol{\beta, \alpha| X, y}) = \frac{1}{2n} ||\boldsymbol{y} - \boldsymbol{X \beta} - \bU_{1:k}\boldsymbol{\alpha}||_2^2 + \lambda || \boldsymbol{\beta} ||_1
 \end{equation}
 
-where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j=1}^p |\beta_j|$ denotes the $\ell_1$ norm of the regression coefficients. \anna{do I need to define the ell2 norm?} Note that the principal component regression coefficients, $\boldsymbol{\alpha}$, are not included in the penalty term. 
-
-%which requires estimation of $p + k + 1$ parameters. Determining the appropriate number of principal components to include is a non-trivial task. However, often in practice the first 10 principal components are used. \anna{and so that's what we do in all our analyses.} 
-
+where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j=1}^p |\beta_j|$ denotes the $\ell_1$ norm of the regression coefficients. \anna{do I need to define the ell2 norm?} Note that the principal component regression coefficients, $\boldsymbol{\alpha}$, are not included in the penalty term. Modeling unobserved confounding using fixed effects requires the estimation of $p + k + 1$ parameters. 
 
 
 %------------------------------%
 \subsection{LMM-Lasso}
-LMM-Lasso models $\bZ\bgamma$ as a random effect assuming $\bgamma \sim N(\boldsymbol{0}, \sigmagg / p \bI_p)$. Often $\bZ$ is not observed directly, and a common convention is to replace $\bZ$ with $\bX$, yielding the random effect $\bX\bgamma \sim N(\boldsymbol{0}, \sigmagg \textbf{K})$. \anna{Equivalently, $\bX\bgamma$ may be denoted $\boldsymbol{u} \sim N(\boldsymbol{0}, \sigmagg \bK)$.} This results in the following LMM regression model
+LMM-Lasso models $\bZ\bgamma$ as a random effect assuming $\bgamma \sim N(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p)$. Often $\bZ$ is not observed directly, and a common convention is to replace $\bZ$ with $\bX$, yielding the random effect $\bX\bgamma \sim N(\boldsymbol{0}, \sigmagg \textbf{K})$. In the literature \cite{Rakitsch2012}, these unobserved confounding effects may equivalently denoted as $\boldsymbol{u} \sim N(\boldsymbol{0}, \sigmagg \bK)$. This results in the following LMM regression model
 
 \begin{equation}
     \label{eqn:lmm_reg}
@@ -180,39 +166,34 @@ where we assume $\beps \independent \bX\bgamma$ and thus $\by  \sim N(\bX \bbeta
 \bV^{-\frac{1}{2}}\by \sim N(\bV^{-\frac{1}{2}}\bX \bbeta, \bI).
 \end{equation}
 
-\anna{(However, as Karl Rohe paper shows, GLS does not completely translate to penalized regression...)}
+\anna{...however, as Karl Rohe paper shows, GLS does not completely translate to penalized regression...comment on this?}
 
 Using the spectral decomposition of $\bK$ described in equation \ref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorizations
 
 \begin{align*}
     \bV^{-1} &= (\sigmagg \bK + \sigmaee \bI)^{-1}\\
-    &=(\sigmagg \boldsymbol{U D^2 U}^T + \sigmaee \bU \bU^T)^{-1}\\
-    &= (\bU (\sigmagg \boldsymbol{D}^2 + \sigmaee \bI) \bU^T)^{-1}\\
-    &=\bU (\sigmagg \boldsymbol{D}^2 + \sigmaee \bI)^{-1} \bU^T.
+    &=(\sigmagg \bU \bD^2 \bU^T + \sigmaee \bU \bU^T)^{-1}\\
+    &= (\bU (\sigmagg \bD^2 + \sigmaee \bI) \bU^T)^{-1}\\
+    &=\bU (\sigmagg \bD^2 + \sigmaee \bI)^{-1} \bU^T.
 \end{align*}
 
 \noindent By incorporating these decompositions, the transformed data can be expressed as $\bW \bXT$ and $\bW \byT$, respectively, where $\bXT = \bU^T \bX$, $\byT = \bU^T \by$, and $\bW = \text{diag}\{w_1, ... w_n\}$ where $w_i$ corresponds to the square root of the $i$th element of the diagonal matrix $(\sigmagg \boldsymbol{D}^2 + \sigmaee \bI)^{-1}$. Together, this yields the objective function
 
 \begin{equation}
-\label{eqn:lmmObj}
-%Q(\boldsymbol{\beta| \widetilde{X}, \widetilde{y}, w}) = ||\Sigma_{i=1}^n w_i ({\widetilde{y}_i} - {\boldsymbol{\widetilde{x}}_i^T \boldsymbol{\beta}})||_2^2 + \lambda || \boldsymbol{\beta} ||_1
+\label{eqn:lmm_obj}
 Q(\bbeta | \bXT, \byT, \bW) = || \bW (\byT - \bXT \bbeta)||_2^2 + \lambda || \bbeta ||_1.
 \end{equation}
 
+An advantage to modeling unobserved confounding using a random effect, as opposed to fixed effects as in PC-Lasso, is that this requires the estimation of substantially fewer parameters: $p + 2$ for LMM-Lasso-Rakitsch, and $p + 3$ for LMM-Lasso-ggmix. 
 
-
-
-\anna{
-Modeling population structure using a random effect, as opposed to fixed effects as in PC-Lasso, requires the estimation of substantially fewer parameters ($p + 2$ for LMM-Lasso-Rakitsch, $p + 3$ for LMM-Lasso-ggmix).
-}
 
 %------------------------------%
 \subsubsection{LMM-Lasso variants}
 
-We have so far used the term $\bW$ to describe the general LMM-Lasso method. However, the form of $\bW$ and method of variance component estimation differs between LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. LMM-Lasso-Rakitsch \cite{Rakitsch2012} uses a two-step procedure for estimating the variance components, in which the variance components and corresponding weights are estimated once under the assumption of a null model. A Lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \cite{glmnet} or \texttt{ncvreg} \cite{ncvreg}. LMM-Lasso-ggmix \cite{bhatnagar2019simultaneous} proposes iteratively updating $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm. This iterative update scheme necessitates the use of the corresponding \texttt{R} package \texttt{ggmix} \cite{ggmix, bhatnagar2019simultaneous}. \anna{We postpone our discussion of the differences in performance of each method to the results section.}
+We have so far used the term $\bW$ to describe the general LMM-Lasso method. However, the form of $\bW$ and method of variance component estimation differs between LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. LMM-Lasso-Rakitsch \cite{Rakitsch2012} uses a two-step procedure for estimating the variance components, in which the variance components and corresponding weights are estimated once under the assumption of a null model. A Lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \cite{glmnet} or \texttt{ncvreg} \cite{ncvreg}. LMM-Lasso-ggmix \cite{bhatnagar2019simultaneous} proposes iteratively updating $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm. This iterative update scheme necessitates the use of the corresponding \texttt{R} package \texttt{ggmix} \cite{ggmix, bhatnagar2019simultaneous}. We postpone further discussion of the differences between these methods to the results section.
 
 %------------------------------%
-\subsubsection{\anna{Intuition from GLS (?) p-values and SEs in response to rotation?}}
+% \subsubsection{\anna{Intuition from GLS (?) p-values and SEs in response to rotation?}}
 
 
 %------------------------------%
@@ -260,9 +241,9 @@ where $\by$ is a pseudophenotype, and $a, b, c$ are scaling factors determined s
     \mathbb{V}(\by) = \eta + (1 - \eta) \xi + (1-\eta)(1-\xi).
 \end{equation}
 
-where $\eta$ is the proportion of the variance of $\by$ attributable to genetic factors, commonly referred to as the narrow-sense heritability \anna{also SNR...} and $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. \anna{We note that this is similar to the simulation technique employed by THAT 2020 PAPER FIND IT...}
+where $\eta$ is the proportion of the variance of $\by$ attributable to genetic factors, commonly referred to as the narrow-sense heritability, and $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. Given our modeling objective of accurately estimating the effect sizes of observed SNPs, $\eta$ also represents our data-generating model's signal to noise ratio (SNR). 
 
-We generated these pseudophenotypes using three types of high-dimensional ($p > n$) $\bX$ matrices: (1) simulated SNP data from independent subpopulations, (2) simulated SNP data from admixed subpopulations, and (3) real genome-wide SNP data from known caucasian (\anna{n = ?}), African American (\anna{n = ?}), and Hispanic (\anna{n = ?}). \anna{cite Vanderwas data} For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation membership. 500 simulations were performed for each data type and parameter combination.
+We generated these pseudophenotypes using three types of high-dimensional ($p > n$) $\bX$ matrices: (1) simulated SNP data from independent subpopulations, (2) simulated SNP data from admixed subpopulations, and (3) real genome-wide SNP data from known caucasian ($n = 417$), African American ($n = 134$), and Hispanic ($n = 37$) subpopulations. \anna{cite Vanderwas data} For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation membership. 500 simulations were performed for each data type and parameter combination.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
@@ -275,14 +256,20 @@ We generated these pseudophenotypes using three types of high-dimensional ($p > 
 %------------------------------%
 \subsection{PC-Lasso and LMM-Lasso outperform Lasso}
 %------------------------------%
-Firstly, these penalized regression methods were compared in the presence of varying levels of environmental confounding. Estimation accuracy for lasso, PC-Lasso, and LMM-Lasso was evaluated based on mean squared error (MSE) in various settings and broken down into bias and variance components.  Figure \ref{fig:mse} presents these results for all three data types in a 1:1 signal to noise (SNR) setting, where $\eta = 0.5$. The top row of figure \ref{fig:mse} shows that when $\xi = 0$, and no environmental confounding is present, lasso and LMM-Lasso perform comparably. PC-Lasso results in a slight inflation in MSE compared to the other methods due to the fact that the top 10 principal components do not explain any variability in the outcome, yet are included in the final model, since they are unpenalized. The bottom row of figure \ref{fig:mse} illustrates the resulting MSE when $\xi = 0.8$ and thus 40\% of the variability of the phenotype is attributable to environmental confounding. In this case, both PC-Lasso and LMM-Lasso clearly outperform the naive lasso. This improvement is more substantial in the independent subpoplulations simulated data due to the fact that the subpopulations are more easily distinguishable based on their observed genetic data. \anna{need details about the real data once it's run}.\\
+Firstly, these penalized regression methods were compared in the presence of varying levels of environmental confounding. Estimation accuracy for lasso, PC-Lasso, and LMM-Lasso was evaluated based on mean squared error (MSE) in various settings and broken down into bias and variance components.  Figure \ref{fig:mse} presents these results for all three data types in a 1:1 signal to noise (SNR) setting, where $\eta = 0.5$. The top row of figure \ref{fig:mse} shows that when $\xi = 0$, and no environmental confounding is present, lasso and LMM-Lasso perform comparably. PC-Lasso results in a slight inflation in MSE compared to the other methods due to the fact that the top 10 principal components do not explain any variability in the outcome, yet are included in the final model, since they are unpenalized. The bottom row of figure \ref{fig:mse} illustrates the resulting MSE when $\xi = 0.8$ and thus 40\% of the variability of the phenotype is attributable to environmental confounding. In this case, both PC-Lasso and LMM-Lasso clearly outperform the naive lasso. This improvement is more substantial in the independent subpopulations simulated data due to the fact that the subpopulations are more easily distinguishable based on their observed genetic data.
 
-\anna{Do I need to discuss the large subpops, heterogeneous gamma here?} \\
+\anna{
+\begin{itemize}
+    \item Need details about the real data once it's run
+    \item Update figure with Vanderwas-generated simulation data
+    \item Add dashed line to legend (dashed = null model mse)
+    \item Should I mention subpopulation sizes (a few large ones) or gamma structure (half-and-half-heterogeneous) here? Those are covered in more detail later.
+\end{itemize}
+}
 
-\anna{add high-dimensional real data case using vanderwas? add dashed line to legend = null model mse}\\
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.7]{figures/fig1b.png}
+    \includegraphics[scale = 0.9]{figures/fig1b.png}
     \caption{MSE for different data types in the presence and absence of environmental confounding.}
     \label{fig:mse}
 \end{figure}
@@ -290,7 +277,13 @@ Firstly, these penalized regression methods were compared in the presence of var
 %------------------------------%
 \subsection{LMM-Lasso outperforms PC-Lasso when simulated subpopulations are small}
 %------------------------------%
-Given the superior performance of PC-Lasso and LMM-Lasso compared to the naive lasso in the presence of environmental confounding, we next compared these methods in the presence of two forms of simulated population structure: (1) relatedness characterized by a small number of large subpopulations \anna{with moderate relatedness (?)} to model large-scale environmental heterogeneity or population stratification, similar to that described in our motivating air qualitty example, and (2) a large number of small, closely related subpopulations intended to approximate finer grained environmental heterogeneity, such as household exposures or behavioral norms. Figure \ref{fig:kinship} illustrates the simulated kinship structures in these scenarios, \anna{as well as that present in the empirical SNP data}. We note that we show results for simulated data generated such that subpopulations were of equal size. Those of unequal size were also considered, but did not result in substantively different results (not shown - could be in supplement).
+Given the superior performance of PC-Lasso and LMM-Lasso compared to the naive lasso in the presence of environmental confounding, we next compared these methods in the presence of two forms of simulated population structure: (1) relatedness characterized by a small number of large subpopulations to model large-scale environmental heterogeneity or population stratification, similar to that described in our motivating air quality example, and (2) a large number of small, closely related subpopulations to approximate finer grained environmental heterogeneity, such as household exposures or behavioral norms. Figure \ref{fig:kinship} illustrates the simulated kinship structures in these scenarios, as well as that present in the empirical SNP data. We note that we show results for simulated data generated such that subpopulations are of equal size, while the empirical SNP data illustrates a scenario of unequal subpopulation sizes.
+
+\anna{
+\begin{itemize}
+    \item "Spend" this many figures on kinship?
+\end{itemize}
+}
 
 \begin{figure}[H]
 \begin{subfigure}{.8\textwidth}
@@ -316,14 +309,21 @@ Given the superior performance of PC-Lasso and LMM-Lasso compared to the naive l
   \caption{\anna{Vanderbilt data genome-wide} kinship}
   \label{fig:vandy_groups}
 \end{subfigure}
-\caption{\anna{obviously these figures need to be tweaked:sizes, uniform scales} \\ \anna{Should kinship in the first figure be lower - more moderate?}}
+\caption{\anna{obviously these figures need to be tweaked:sizes, uniform scales}}
 \label{fig:kinship}
 \end{figure}
 
-Pseudophenotypes for these simulations were again generated using a 1:1 SNR, $\eta = 0.5$, and in the presence of moderate environmental confounding, $\xi = 0.5$. \anna{Due to constraints within the BNPSD package and the nature of the admixed population model they use (???), only the independent subpopulations method was able to simulate a large number of small subpopulations. For this reason, the presented simulated results all correspond to this simulation method from the bnpsd package.} Figure \ref{fig:big_vs_small} summarizes the results of these simulations with the y-axis displaying the difference in MSE (PC-Lasso - LMM-Lasso) for each simulation and for the various subpopulation structures. The dashed horizontal line at 0 indicates no difference in the performance of PC-Lasso and LMM-Lasso, while differences greater than 0 correspond to smaller MSE for LMM-Lasso, and thus superior estimation accuracy. In the presence of a small number of large subpopulations, there is some overlap in the estimation accuracy of PC-Lasso and LMM-Lasso, as evidenced by the corresponding box straddling the 0 line. However, the majority of the box falls below 0, indicating the superior performance of PC-Lasso in many of the simulations. IN the presence of many small subpopulations, however, the entire box and error bars remain above the 0 line, indicating the clear superior estimation accuracy of LMM-Lasso in this context. \cite{hoffman2013correcting} showed that principal component adjustment methods represent a low dimensional approximation to linear mixed models. As such, it makes sense that PC-Lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform well in the large subpopulation setting, but fall short in the presence of many small subgroups. \anna{Additionally, its performance in this context may also me augmented by the fact that the subpopulations are more discretized  easily distinguishable based on their observed genetic data in the independent subpopulation simulated data. Although small subpopulations are unable to be simulated in the BNPSD admixed subpopulation setting, the corresponding results for the large subgroups in the admixed simulated data show much more comparable results between PC-Lasso and LMM-Lasso. - do this}. \anna{Vanderwas?}
+Pseudophenotypes for these simulations were again generated using a 1:1 SNR, $\eta = 0.5$, and in the presence of moderate environmental confounding, $\xi = 0.5$. Figure \ref{fig:big_vs_small} summarizes the results of these simulations with the y-axis displaying the difference in MSE (PC-Lasso - LMM-Lasso) for each simulation and for the various subpopulation structures. The dashed horizontal line at 0 indicates no difference in the performance of PC-Lasso and LMM-Lasso, while differences greater than 0 correspond to smaller MSE for LMM-Lasso, and thus superior estimation accuracy. In the presence of a small number of large subpopulations, there is some overlap in the estimation accuracy of PC-Lasso and LMM-Lasso, as evidenced by the corresponding box straddling the 0 line. However, the majority of the box falls below 0, indicating the superior performance of PC-Lasso in many of the simulations. In the presence of many small subpopulations, however, LMM-Lasso is clearly superior to PC-Lasso in estimation accuracy. \cite{hoffman2013correcting} showed that principal component adjustment methods represent a low dimensional approximation to linear mixed models. As such, it is reasonable that PC-Lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform well in the small-number-of-large-subpopulations setting, but fall short in the presence of many small subpopulations. Additionally, its performance in this context may also be augmented by the fact that the subpopulations are more discretized  easily distinguishable based on their observed genetic data in the independent subpopulation simulated data. The BNPSD 1-dimensional admixture simulation method is unable to accommodate a large number of small subpopulations. \anna{However, the results for the few large subgroups in the 1-dimensional admixture simulated data show more comparable results between PC-Lasso and LMM-Lasso. 
+} \anna{(I still need to run these sims and add the results to the figure below)}
+
+\anna{
+\begin{itemize}
+    \item Vanderwas data to show results for subpopulations of unequal size
+    \item results for BNPSD 1d admixture data with large subgroups
+\end{itemize}
+}
 
 
-\anna{Should Vanderwas simulated data be here?}
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.7]{figures/fig2a}
@@ -336,10 +336,14 @@ Pseudophenotypes for these simulations were again generated using a 1:1 SNR, $\e
 \subsection{LMM-Lasso outperforms PC-Lasso when $\gamma$ is heterogeneous}
 %------------------------------%
 
-In addition to considering the effect of population structure, or forms of $\bZ$, on these methods' estimation accuracy, we also evaluated the effect of varying forms of $\bgamma$, the subpopulation-specific effect sizes. Our initial thinking was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that do not lend themselves to linear approximations. To that end we investigated four distinct $\bgamma$ structures: linear homogeneous, linear heterogeneous, nonlinear homogeneous, and nonlinear heterogeneous, \anna{names should change... half and half, not exponential is the better nonlinear setting}. In our naming convention, linear/nonlinear refers to whether the coefficients follow a linear pattern versus a nonlinear form, while homogeneous/heterogeneous indicates whether coefficients have the same, or differing signs, respectively. For example, (1, -2, 3, -4) is an example of a linear-heterogeneous structure, whereas (2, 2, 1, 1) is a nonlinear-homogeneous form. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \\
+In addition to considering the effect of population structure, or forms of $\bZ$, on these methods' estimation accuracy, we also evaluated the effect of varying forms of $\bgamma$, the subpopulation-specific effect sizes. Our initial thinking was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that do not lend themselves to linear approximations. To that end we investigated four distinct $\bgamma$ structures: linear homogeneous, linear heterogeneous, nonlinear homogeneous, and nonlinear heterogeneous, \anna{(names probably need to change. We've moved to half-and-half, not exponential, as a more illustrative nonlinear setting)}. In our naming convention, linear/nonlinear refers to whether the coefficients follow a linear pattern versus a nonlinear form, while homogeneous/heterogeneous indicates whether coefficients have the same, or differing signs, respectively. For example, (1, -2, 3, -4) is an example of a linear-heterogeneous structure, whereas (2, 2, 1, 1) is a nonlinear-homogeneous form. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \\
 
+\anna{
+\begin{itemize}
+    \item Replace exponential with half-and-half
+\end{itemize}
+}
 
-\anna{put half and half in this plot instead of exponential? In addition?}
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.9]{figures/gamma_structure.png}
@@ -360,16 +364,18 @@ We thus evaluate PC-Lasso and LMM-Lasso in the presence of large and small subpo
 \subsection{Re-estimation of $\eta$ may, in some cases, slightly improve our estimate of $\hat{\eta}$, but does not improve the estimation of $\beta$, and takes a long time}
 %------------------------------%
 
-In section 3 briefly mentioned the existence of to LMM-Lasso variants: LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. The LMM-Lasso results shown so far are those of LMM-Lasso-Rakitsch, though they are representative of LMM-Lasso-ggmix. The primary purpose of this review is to compare LMM-Lasso to other penalized regression methods which aim to correct for population structure and environmental heterogeneity. However, we also want to explain why we used LMM-Lasso-Rakitsch, and provide guidance for potential users of either method. 
+In section 3 briefly mentioned the existence of to LMM-Lasso variants: LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. The LMM-Lasso results shown so far are those of LMM-Lasso-Rakitsch, though they are representative of LMM-Lasso-ggmix. The primary purpose of this review is to compare LMM-Lasso to other penalized regression methods which aim to correct for population structure and environmental heterogeneity. However, we also wish to briefly discuss the key differences between methods, and provide guidance for potential users of either method. 
 
-LMM-Lasso-Rakitsch estimates the variance components once, under the assumption of a null model. LMM-Lasso-ggmix seeks to improve upon this by re-estimating the variance components and $\bbeta$ iteratively. Although this underlying idea seems reasonable, we have been unable to find a scenario where LMM-Lasso-ggmix outperforms the LMM-Lasso-Rakitsch in estimation accuracy of $\bbeta$ or $\eta$. 
+LMM-Lasso-Rakitsch estimates the variance components once, under the assumption of a null model. LMM-Lasso-ggmix seeks to improve upon this by re-estimating the variance components and $\bbeta$ iteratively. Although this seems a reasonable approach, we have been unable to find a scenario where LMM-Lasso-ggmix outperforms the LMM-Lasso-Rakitsch in estimation accuracy of $\bbeta$ or $\eta$. 
+\anna{
+\begin{itemize}
+    \item ggmix vs lmmlasso MSE plot will go here once run and pretty
+    \item ggmix vs lmmlasso eta-hat plot will go here once run and pretty
+\end{itemize}
+}
 
-\anna{ggmix vs lmmlasso MSE plot}- I have this, make it pretty\\
 
-
-\anna{ggmix vs lmmlasso eta-hat plot} - I have this, make it pretty\\
-
-In addition, we have found that LMM-Lasso-ggmix performs poorly in a low-dimensional setting due to the ill-conditioning of the RRM. Given its intended use for the analysis of high-dimensional data, this fact could be of little consequence to practitioners. However, although its estimation accuracy in high dimensions is on par with that of LMM-Lasso-Rakitsch, \anna{as shown in two previous mse figs}, this is also a setting in which the computational time required may be prohibitive for practical applications. Figure \anna{time fig} shows a ratio of the computing time required for LMM-Lasso-ggmix compared to that of LMM-Lasso-Rakitsch, where the horizontal dashed line at 1 indicates both methods require the same computing time. In high dimenions, where LMM-Lasso-ggmix performs well, it is between \anna{something and something else} times slower than LMM-Lasso-Rakitsch. Thus, LMM-Lasso-Rakitsch seems to be a more attractive and scalable method. We have implemented the LMM-Lasso-Rakitsch method using the equivalent but more interpretable $\eta$ paramaterization in the \texttt{R} package, \texttt{penalizedLMM - or something more fun}, available on the author's github page: \url{https://github.com/areisett/penalizedLMM}.
+In addition, we have found that LMM-Lasso-ggmix performs poorly in a low-dimensional setting due to the ill-conditioning of the RRM. Given its intended use for the analysis of high-dimensional data, this fact could be of little consequence to practitioners. However, although its estimation accuracy in high dimensions is on par with that of LMM-Lasso-Rakitsch, as shown in \anna{figure xxx}, this is also a setting in which the computational time required may be prohibitive for practical applications. Figure \anna{xxx} shows a ratio of the computing time required for LMM-Lasso-ggmix compared to that of LMM-Lasso-Rakitsch, where the horizontal dashed line at 1 indicates both methods require the same computing time. In high dimenions, where LMM-Lasso-ggmix performs well, it is \anna{approximately X} times slower than LMM-Lasso-Rakitsch. Thus, LMM-Lasso-Rakitsch seems to be a more attractive and scalable method than LMM-Lasso-ggmix.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -379,10 +385,13 @@ In addition, we have found that LMM-Lasso-ggmix performs poorly in a low-dimensi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{itemize}
-    \item LMM-Lasso outperforms PC-Lasso when (1) subpopulations are small and (2) when confounding effects are nonlinear and heterogeneous
-    \item LMM-Lasso \cite{Rakitsch2012} and ggmix  \cite{bhatnagar2019simultaneous} perform similarly in many scenarios
-    \item However, ggmix is time-consuming and may not be practical for more realistic genetic data sets
-    \item Both PC-Lasso and LMM-Lasso methods suffer in estimation accuracy due to their bias from $\lambda$
-    \item Bias-reduction techniques for penalized LMMs may be an attractive avenue for future work
-\end{itemize}
+In this work, we have reviewed the concept of population stratification and defined explicitly the non-genetic, environmental mechanism by which it may contribute to confounding the genotype-phenotype relationship. We have provided a broad outline of existing methods for ameliorating the effects of these unobserved confounding influences. In addition, we have provided a thorough review of two popular approaches for correcting for population structure in genetic data: PC-Lasso and LMM-Lasso. 
+
+We have detailed the assumptions made by PC-Lasso and LMM-Lasso, which model confounding influences as fixed and random effects, respectively. We have also detailed the ways in which simulation schemes to evaluate these methods may fail to accurately capture the effects of environmental heterogeneity. In turn, we propose and utilize a simulation approach in which the estimation bias introduced by environmental heterogeneity may be evaluated. We then compare the estimation accuracy of a naive lasso, PC-Lasso, and LMM-Lasso in various confounding scenarios.
+
+Unsurprisingly, we find that PC-Lasso and LMM-Lasso outperform the naive lasso whenever environmental confounding effects are present. However, in the absence of such effects, PC-Lasso may hinder estimation accuracy and perform more poorly than even the naive lasso. This is due to the fact that the principal components are unpenalized and thus included in the final model, even when they do more harm than good in explaining phenotypic variability. Additionally, we find that LMM-Lasso outperforms PC-Lasso when (1) small genetic subpopulations are present which correspond to environmental heterogeneity and (2) when confounding effects are nonlinear and heterogeneous in nature. In the presence of large subpopulations which correspond to homogeneous, linear environmental effects, PC-Lasso and LMM-Lasso perform comparably in estimation accuracy. While this scenario may be plausible, given that LMM-Lasso is more robust to subpopulation sizes and nonlinear effects, it may present a 'safer choice' for practitioners seeking to obtain unbiased estimates when the exact nature of population structure and corresponding environmental heterogeneity are unknown.  
+
+We considered two implementations of the LMM-Lasso method: LMM-Lasso-Rakitsch and LMM-Lasso-ggmix, which differ in their variance estimation procedures and computational implementations. Although we found that both methods perform similarly in terms of estimation accuracy in many scenarios, LMM-Lasso-ggmix has several distinct disadvantages. Firstly, it suffers from instability in low dimensions. Secondly, although LMM-Lasso-Rakitsch and LMM-Lasso-ggmix perform comparably in high dimensions, LMM-Lasso-ggmix takes approximately \anna{x} times longer due to its iterative estimation procedure. Thirdly, while the additional time required of LMM-Lasso-ggmix could be worthwhile if it resulted in a more accurate estimation of $\eta$, or narrow-sense heritability, we have been unable to identify a scenario where its narrow-sense heritability estimates are superior to those of LMM-Lasso-Rakitsch. We have implemented the LMM-Lasso-Rakitsch method using the equivalent but more interpretable $\eta$ paramaterization in the \texttt{R} package, \texttt{penalizedLMM (final name tbd)}, available on the author's github page: \url{https://github.com/areisett/penalizedLMM}.
+
+Even in scenarios where LMM-Lasso outperforms other methods, its estimation accuracy still suffers due to the bias inherent in penalized regression methods. Because of this, bias-reduction techniques for penalized LMMs may be an attractive avenue for future research.
+
