@@ -263,15 +263,13 @@ Firstly, these penalized regression methods were compared in the presence of var
 \anna{
 \begin{itemize}
     \item Need details about the real data once it's run
-    \item Update figure with Vanderwas-generated simulation data
-    \item Add dashed line to legend (dashed = null model mse)
-    \item Should I mention subpopulation sizes (a few large ones) or gamma structure (half-and-half-heterogeneous) here? Those are covered in more detail later.
+    \item Should I mention subpopulation sizes (a few large ones) or gamma structure (half-and-half-heterogeneous) here? No - do a brief summary where noted above
 \end{itemize}
 }
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.9]{figures/fig1b.png}
+    \includegraphics[scale = 1.1]{figures/beta_mse.png}
     \caption{MSE for different data types in the presence and absence of environmental confounding.}
     \label{fig:mse}
 \end{figure}
@@ -315,20 +313,19 @@ Given the superior performance of PC-Lasso and LMM-Lasso compared to the naive l
 \label{fig:kinship}
 \end{figure}
 
-Pseudophenotypes for these simulations were again generated using a 1:1 SNR, $\eta = 0.5$, and in the presence of moderate environmental confounding, $\xi = 0.5$. Figure \ref{fig:big_vs_small} summarizes the results of these simulations with the y-axis displaying the difference in MSE (PC-Lasso - LMM-Lasso) for each simulation and for the various subpopulation structures. The dashed horizontal line at 0 indicates no difference in the performance of PC-Lasso and LMM-Lasso, while differences greater than 0 correspond to smaller MSE for LMM-Lasso, and thus superior estimation accuracy. In the presence of a small number of large subpopulations, there is some overlap in the estimation accuracy of PC-Lasso and LMM-Lasso, as evidenced by the corresponding box straddling the 0 line. However, the majority of the box falls below 0, indicating the superior performance of PC-Lasso in many of the simulations. In the presence of many small subpopulations, however, LMM-Lasso is clearly superior to PC-Lasso in estimation accuracy. \cite{hoffman2013correcting} showed that principal component adjustment methods represent a low dimensional approximation to linear mixed models. As such, it is reasonable that PC-Lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform well in the small-number-of-large-subpopulations setting, but fall short in the presence of many small subpopulations. Additionally, its performance in this context may also be augmented by the fact that the subpopulations are more discretized  easily distinguishable based on their observed genetic data in the independent subpopulation simulated data. The BNPSD 1-dimensional admixture simulation method is unable to accommodate a large number of small subpopulations. \anna{However, the results for the few large subgroups in the 1-dimensional admixture simulated data show more comparable results between PC-Lasso and LMM-Lasso. 
-} \anna{(I still need to run these sims and add the results to the figure below)}
+Pseudophenotypes for these simulations were again generated using a 1:1 SNR, $\eta = 0.5$, and in the presence of moderate environmental confounding, $\xi = 0.5$. Figure \ref{fig:big_vs_small} summarizes the results of these simulations with the y-axis displaying the difference in MSE (PC-Lasso - LMM-Lasso) for each simulation and for the various subpopulation structures. The dashed horizontal line at 0 indicates no difference in the performance of PC-Lasso and LMM-Lasso, while differences greater than 0 correspond to smaller MSE for LMM-Lasso, and thus superior estimation accuracy. In the presence of a small number of large subpopulations, there is some overlap in the estimation accuracy of PC-Lasso and LMM-Lasso, as evidenced by the corresponding box straddling the 0 line. However, the majority of the box falls below 0, indicating the superior performance of PC-Lasso in many of the simulations. In the presence of many small subpopulations, however, LMM-Lasso is clearly superior to PC-Lasso in estimation accuracy. \cite{hoffman2013correcting} showed that principal component adjustment methods represent a low dimensional approximation to linear mixed models. As such, it is reasonable that PC-Lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform well in the small-number-of-large-subpopulations setting, but fall short in the presence of many small subpopulations. 
 
 \anna{
 \begin{itemize}
-    \item Vanderwas data to show results for subpopulations of unequal size
-    \item results for BNPSD 1d admixture data with large subgroups
+    \item I ran this but think it just makes things more confusing - go back to only independent subpopulations data - for both (?) 
 \end{itemize}
 }
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.7]{figures/fig2a}
+    % \includegraphics[scale = 0.9]{figures/mse_diff_subpops}
+     \includegraphics[scale = 0.9]{figures/fig2a.png}
     \caption{Relative performance of LMM-Lasso, PC-Lasso in terms of estimation accuracy.}
     \label{fig:big_vs_small}
 \end{figure}
@@ -338,13 +335,7 @@ Pseudophenotypes for these simulations were again generated using a 1:1 SNR, $\e
 \subsection{LMM-Lasso outperforms PC-Lasso when $\gamma$ is heterogeneous}
 %------------------------------%
 
-In addition to considering the effect of population structure, or forms of $\bZ$, on these methods' estimation accuracy, we also evaluated the effect of varying forms of $\bgamma$, the subpopulation-specific effect sizes. Our initial thinking was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that do not lend themselves to linear approximations. To that end we investigated four distinct $\bgamma$ structures: linear homogeneous, linear heterogeneous, nonlinear homogeneous, and nonlinear heterogeneous, \anna{(names probably need to change. We've moved to half-and-half, not exponential, as a more illustrative nonlinear setting)}. In our naming convention, linear/nonlinear refers to whether the coefficients follow a linear pattern versus a nonlinear form, while homogeneous/heterogeneous indicates whether coefficients have the same, or differing signs, respectively. For example, (1, -2, 3, -4) is an example of a linear-heterogeneous structure, whereas (2, 2, 1, 1) is a nonlinear-homogeneous form. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \\
-
-\anna{
-\begin{itemize}
-    \item Replace exponential with half-and-half
-\end{itemize}
-}
+In addition to considering the effect of population structure, or forms of $\bZ$, on these methods' estimation accuracy, we also evaluated the effect of varying forms of $\bgamma$, the subpopulation-specific effect sizes. Our initial thinking was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that do not lend themselves to linear approximations. To that end we investigated six distinct $\bgamma$ structures: linear homogeneous, linear heterogeneous, nonlinear homogeneous, nonlinear heterogeneous, exponential homogeneous, and exponential heterogeneous. In our naming convention, linear/nonlinear refers to whether the coefficients follow a linear pattern versus a nonlinear form, while homogeneous/heterogeneous indicates whether coefficients have the same, or differing signs, respectively. For example, (1, -2, 3, -4) is an example of a linear-heterogeneous structure, whereas (2, 2, 1, 1) is a nonlinear-homogeneous form. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \\
 
 \begin{figure}[H]
     \centering
@@ -357,7 +348,8 @@ We thus evaluate PC-Lasso and LMM-Lasso in the presence of large and small subpo
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.9]{figures/fig2b.png}
+    % \includegraphics[scale = 0.9]{figures/fig2b.png}
+    \includegraphics[scale = 0.9]{figures/mse_diff_hetero.png}
     \caption{Relative performance of LMM-Lasso, PC-Lasso for different subpopulation and $\bgamma$ structures}
     \label{fig:big_small_gamma}
 \end{figure}
@@ -371,13 +363,35 @@ In section 3 briefly mentioned the existence of to LMM-Lasso variants: LMM-Lasso
 LMM-Lasso-Rakitsch estimates the variance components once, under the assumption of a null model. LMM-Lasso-ggmix seeks to improve upon this by re-estimating the variance components and $\bbeta$ iteratively. Although this seems a reasonable approach, we have been unable to find a scenario where LMM-Lasso-ggmix outperforms the LMM-Lasso-Rakitsch in estimation accuracy of $\bbeta$ or $\eta$. 
 \anna{
 \begin{itemize}
-    \item ggmix vs lmmlasso MSE plot will go here once run and pretty
-    \item ggmix vs lmmlasso eta-hat plot will go here once run and pretty
+    \item ggmix vs lmmlasso MSE plot will go here once run and pretty: options
 \end{itemize}
 }
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.9]{figures/eta_hat.png}
+    \includegraphics[scale = 0.9]{figures/beta_hat.png}
+\end{figure}
 
-In addition, we have found that LMM-Lasso-ggmix performs poorly in a low-dimensional setting due to the ill-conditioning of the RRM. Given its intended use for the analysis of high-dimensional data, this fact could be of little consequence to practitioners. However, although its estimation accuracy in high dimensions is on par with that of LMM-Lasso-Rakitsch, as shown in \anna{figure xxx}, this is also a setting in which the computational time required may be prohibitive for practical applications. Figure \anna{xxx} shows a ratio of the computing time required for LMM-Lasso-ggmix compared to that of LMM-Lasso-Rakitsch, where the horizontal dashed line at 1 indicates both methods require the same computing time. In high dimenions, where LMM-Lasso-ggmix performs well, it is \anna{approximately X} times slower than LMM-Lasso-Rakitsch. Thus, LMM-Lasso-Rakitsch seems to be a more attractive and scalable method than LMM-Lasso-ggmix.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 1]{figures/eta_beta_hat.png}
+\end{figure}
+
+\newpage
+\anna{The error bars are indicating differences across different values of xi and simulated data-types (indepent and 1d linear admixture - this may be confusing/something to change or describe explicitly.
+}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.8]{figures/time_ratio.png}
+    % \caption{Relative performance of LMM-Lasso, PC-Lasso for different subpopulation and $\bgamma$ structures}
+    \label{fig:time}
+\end{figure}
+
+
+In addition, we have found that LMM-Lasso-ggmix performs poorly in a low-dimensional setting due to the ill-conditioning of the RRM. Given its intended use for the analysis of high-dimensional data, this fact could be of little consequence to practitioners. However, although its estimation accuracy in high dimensions is on par with that of LMM-Lasso-Rakitsch, as shown in \anna{figure xxx}, this is also a setting in which the computational time required may be prohibitive for practical applications. Figure \ref{fig:time} shows the ratio of computing time required for LMM-Lasso-ggmix compared to that of LMM-Lasso-Rakitsch, for various sample sizes. The horizontal dashed line at 1 indicates both methods require the same computing time. Despite its comparable performance in accurately estimating $\hat{\bbeta}$, LMM-Lasso-ggmix takes approximately 71 to 9 times as long as LMM-Lasso-Rakitsch. Thus, LMM-Lasso-Rakitsch seems to be a more attractive and scalable method than LMM-Lasso-ggmix.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
