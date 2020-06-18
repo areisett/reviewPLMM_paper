@@ -109,16 +109,18 @@ In Section~\ref{Sec:res}, we compare the performance of PC-Lasso and LMM-Lasso i
 %------------------------------%
 \subsection{Model}
 
-To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects belonging to $q \le p$ subpopulations and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$ \pb{do we need to explicitly assume q discrete subpopulations here?}. We denote the standardized version of this genotype matrix as $\bX$. We assume that an $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of additive SNP effects, environmental confounding, and observational noise and consider the linear mixed model,
+\pb{Seems like we should explicitly include an intercept in all these models?}
+
+To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects belonging to $q \le p$ subpopulations and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$ \pb{do we need to explicitly assume q discrete subpopulations here?}. We denote the standardized version \pb{need more explicit details on standardization} of this genotype matrix as $\bX$. We assume that an $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of additive SNP effects, environmental confounding, and observational noise and consider the linear mixed model,
 
 \begin{equation}
     \label{eqn:model}
     \by = \bX\bbeta + \bZ\bgamma + \beps
 \end{equation}
 
-where $\bbeta$ is a $p \times 1$ vector of SNP effects, $\bZ$ is an $n \times q$ matrix that indicates population structure, $\bgamma$ is an $q \times 1$ vector of subpopulation-specific environmental effects, and $\beps \sim N(\boldsymbol{0}, \sigmaee \bI_n)$.
+where $\bbeta$ is a $p \times 1$ vector of SNP effects, $\bZ$ is an $n \times q$ matrix that indicates population structure, $\bgamma$ is an $q \times 1$ vector of subpopulation-specific environmental effects, and $\beps \sim N(\boldsymbol{0}, \sigmaee \bI_n)$. \pb{This is a problem throughout, but ``where'' shouldn't be indented here.  Either don't have a space between the equation and the next block of text, or use noindent}
 
-Both PC-Lasso and LMM-Lasso rely on matrix decompositions of $\bX$ and relative relationship matrix (RRM), $\bK$, which describes the pair-wise genetic similarity among subjects \cite{hayes2009increased}. Using the singular value decomposition (SVD) of the standardized genotype matrix, we can derive the spectral decomposition of the RRM:
+Both PC-Lasso and LMM-Lasso rely on matrix decompositions of $\bX$ and relative relationship matrix (RRM) \pb{RRM is the REALIZED relationship matrix, not relative}, $\bK$, which describes the pair-wise genetic similarity among subjects \cite{hayes2009increased}. Using the singular value decomposition (SVD) of the standardized genotype matrix, we can derive the spectral decomposition of the RRM:
 
 \begin{align}
     \label{eqn:k}
@@ -128,7 +130,7 @@ Both PC-Lasso and LMM-Lasso rely on matrix decompositions of $\bX$ and relative 
                    &\propto \bR \bR^T
 \end{align}
 
-where the columns of $\bU$ are the principal components of $\bX$ (equivalently, those of $\bK$) and $\boldsymbol{D}^2$ is a diagonal matrix of the eigenvalues of $\bX$ (equivalently, the singular values of $\bK$.) The columns of $\boldsymbol{R}$ are therefore proportional to the principal components weighted by their corresponding singular values. 
+where the columns of $\bU$ are the principal components of $\bX$ (equivalently, those of $\bK$) and $\boldsymbol{D}^2$ is a diagonal matrix of the eigenvalues of $\bX$ \pb{only square matrices have eigenvalues} (equivalently, the singular values of $\bK$.) The columns of $\boldsymbol{R}$ are therefore proportional to the principal components weighted by their corresponding singular values. 
 
 %------------------------------%
 \subsection{PC-Lasso}
@@ -146,19 +148,21 @@ where $\bU_{1:k}$ is the $n \times k$ matrix of principal component vectors, $\b
     Q(\boldsymbol{\beta, \alpha| X, y}) = \frac{1}{2n} ||\boldsymbol{y} - \boldsymbol{X \beta} - \bU_{1:k}\boldsymbol{\alpha}||_2^2 + \lambda || \boldsymbol{\beta} ||_1
 \end{equation}
 
-where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j=1}^p |\beta_j|$ denotes the $\ell_1$ norm of the regression coefficients. \anna{do I need to define the ell2 norm?} Note that the principal component regression coefficients, $\boldsymbol{\alpha}$, are not included in the penalty term. Modeling unobserved confounding using fixed effects requires the estimation of $p + k + 1$ parameters. 
+where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j=1}^p |\beta_j|$ denotes the $\ell_1$ norm of the regression coefficients. \anna{do I need to define the ell2 norm?} \pb{YES} Note that the principal component regression coefficients, $\boldsymbol{\alpha}$, are not included in the penalty term. Modeling unobserved confounding using fixed effects requires the estimation of $p + k + 1$ parameters. 
 
 
 %------------------------------%
 \subsection{LMM-Lasso}
-LMM-Lasso models $\bZ\bgamma$ as a random effect assuming $\bgamma \sim N(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p)$. Often $\bZ$ is not observed directly, and a common convention is to replace $\bZ$ with $\bX$, yielding the random effect $\bX\bgamma \sim N(\boldsymbol{0}, \sigmagg \textbf{K})$. In the literature \cite{Rakitsch2012}, these unobserved confounding effects may equivalently denoted as $\boldsymbol{u} \sim N(\boldsymbol{0}, \sigmagg \bK)$. This results in the following LMM regression model
+LMM-Lasso models $\bZ\bgamma$ as a random effect assuming $\bgamma \sim N(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p)$ \pb{too many sub/superscripts for an in-line fraction}. Typically, $\bZ$ is not observed directly, and a common convention \citep[e.g.,][]{Rakitsch2012} is to replace $\bZ$ with $\bX$. Then, rather than assuming anything about $\bgamma$ directly, let $\bu=\bX\bgamma$ represent the random effect and assume $\boldsymbol{u} \sim N(\boldsymbol{0}, \sigmagg \bK)$. This results in the LMM regression model
 
 \begin{equation}
     \label{eqn:lmm_reg}
     \by = \bX\bbeta + \bX\bgamma+ \beps
 \end{equation}
 
-where we assume $\beps \independent \bX\bgamma$ and thus $\by  \sim N(\bX \bbeta, \bV := \sigmagg \textbf{K} + \sigmaee \textbf{I})$. LMM-Lasso then performs a weighted rotation of the original data, left-multiplying by $\bV^{-1/2}$ in a manner akin to generalized least squares to diagonalize the error term such that
+\pb{need a comma after this equation, just like you would if it were text; this shows up several other places as well}
+
+where we assume $\beps \independent \bX\bgamma$ and thus $\by  \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso then performs a weighted rotation of the original data, left-multiplying by $\bV^{-1/2}$ in a manner akin to generalized least squares to diagonalize the error term such that
 
 \begin{equation}
 \bV^{-\frac{1}{2}}\by \sim N(\bV^{-\frac{1}{2}}\bX \bbeta, \bI).
@@ -188,7 +192,7 @@ An advantage to modeling unobserved confounding using a random effect, as oppose
 %------------------------------%
 \subsubsection{LMM-Lasso variants}
 
-We have so far used the term $\bW$ to describe the general LMM-Lasso method. However, the form of $\bW$ and method of variance component estimation differs between LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. LMM-Lasso-Rakitsch \cite{Rakitsch2012} uses a two-step procedure for estimating the variance components, in which the variance components and corresponding weights are estimated once under the assumption of a null model. A Lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \cite{glmnet} or \texttt{ncvreg} \cite{ncvreg}. LMM-Lasso-ggmix \cite{bhatnagar2019simultaneous} proposes iteratively updating $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm. This iterative update scheme necessitates the use of the corresponding \texttt{R} package \texttt{ggmix} \cite{ggmix, bhatnagar2019simultaneous}. We postpone further discussion of the differences between these methods to the results section.
+We have so far used the term $\bW$ to describe the general LMM-Lasso method. However, the form of $\bW$ and method of variance component estimation differs between LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. LMM-Lasso-Rakitsch \cite{Rakitsch2012} uses a two-step procedure for estimating the variance components, in which the variance components and corresponding weights are estimated once under the assumption of a null model \pb{I think you should be more specific here about the ``variance components'', use the $\sigma_e^2$ notation you just introduced, etc.}. A Lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \cite{glmnet} or \texttt{ncvreg} \cite{ncvreg}. LMM-Lasso-ggmix \cite{bhatnagar2019simultaneous} proposes iteratively updating $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm. This iterative update scheme necessitates the use of the corresponding \texttt{R} package \texttt{ggmix} \cite{ggmix, bhatnagar2019simultaneous}. We postpone further discussion of the differences between these methods to the results section.
 
 %------------------------------%
 % \subsubsection{\anna{Intuition from GLS (?) p-values and SEs in response to rotation?}}
