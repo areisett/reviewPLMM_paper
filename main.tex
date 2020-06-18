@@ -168,7 +168,7 @@ where we assume $\beps \independent \bX\bgamma$ and thus $\by  \sim N(\bX \bbeta
 
 \anna{...however, as Karl Rohe paper shows, GLS does not completely translate to penalized regression...comment on this?}
 
-Using the spectral decomposition of $\bK$ described in equation \ref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorizations
+Using the spectral decomposition of $\bK$ described in equation \ref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorization \note{ONLY WORKS IF $\bX$ IS FULL RANK}
 
 \begin{align*}
     \bV^{-1} &= (\sigmagg \bK + \sigmaee \bI)^{-1}\\
