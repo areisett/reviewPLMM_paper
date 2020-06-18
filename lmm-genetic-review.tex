@@ -16,7 +16,7 @@
 \newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
 \usetikzlibrary{arrows}
-\providecommand{\note}[1]{\textcolor{red}{#1}}
+\providecommand{\pb}[1]{\textcolor{red}{#1}}
 \providecommand{\anna}[1]{\textcolor{blue}{#1}}
 \newcommand{\bbeta}{\boldsymbol{\beta}}
 \newcommand{\bbetaT}{\widetilde{\boldsymbol{\beta}}}
@@ -48,7 +48,7 @@
 \maketitle
 
 \begin{abstract}
-Many genetic studies that aim to identify genetic variants associated with complex phenotypes are subject to confounding due to unobserved factors. This poses a challenge to the detection of multivariate associations of interest and is known to induce spurious associations when left unaccounted for. Penalized linear mixed models (LMMs) are an attractive method to correct for unobserved confounding. These methods correct for varying levels of relatedness and population structure by modeling it as a random effect with a covariance structure estimated from observed genetic data. Despite extensive discussion and simulation studies of penalized LMMs in the literature, the non-genetic mechanism by which population stratification confounds the phenotype-genotype relationship is rarely discussed or treated explicitly. As such, the ability of LMMs to accurately estimate fixed, sparse genetic effects in the presence of environmental heterogeneity, for which population structure may serve as a proxy, has not been well studied. Considering this, we evaluate the performance of several penalized regression methods in terms of MSE in presence of a number of confounding structures.
+Many genetic studies that aim to identify genetic variants associated with complex phenotypes are subject to confounding due to unobserved factors \pb{``Unobserved factors'' is a bit vague -- think we need to work ``environment'' into this first sentence}. This poses a challenge to the detection of multivariate associations of interest and is known to induce spurious associations when left unaccounted for. Penalized linear mixed models (LMMs) are an attractive method to correct for unobserved confounding. These methods correct for varying levels of relatedness and population structure by modeling it as a random effect with a covariance structure estimated from observed genetic data. Despite extensive discussion and simulation studies of penalized LMMs in the literature \pb{is the literature on penalized LMMs really ``extensive''?  I would say that the literature on penalized regression is extensive, and on LMMs is extensive, but not actually that much on penalized LMMs -- hence the need for this review}, the non-genetic mechanism by which population stratification confounds the phenotype-genotype relationship is rarely discussed or treated explicitly. As such, the ability of LMMs to accurately estimate fixed, sparse genetic effects in the presence of environmental heterogeneity, for which population structure may serve as a proxy, has not been well studied. Considering this, we evaluate the performance of several penalized regression methods in terms of MSE in presence of a number of confounding structures.
 % in the presence of confounding due to varying levels of environmental heterogeneity and relatedness.
 \end{abstract}
 
