@@ -364,19 +364,8 @@ We thus evaluate PC-Lasso and LMM-Lasso in the presence of large and small subpo
 In section 3 briefly mentioned the existence of to LMM-Lasso variants: LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. The LMM-Lasso results shown so far are those of LMM-Lasso-Rakitsch, though they are representative of LMM-Lasso-ggmix. The primary purpose of this review is to compare LMM-Lasso to other penalized regression methods which aim to correct for population structure and environmental heterogeneity. However, we also wish to briefly discuss the key differences between methods, and provide guidance for potential users of either method. 
 
 LMM-Lasso-Rakitsch estimates the variance components once, under the assumption of a null model. LMM-Lasso-ggmix seeks to improve upon this by re-estimating the variance components and $\bbeta$ iteratively. Although this seems a reasonable approach, we have been unable to find a scenario where LMM-Lasso-ggmix outperforms the LMM-Lasso-Rakitsch in estimation accuracy of $\bbeta$ or $\eta$. 
-\anna{
-\begin{itemize}
-    \item ggmix vs lmmlasso MSE plot will go here once run and pretty: options
-\end{itemize}
-}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale = 0.9]{figures/eta_hat.png}
-    \includegraphics[scale = 0.9]{figures/beta_hat.png}
-\end{figure}
-
-
+\anna{eta part needs to be converted to mse}
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 1]{figures/eta_beta_hat.png}
@@ -389,7 +378,7 @@ LMM-Lasso-Rakitsch estimates the variance components once, under the assumption 
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.8]{figures/time_ratio.png}
-    % \caption{Relative performance of LMM-Lasso, PC-Lasso for different subpopulation and $\bgamma$ structures}
+    \caption{Caption goes here}
     \label{fig:time}
 \end{figure}
 
