@@ -9,7 +9,7 @@
 
 An objective of many genetic studies is to accurately identify variants associated with a particular trait or disease, and to estimate the effects of those variants. Such information is valuable for assessing an individual's risk of developing a particular condition, elucidating the underlying genetic architecture of a disease, and identifying potential drug targets. However, this effort may be hindered by several factors. 
 
-Genetic variants are often correlated with each other, meaning that univariate testing of genetic variants may result in false positives and biased effect estimates. This occurs when the variant being tested is correlated with other variants, so that the effects of these correlated variants are erroneously attributed to the variant in question. One method for analyzing data in the presence of LD \pb{LD needs to be defined} is pruning, where only uncorrelated SNPs are used in modeling or testing procedures. Pruning limits analysis to SNPs which are representative of a particular region, and may result in improved predictive accuracy \pb{is predictive accuracy the main reason for pruning?  Why does it improve prediction?}. However, pruning is limited in that it can only identify SNPs in LD with the true causal SNP \pb{I don't understand this sentence; wouldn't this limitation apply to all methods?}. In addition, it has been shown that in the worst-case scenario, pruning algorithms may not select any representative SNPs in a particular region of the genome \cite{prive2018efficient}.
+Genetic variants are often correlated with each other, meaning that univariate testing of genetic variants may result in false positives and biased effect estimates. This occurs when the variant being tested is correlated with other variants, so that the effects of these correlated variants are erroneously attributed to the variant in question. \anna{One method for analyzing data in the presence of correlated loci, or linkage disequilibrium (LD), is LD-pruning. In LD-pruning methods, SNPs are sequentially thinned, so that only SNPs correlated with each other below some desired threshold are used in modeling and testing procedures.} LD-pruning limits analysis to SNPs which are representative of a particular region. This may result in causal SNPs being removed from analysis, so that only SNPs in LD with the causal loci can be identified and their effects estimated. In addition, it has been shown that in the worst-case scenario, pruning algorithms may not select any representative SNPs in a particular region of the genome \cite{prive2018efficient}. However, LD-pruning does allow for the use of methods which assume uncorrelated loci such as \anna{BLAHHHHH: \url{https://www.nature.com/articles/srep27644/tables/1}}. In addition, LD-pruning may result in improved predictive accuracy \anna{because why}, which can be of particular benefit to polygenic risk score methods.  
 
 An alternative solution to the problem of LD is the use of multivariate methods such as multiple linear regression, which adjusts for and estimates the effects of numerous variants simultaneously. However, such methods rely on data where the number of observations is less than the number of features. This is often infeasible in genetic studies where the number of features typically exceeds the number of observations. Penalized regression methods make such problems tractable by constraining the solution space of coefficient estimates.
 
@@ -20,8 +20,7 @@ Lasso penalized regression models typically assume independent observations and 
 One reason that population stratification warrants such concern in genetic studies is that due to ethnic and geographic segregation, population stratification tends to be associated with differing environmental exposures and cultural practices.  In other words, random genetic variation is likely to be associated with non-genetic factors that also influence the trait of interest, thereby confounding the genotype-phenotype relationship and leading to spurious associations and biased estimates of SNP effects. Biased estimates of this nature severely hinder prediction and understanding differences among populations \cite{barton2019population}. Although bias at individual loci may be small, this bias may become magnified when aggregated across thousands of SNPs, as is done when calculating polygenic risk scores \cite{barton2019population}.
 
 
-In order to clarify and emphasize the importance of this subtle distinction, we present a detailed review of relevant concepts and methods. The remainder of this paper is organized as follows. In section 2 we provide a summary of the causes and consequences of structure in the genetic data of seemingly unrelated individuals and formally define terminology used throughout this paper. We emphasize that confounding due to population structure, frequently cited as a driver of spurious associations \cite{Sillanpaeae2011, sul2018population}, is a function of environmental heterogeneity, where genetic data serves as a proxy for differential environmental exposures. In so doing, we refine the definition of confounding due to population structure in terms of a non-genetic mechanism. In addition, we briefly review historical methods of correcting for population stratification and relatedness. In section 3 we provide a detailed review of the two most prevalent multivariate methods of adjusting for population stratification and relatedness at present: PCA adjusted lasso penalized regression (PC-Lasso) and lasso penalized multivariate LMMs (LMM-Lasso). We review the statistical details of these methods as well as the consequences of the ways in which they attempt to correct for population structure and environmental heterogeneity. In section 4, we illustrate the concepts described in section 3 via simulation studies, where the data-generating mechanism formally differentiates between population structure and environmental heterogeneity. These simulation results are used to illustrate the importance of distinguishing between population structure and heterogeneous environmental exposures in penalized regression methods. In addition, these results identify scenarios where particular methods may be most and least effective in accurately estimating the effect sizes of observed SNPs in the presence of unobserved confounding.
-\pb{don't hard-code ``section 3''; use ref and label instead}
+In order to clarify and emphasize the importance of this subtle distinction, we present a detailed review of relevant concepts and methods. The remainder of this paper is organized as follows. In section \ref{sec:background} we provide a summary of the causes and consequences of structure in the genetic data of seemingly unrelated individuals and formally define terminology used throughout this paper. We emphasize that confounding due to population structure, frequently cited as a driver of spurious associations \cite{Sillanpaeae2011, sul2018population}, is a function of environmental heterogeneity, where genetic data serves as a proxy for differential environmental exposures. In so doing, we refine the definition of confounding due to population structure in terms of a non-genetic mechanism. In addition, we briefly review historical methods of correcting for population stratification and relatedness. In section \ref{sec:methods} we provide a detailed review of the two most prevalent multivariate methods of adjusting for population stratification and relatedness at present: PCA adjusted lasso penalized regression (PC-Lasso) and lasso penalized multivariate LMMs (LMM-Lasso). We review the statistical details of these methods as well as the consequences of the ways in which they attempt to correct for population structure and environmental heterogeneity. In section \ref{sec:results}, we illustrate the concepts described in section \ref{sec:methods} via simulation studies, where the data-generating mechanism formally differentiates between population structure and environmental heterogeneity. These simulation results are used to illustrate the importance of distinguishing between population structure and heterogeneous environmental exposures in penalized regression methods. In addition, these results identify scenarios where particular methods may be most and least effective in accurately estimating the effect sizes of observed SNPs in the presence of unobserved confounding.
 
 
 
@@ -29,7 +28,7 @@ In order to clarify and emphasize the importance of this subtle distinction, we 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Background}
+\section{Background} \label{sec:background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -94,12 +93,12 @@ Multivariate mixed model approaches reduce these problems by assessing the relat
 
 The remainder of this review will focus on the performance of multivariate Lasso-penalized methods for the analysis of continuous, normally distributed outcomes. Specifically, PC-adjustment and LMM methods, which we will refer to as PC-Lasso and LMM-Lasso, respectively. We consider two similar implementations of the LMM-Lasso method, one developed by \cite{Rakitsch2012} and a more recent implementation from \cite{bhatnagar2019simultaneous}. Subsequent references to LMM-Lasso apply to both implementations, unless otherwise stated. Where necessary, we will differentiate between these implementations as LMM-Lasso-Rakitsch and LMM-Lasso-ggmix, respectively. 
 
-In Section~\ref{Sec:res}, we compare the performance of PC-Lasso and LMM-Lasso in terms of their abilities to accurately estimate SNP effects and in terms of their true sign rates in the presence of varying levels of relatedness and environmental confounding. Although several studies have shown that LMMs outperform PC-adjustment methods in the univariate framework \cite{wang2013analytical, kang2010variance, zhao2007arabidopsis}, to the best of our knowledge this is the only comprehensive review and comparison of these methods in a penalized multivariate framework and using a simulation scheme motivated by human genetic relatedness and which formalizes the non-genetic confounding mechanism of population stratification.\\
+In section \ref{sec:results}, we compare the performance of PC-Lasso and LMM-Lasso in terms of their abilities to accurately estimate SNP effects and in terms of their true sign rates in the presence of varying levels of relatedness and environmental confounding. Although several studies have shown that LMMs outperform PC-adjustment methods in the univariate framework \cite{wang2013analytical, kang2010variance, zhao2007arabidopsis}, to the best of our knowledge this is the only comprehensive review and comparison of these methods in a penalized multivariate framework and using a simulation scheme motivated by human genetic relatedness and which formalizes the non-genetic confounding mechanism of population stratification.\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Methods}
+\section{Methods} \label{sec:methods}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -223,8 +222,7 @@ We generated these pseudophenotypes using three types of high-dimensional ($p > 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Results}
-\label{Sec:res}
+\section{Results} \label{sec:results}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -362,7 +360,7 @@ In addition, we have found that LMM-Lasso-ggmix performs poorly in a low-dimensi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Discussion/conclusion}
+\section{Discussion} \label{sec:discussion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
