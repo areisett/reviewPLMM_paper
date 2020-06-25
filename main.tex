@@ -52,7 +52,7 @@ As an example, consider a genetic study to assess genetic variants associated wi
 
 % \anna{description of DAG below, in reference to previous one}
 
-The mechanism of environmental confounding is summarized in the directed acyclic graph displayed in figure \ref{fig:ps_env}. The undirected dashed line between population stratification and environmental exposure indicates that while we assume these elements are correlated, we do not assume any causal direction. Otherwise stated, we do not assume that environmental factors \anna{directly} influence population-specific allele frequencies, or vice versa, only that the two may be related. \pb{I find these previous two sentences confusing/contradictory: We assume that environment and genetics are related, but also that environment has no effect on SNPs.}
+The mechanism of environmental confounding is summarized in the directed acyclic graph displayed in figure \ref{fig:ps_env}. The undirected dashed line between population stratification and environmental exposure indicates that while we assume these elements are correlated, we do not assume any causal direction. Otherwise stated, we do not assume that environmental factors \anna{directly} influence population-specific allele frequencies, or vice versa, only that the two may be related.  \anna{often end up related for complex reasons... the environment and genetics have become associated over time for complicated reasons that we aren't going to get into... air quality isn't changing people's genetics, genetics aren't causing people to move to areas of better/worse air quality}
 
 \begin{figure}[H]
 \centering
@@ -75,7 +75,7 @@ An additional consideration in genetic studies that we will briefly mention is t
 %------------------------------%
 \subsection{Correcting for population structure}
 
-Statistical methods to control for the effects of confounding due to population stratification have proliferated as computational advances have allowed for the analysis of genetic data from large cohorts. It should be noted that by attempting to reduce the effects of population structure, these methods reduce the effects of environmental confounding by blocking the casual pathway between population structure and observed SNPs \pb{Shouldn't this be: between environment and SNPs?}. \anna{no...}
+Statistical methods to control for the effects of confounding due to population stratification have proliferated as computational advances have allowed for the analysis of genetic data from large cohorts. It should be noted that by attempting to reduce the effects of population structure, these methods reduce the effects of environmental confounding by blocking the casual pathway between population structure and observed SNPs.
 
 The genomic control method is a univariate testing procedure which modifies the Cochran-Armitage test for trend by a correction factor \pb{genomic control is not specific to trend tests; it can be used for any type of test statistic inflation}. This correction attempts to quantify and remove the effect of population structure on the distribution of the chi-square statistic using markers unrelated to the phenotype of interest and independent of the marker being tested for association \cite{devlin1999genomic, bacanu2000power, wang2009testing}. The genomic control method retains the disadvantages of univariate SNP testing and its power to detect true associations is likely to suffer in the presence of linkage disequilibrium \pb{reference?}.  \pb{This paragraph is a little too negative about genomic control...needs to be softened slightly}
 
@@ -109,6 +109,8 @@ In section \ref{sec:results}, we compare the performance of PC-Lasso and LMM-Las
 \subsection{Model}
 
 \pb{Seems like we should explicitly include an intercept in all these models?}
+
+\anna{typically Z is an incidence matrix... subpops q ... but not the only possibility}
 
 To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects belonging to $q \le p$ subpopulations and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$ \pb{do we need to explicitly assume q discrete subpopulations here?} \anna{In order to show the equivalence of $u \sim N(0, \sigmagg \bK) \text{ and } Z\gamma \sim N(0, \sigmagg \bK)$ I think so, but maybe I can point out that this is the assumption the equivalence is arising from, but we don't' have to have discrete suppopulations in practice...\textbf{do this}}. We denote the standardized version \pb{need more explicit details on standardization} \anna{\textbf{do this} get details from Hayes 2009} of this genotype matrix as $\bX$. We assume that an $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of additive SNP effects, environmental confounding, and observational noise and consider the linear mixed model,
 \begin{equation}
@@ -155,7 +157,7 @@ where we assume $\beps \independent \bX\bgamma$ and thus $\by  \sim N(\bX \bbeta
 \bV^{-\frac{1}{2}}\by \sim N(\bV^{-\frac{1}{2}}\bX \bbeta, \bI).
 \end{equation}
 \anna{...however, as Karl Rohe paper shows, GLS does not completely translate to penalized regression...comment on this?}
-Using the spectral decomposition of $\bK$ described in equation \ref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorization \pb{ONLY WORKS IF $\bX$ IS FULL RANK} \anna{I understand this on paper, but why does it work numerically? Even if $n > p$, svd(K) or eigen(K) gives a U that is $n \times n$... what are the vectors corresponding to the 0-eigenvalues? Toy example...}
+Using the spectral decomposition of $\bK$ described in equation \ref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorization \pb{ONLY WORKS IF $\bX$ IS FULL RANK} \anna{I understand this on paper, but why does it work numerically? Even if $n > p$, svd(K) or eigen(K) gives a U that is $n \times n$... what are the vectors corresponding to the 0-eigenvalues? Toy example... PROVIDED U IS N X N}
 \begin{align*}
     \bV^{-1} &= (\sigmagg \bK + \sigmaee \bI)^{-1}\\
     &=(\sigmagg \bU \bD^2 \bU^T + \sigmaee \bU \bU^T)^{-1}\\
@@ -325,6 +327,7 @@ Phenotypes for these simulations were again simulated using a 1:1 SNR, $\eta = 0
 %------------------------------%
 
 \pb{We should discuss this section; to me, this section comes across as overly complicated and the point is not really coming across}
+\anna{homogeneous reflects groups that are genetically similar have more similar environmental exposures, heterogeneous says this is not the case. For example... negative lung exposures that are geographic make more sense as a homogeneous exposure but something more behavior-based like smoking behaviors are more plausibly be heterogenous: e.g. smoking in China vs. France - similar behavior, different genetically}
 
 In addition to considering the effect of population structure, or forms of $\bZ$, on these methods' estimation accuracy, we also evaluated the effect of varying forms of $\bgamma$, the subpopulation-specific effect sizes. Our initial thinking was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that do not lend themselves to linear approximations. To that end we investigated six distinct $\bgamma$ structures: linear homogeneous, linear heterogeneous, nonlinear homogeneous, nonlinear heterogeneous, exponential homogeneous, and exponential heterogeneous. In our naming convention, linear/nonlinear refers to whether the coefficients follow a linear pattern versus a nonlinear form, while homogeneous/heterogeneous indicates whether coefficients have the same, or differing signs, respectively. For example, (1, -2, 3, -4) is an example of a linear-heterogeneous structure, whereas (2, 2, 1, 1) is a nonlinear-homogeneous form. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \\
 
@@ -337,6 +340,7 @@ In addition to considering the effect of population structure, or forms of $\bZ$
 
 We thus evaluate PC-Lasso and LMM-Lasso in the presence of large and small subpopulations as well as distinct coefficient structures. Figure \ref{fig:big_small_gamma} shows the difference in MSE (PC-Lasso - LMM-Lasso) for all simulations, broken down by both subpopulation and coefficient structure. The right-hand panels of \ref{fig:big_small_gamma} are consistent with figure \ref{fig:big_vs_small}, showing superior LMM-Lasso performance in the presence of small subpopulations, regardless of coefficient linearity or homogeneity. The panel of figure \ref{fig:big_small_gamma} corresponding to large subpopulations with heterogeneous coefficients also appears to be a setting where LMM-Lasso consistently outperforms PC-Lasso, regardless of coefficient linearity. Only in the setting of large supopulations with homogeneous coefficients does PC-Lasso outperform LMM-Lasso. In line with our initial intuition, PC-Lasso performs best within this setting when coefficients are linear in nature. 
 
+\anna{replace this with inedpendent subpopulations}
 \begin{figure}[H]
     \centering
     % \includegraphics[scale = 0.9]{figures/fig2b.png}
