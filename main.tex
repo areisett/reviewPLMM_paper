@@ -112,16 +112,15 @@ In section \ref{sec:results}, we compare the performance of PC-Lasso and LMM-Las
 
 \pb{Seems like we should explicitly include an intercept in all these models?}
 
-\anna{typically Z is an incidence matrix... subpops q ... but not the only possibility}
-
-To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects belonging to $q \le p$ subpopulations and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$ \pb{do we need to explicitly assume q discrete subpopulations here?} \anna{In order to show the equivalence of $u \sim N(0, \sigmagg \bK) \text{ and } Z\gamma \sim N(0, \sigmagg \bK)$ I think so, but maybe I can point out that this is the assumption the equivalence is arising from, but we don't' have to have discrete suppopulations in practice...\textbf{do this}}. We denote the standardized version \pb{need more explicit details on standardization} \anna{\textbf{do this} get details from Hayes 2009} of this genotype matrix as $\bX$. We assume that an $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of additive SNP effects, environmental confounding, and observational noise and consider the linear mixed model,
+To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$. We denote the standardized version of this genotype matrix as $\bX$, where each $X_{ij} = (G_{ij} - 2 p_j) / \sqrt{p_j (1 - p_j)}$ and $p_j$ is the observed minor allele frequency (MAF) of SNP $j$. We assume that an $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of additive SNP effects, environmental confounding, and observational noise and consider the linear mixed model,
 \begin{equation}
     \label{eqn:model}
     \by = \bX\bbeta + \bZ\bgamma + \beps
 \end{equation}
-where $\bbeta$ is a $p \times 1$ vector of SNP effects, $\bZ$ is an $n \times q$ matrix that indicates population structure, $\bgamma$ is an $q \times 1$ vector of subpopulation-specific environmental effects, and $\beps \sim N(\boldsymbol{0}, \sigmaee \bI_n)$.
+where $\bbeta$ is a $p \times 1$ vector of SNP effects, $\bZ$ is an $n \times q$ matrix that allocates environmental effects, $\bgamma$ is an $q \times 1$ vector of environmental effects, and $\beps \sim N(\boldsymbol{0}, \sigmaee \bI_n)$. Often it is assumed that subjects belong to $q \le p$ subpopulations, and $\bZ$ is a corresponding incidence matrix of 0s and 1s. However, as we will discuss, this is not the only possibility.
 
-Both PC-Lasso and LMM-Lasso rely on matrix decompositions of $\bX$ and realized relationship matrix (RRM), $\bK$, which describes the pair-wise genetic similarity among subjects \cite{hayes2009increased}. Using the singular value decomposition (SVD) of the standardized genotype matrix, we can derive the spectral decomposition of the RRM: \anna{does this sentence need to change?}
+Both PC-Lasso and LMM-Lasso rely on matrix decompositions of $\bX$ and realized relationship matrix (RRM), $\bK$, which describes the pair-wise genetic similarity among subjects \cite{hayes2009increased}. Using the singular value decomposition (SVD) of the standardized genotype matrix, we can derive the spectral decomposition of the RRM: 
+
 \begin{align}
     \label{eqn:k}
     \bK &= \frac{1}{p} \bX \bX^T \nonumber \\
@@ -129,7 +128,7 @@ Both PC-Lasso and LMM-Lasso rely on matrix decompositions of $\bX$ and realized 
                    &= \frac{1}{p} \bU \bD (\bU \bD)^T \nonumber \\
                    &\propto \bR \bR^T,
 \end{align}
-where the columns of $\bU$ are the principal components of $\bX$ (equivalently, those of $\bK$) and $\boldsymbol{D}^2$ is a diagonal matrix of the singular values of $\bK$. The columns of $\boldsymbol{R}$ are therefore proportional to the principal components weighted by their corresponding singular values. 
+\anna{See Lippert 2011 for details about the dimensions and contents of U} where the columns of $\bU$ are the principal components of $\bX$ (equivalently, those of $\bK$) and $\boldsymbol{D}^2$ is a diagonal matrix of the singular values of $\bK$. The columns of $\boldsymbol{R}$ are therefore proportional to the principal components weighted by their corresponding singular values. 
 
 %------------------------------%
 \subsection{PC-Lasso}
