@@ -269,45 +269,12 @@ We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level o
 
 \pb{I find ``small'' subpopulations unclear; how do you feel about ``fine'' and ``coarse'' structure?}
 
-Given the superior performance of PC-Lasso and LMM-Lasso compared to the naive lasso in the presence of environmental confounding, we next compared these methods in the presence of two forms of simulated population structure: (1) relatedness characterized by a small number of large subpopulations to model large-scale environmental heterogeneity or population stratification, similar to that described in our motivating air quality example, and (2) a large number of small, closely related subpopulations to approximate finer grained environmental heterogeneity, such as household exposures or behavioral norms. Figure \ref{fig:kinship} illustrates the simulated kinship structures in these scenarios, as well as that present in the empirical SNP data. We note that we show results for simulated data generated such that subpopulations are of equal size, while the empirical SNP data illustrates a scenario of unequal subpopulation sizes.
+Given the superior performance of PC-Lasso and LMM-Lasso compared to the naive lasso in the presence of environmental confounding, we next compared these methods in the presence of two forms of simulated population structure: (1) relatedness characterized by a small number of large subpopulations to model large-scale environmental heterogeneity or population stratification, similar to that described in our motivating air quality example, and (2) a large number of small, closely related subpopulations to approximate finer grained environmental heterogeneity, such as household exposures or behavioral norms. 
+
+\anna{the following sentence needs to change now that kinship figs are gone}
+Figure \anna{KINSHIP FIGS IN SUPP NOT HERE} illustrates the simulated kinship structures in these scenarios, as well as that present in the empirical SNP data. We note that we show results for simulated data generated such that subpopulations are of equal size, while the empirical SNP data illustrates a scenario of unequal subpopulation sizes.
 
 \pb{should describe our empirical structure here -- is it fine or coarse?}
-
-\anna{
-\begin{itemize}
-    \item "Spend" this many figures on kinship?
-\end{itemize}
-}
-
-\pb{these are nice figures, but to me, better for supplement}
-
-\begin{figure}[H]
-\begin{subfigure}{.8\textwidth}
-  \centering
-  % include first image
-  \includegraphics[width=.7\linewidth]{figures/kinship1}  
-  \caption{Independent subpopulations simulated kinship; a small number of large groups}
-  \label{fig:large_groups}
-\end{subfigure}
-\newline
-\begin{subfigure}{.8\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=.7\linewidth]{figures/kinship2}  
-  \caption{Independent subpopulations simulated kinship; a large number of small groups}
-  \label{fig:small_groups}
-\end{subfigure}
-\newline
-\begin{subfigure}{.8\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=.7\linewidth]{figures/vanderwas_kinship.pdf}  
-  \caption{\anna{Vanderbilt data genome-wide} kinship}
-  \label{fig:vandy_groups}
-\end{subfigure}
-\caption{\anna{obviously these figures need to be tweaked:sizes, uniform scales}}
-\label{fig:kinship}
-\end{figure}
 
 Phenotypes for these simulations were again simulated using a 1:1 SNR, $\eta = 0.5$, and in the presence of moderate environmental confounding, $\xi = 0.5$. Figure \ref{fig:big_vs_small} summarizes the results of these simulations with the y-axis displaying the difference in MSE (PC-Lasso - LMM-Lasso) for each simulation and for the various subpopulation structures. The dashed horizontal line at 0 indicates no difference in the performance of PC-Lasso and LMM-Lasso, while differences greater than 0 correspond to smaller MSE for LMM-Lasso, and thus superior estimation accuracy. In the presence of a small number of large subpopulations, there is some overlap in the estimation accuracy of PC-Lasso and LMM-Lasso, as evidenced by the corresponding box straddling the 0 line. However, the majority of the box falls below 0, indicating the superior performance of PC-Lasso in many of the simulations. In the presence of many small subpopulations, however, LMM-Lasso is clearly superior to PC-Lasso in estimation accuracy. This is consistent with \citep{hoffman2013correcting}, who showed that principal component adjustment methods represent a low dimensional approximation to linear mixed models. As such, it is reasonable that PC-Lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform well in the small-number-of-large-subpopulations setting, but fall short in the presence of many small subpopulations. 
 
@@ -317,7 +284,7 @@ Phenotypes for these simulations were again simulated using a 1:1 SNR, $\eta = 0
     \centering
     % \includegraphics[scale = 0.9]{figures/mse_diff_subpops}
      \includegraphics[scale = 0.9]{figures/mse_diff_subpops.png}
-    \caption{Relative performance of LMM-Lasso, PC-Lasso in terms of estimation accuracy:  \anna{$\bgamma$ structure is nonlinear (aka half and half) and heterogeneous, $\eta= \xi = 0.5$}}
+    \caption{Relative performance of LMM-Lasso, PC-Lasso in terms of estimation accuracy:  \anna{structureX is independent subpops, $\bgamma$ structure is dichotomous and heterogeneous, $\eta= 0.5, \xi$ is varying}}
     \label{fig:big_vs_small}
 \end{figure}
 
@@ -340,12 +307,11 @@ In addition to considering the effect of population structure, or forms of $\bZ$
 
 We thus evaluate PC-Lasso and LMM-Lasso in the presence of large and small subpopulations as well as distinct coefficient structures. Figure \ref{fig:big_small_gamma} shows the difference in MSE (PC-Lasso - LMM-Lasso) for all simulations, broken down by both subpopulation and coefficient structure. The right-hand panels of \ref{fig:big_small_gamma} are consistent with figure \ref{fig:big_vs_small}, showing superior LMM-Lasso performance in the presence of small subpopulations, regardless of coefficient linearity or homogeneity. The panel of figure \ref{fig:big_small_gamma} corresponding to large subpopulations with heterogeneous coefficients also appears to be a setting where LMM-Lasso consistently outperforms PC-Lasso, regardless of coefficient linearity. Only in the setting of large supopulations with homogeneous coefficients does PC-Lasso outperform LMM-Lasso. In line with our initial intuition, PC-Lasso performs best within this setting when coefficients are linear in nature. 
 
-\anna{replace this with inedpendent subpopulations}
 \begin{figure}[H]
     \centering
     % \includegraphics[scale = 0.9]{figures/fig2b.png}
     \includegraphics[scale = 0.9]{figures/mse_diff_hetero.png}
-    \caption{Relative performance of LMM-Lasso, PC-Lasso for different subpopulation and $\bgamma$ structures: \anna{structureX is 1d linear admixture, $\eta= \xi = 0.5$}}
+    \caption{Relative performance of LMM-Lasso, PC-Lasso for different subpopulation and $\bgamma$ structures: \anna{structureX is independent subpops, $\eta= 0.5, \xi = 0.8$}}
     \label{fig:big_small_gamma}
 \end{figure}
 
@@ -363,7 +329,7 @@ LMM-Lasso-Rakitsch estimates the variance components once, under the assumption 
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 1]{figures/eta_beta_hat.png}
-     \caption{Caption goes here \anna{$\xi = 0.5$, structureX = 1d linear, structureGamma is half and half heterogeneous}}
+     \caption{Caption goes here \anna{$\xi = 0.5$, structureX = independent subpops, structureGamma is dichotomous heterogeneous, large blocks}}
     \label{fig:eta_beta_mse}
 \end{figure}
 
@@ -371,7 +337,7 @@ LMM-Lasso-Rakitsch estimates the variance components once, under the assumption 
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.8]{figures/time_ratio.png}
-    \caption{Caption goes here \anna{$\eta = \xi = 0.5$, structureX = 1d linear, structureGamma is half and half heterogeneous}}
+    \caption{Caption goes here \anna{$\eta = 0.5, \xi = 0.8$, structureX = independent subpops, structureGamma is dichotomous heterogeneous, large blocks}}
     \label{fig:time}
 \end{figure}
 
