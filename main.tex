@@ -146,12 +146,17 @@ where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j
 %------------------------------%
 \subsection{LMM-Lasso}
 LMM-Lasso models $\bZ\bgamma$ as a random effect assuming 
-$$\bgamma \sim N\left(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p \right).$$  Typically, $\bZ$ is not observed directly, and a common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}. Then, rather than assuming anything about $\bgamma$ directly, let $\bu=\bX\bgamma$ represent the random effect and assume $\bu \sim N(\boldsymbol{0}, \sigmagg \bK)$. This results in the LMM regression model
+$$\bgamma \sim N\left(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p \right).$$  Typically, $\bZ$ is not observed directly, and a common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}.This results in the LMM regression model
 \begin{equation}
     \label{eqn:lmm_reg}
     \by = \Int + \bX\bbeta + \bX\bgamma+ \beps,
 \end{equation}
-where we assume $\beps \independent \bX\bgamma$ and thus $\by  \sim N(\Int + \bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso performs a weighted rotation of the original data, left-multiplying by $\bV^{-1/2}$ in a manner akin to generalized least squares to diagonalize the error term such that
+where we assume $\beps \independent \bX\bgamma$. Rather than assuming anything about $\bgamma$ directly, an equivalent representation lets $\bu=\bX\bgamma$ such that $\bu \sim N(\boldsymbol{0}, \sigmagg \bK)$, and yields the equivalent LMM model
+\begin{equation}
+    \label{eqn:lmm_reg_u}
+    \by = \Int + \bX\bbeta + \bu + \beps.
+\end{equation}
+Regardless of representation, the LMM assumes $\by \sim N(\Int + \bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso performs a weighted rotation of the original data, left-multiplying by $\bV^{-1/2}$ in a manner akin to generalized least squares to diagonalize the error term such that
 \begin{equation}
 \bV^{-\frac{1}{2}}\by \sim N(\bV^{-\frac{1}{2}} \left(\Int +\bX \bbeta\right), \bI).
 \end{equation}
@@ -169,10 +174,10 @@ Using the spectral decomposition of $\bK$ described in equation \eqref{eqn:k}, w
     &= (\bU (\sigmagg \bD^2 + \sigmaee \bI) \bU^T)^{-1}\\
     &=\bU (\sigmagg \bD^2 + \sigmaee \bI)^{-1} \bU^T.
 \end{align*}
-By incorporating these decompositions, the transformed data can be expressed as $\bW \bXT$ and $\bW \byT$, respectively, where $\bXT = \bU^T \bX$ and $\byT = \bU^T \left( \by - \Int \right)$, where we center $\by$ to simplify notation. $\bW = \text{diag}\{w_1, ... w_n\}$ where $w_i$ corresponds to the square root of the $i$th element of the diagonal matrix $(\sigmagg \boldsymbol{D}^2 + \sigmaee \bI)^{-1}$. Together, this yields the objective function
+By incorporating these decompositions, the transformed data can be expressed as $\bW \bXT$ and $\bW \byT$, respectively, where $\bXT = \bU^T \bX$ and $\byT = \bU^T \left(\by - \Int \right)$, where we center the transformed $\by$ to simplify notation and computation.  $\bW = \text{diag}\{w_1, ... w_n\}$ where $w_i$ corresponds to the square root of the $i$th element of the diagonal matrix $(\sigmagg \boldsymbol{D}^2 + \sigmaee \bI)^{-1}$. Together, this yields the objective function
 \begin{equation}
 \label{eqn:lmm_obj}
-Q(\bbeta' | \bXT, \byT, \bW) = || \bW (\byT - \bXT \bbeta)||_2^2 + \lambda || \bbeta ||_1.
+Q(\bbeta | \bXT, \byT, \bW) = || \bW (\byT - \bXT \bbeta)||_2^2 + \lambda || \bbeta ||_1.
 \end{equation}
 An advantage to modeling unobserved confounding using a random effect, as opposed to fixed effects as in PC-Lasso, is that this requires the estimation of substantially fewer parameters: $p + 2$ for LMM-Lasso-Rakitsch, and $p + 3$ for LMM-Lasso-ggmix. 
 
@@ -198,7 +203,7 @@ Thus, whether modeled as a fixed or random effect, the underlying effect of $\bZ
 %------------------------------%
 \subsection{Simulating environmental confounding}
 
-In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_reg}, a common practice \citep{Rakitsch2012, bhatnagar2019simultaneous} is to draw a new value of the quantity $\bX\bgamma$ from a $N(\boldsymbol{0}, \sigmagg \bK)$ for each replication of the analysis.  We argue that this is somewhat misleading from the perspective of understanding the statistical properties of the method. Averaging over situations in which the environmental confounding is constantly changing direction and magnitude ``washes out'' bias in $\hat{\bbeta}$ while inflating the variance. To see why this is the case, consider the ordinary least squares (OLS) estimates of $\bbeta$ based on model \eqref{eqn:lmm_reg}: \anna{intercept stuff gets messy here - need to include}
+In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_reg}, a common practice \citep{Rakitsch2012, bhatnagar2019simultaneous} is to draw a new value of the quantity $\bX\bgamma$ from a $N(\boldsymbol{0}, \sigmagg \bK)$ for each replication of the analysis.  We argue that this is somewhat misleading from the perspective of understanding the statistical properties of the method. Averaging over situations in which the environmental confounding is constantly changing direction and magnitude ``washes out'' bias in $\hat{\bbeta}$ while inflating the variance. To see why this is the case, consider the low-dimensional ordinary least squares (OLS) estimates of $\bbeta$ based on model \eqref{eqn:lmm_reg} where, without loss of generatlity, we assume $\mu = 0$ for ease of notation: \anna{intercept stuff would get messy here... does this work?}
 \begin{align*}
     \mathbb{E}(\hat{\bbeta}) &= (\bX^T \bX)^{-1} \bX^T \mathbb{E}(\by)\\
     &=  (\bX^T \bX)^{-1} \bX^T \mathbb{E}(\bX\bbeta + \bX\bgamma + \beps)\\
@@ -207,11 +212,11 @@ In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_re
     &=  (\bX^T \bX)^{-1} \bX^T \mathbb{V}(\bX\bbeta + \bX\bgamma + \beps)\\
     &=  (\bX^T \bX)^{-1} \bX^T \mathbb{V}(\bX\bgamma + \beps) \bX  (\bX^T \bX)^{-1}.
 \end{align*}
-Under the assumption that $\bgamma \sim N(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p)$, $\mathbb{E}(\hat{\bbeta}) = \bbeta, \mathbb{V}(\hat{\bbeta}) = \frac{\sigmagg}{p}\bI + \sigmaee (\bX^T \bX)^{-1}$ \pb{this is not a sentence}. To return to our earlier example involving confounding due to air quality, randomly drawing a new value of $\bX\bgamma$ for each replication would mean that subpopulation A may be exposed to good air quality in one replication, and bad air quality in the next. Reporting the average across these situations is inconsistent with the question we are truly interested in, namely: what would happen if we took repeated samples from fixed populations A and B? Those repeated samples would show a systematic bias due to the difference in air quality, but this is masked if we generate new values of $\bX\bgamma$ with each replication. Considering $\bgamma$ as a fixed quantity is more consistent with the usual meaning of environmental confounding. Specifically, in the low-dimensional OLS setting, under the assumption that the quantity $\bgamma$ is fixed, $\mathbb{E}(\hat{\bbeta}) = \bbeta + \bgamma, \mathbb{V}(\hat{\bbeta}) = \sigmaee (\bX^T \bX)^{-1}$. 
+The assumption that environmental effects follow a random distribution, $\bgamma \sim N(\boldsymbol{0}, \sigmagg / p \bI_p)$, yields $\mathbb{E}(\hat{\bbeta}) = \bbeta$, and $\mathbb{V}(\hat{\bbeta}) = \sigmagg/p \bI + \sigmaee (\bX^T \bX)^{-1}$. Returning to our earlier example involving confounding due to air quality, randomly drawing a new value of $\bX\bgamma$ for each replication would mean that subpopulation A may be exposed to good air quality in one replication, and bad air quality in the next. Reporting the average across these situations is inconsistent with the question we are truly interested in, namely: what would happen if we took repeated samples from fixed populations A and B? Those repeated samples would show a systematic bias due to the difference in air quality, but this is masked if we generate new values of $\bX\bgamma$ with each replication. Considering $\bgamma$ as a fixed quantity is more consistent with the usual meaning of environmental confounding. Specifically, in the low-dimensional OLS setting, under the assumption that the quantity $\bgamma$ is fixed, $\mathbb{E}(\hat{\bbeta}) = \bbeta + \bgamma, \mathbb{V}(\hat{\bbeta}) = \sigmaee (\bX^T \bX)^{-1}$, which allows us to quantify bias in our estimates. 
 
-Although we derive these quantities under model \eqref{eqn:lmm_reg}, where $\bZ = \bX$, these results also hold for the more general model \eqref{eqn:model}, where $\bZ \ne \bX$, by decomposing $\bZ \bgamma$ into components in and orthogonal to the column space of the projection matrix of $\bX$. 
+Although we derive these quantities under model \eqref{eqn:lmm_reg}, where $\bZ = \bX$, these results also hold for the more general model \eqref{eqn:model}, where $\bZ \ne \bX$. We see this by decomposing $\bZ \bgamma$ into components in and orthogonal to the column space of the projection matrix of $\bX$. 
 
-Define the projection matrix of $\bX$ by $\boldsymbol{P}_{\bX} = \bX (\bX^T \bX)^{-1} \bX^T$, and let $\mathcal{C}(\boldsymbol{P}_{\bX})$ and $\mathcal{N}(\boldsymbol{P}_{\bX})$ denote the column and null spaces of $\boldsymbol{P}_{\bX}$, respectively. $\exists \boldsymbol{\tau, \psi}: \bZ \bgamma = \bX \boldsymbol{\tau + \psi}$ , $\boldsymbol{\tau} \in \mathcal{C}(\boldsymbol{P}_{\bX})$, and $\boldsymbol{\psi} \in \mathcal{N}(\boldsymbol{P}_{\bX})$. Then,
+Define the projection matrix of $\bX$ by $\boldsymbol{P}_{\bX} = \bX (\bX^T \bX)^{-1} \bX^T$, and let $\mathcal{C}(\boldsymbol{P}_{\bX})$ and $\mathcal{N}(\boldsymbol{P}_{\bX})$ denote the column and null spaces of $\boldsymbol{P}_{\bX}$, respectively. Then, $\exists \boldsymbol{\tau, \psi}: \bZ \bgamma = \bX \boldsymbol{\tau + \psi}$ , $\boldsymbol{\tau} \in \mathcal{C}(\boldsymbol{P}_{\bX})$, and $\boldsymbol{\psi} \in \mathcal{N}(\boldsymbol{P}_{\bX})$ such that
 \begin{align*}
     \by &= \bX\bbeta + \bZ\bgamma + \beps\\
     &= \bX\bbeta + \bX \boldsymbol{\tau} + \boldsymbol{\psi} + \beps\\
