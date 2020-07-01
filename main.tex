@@ -224,19 +224,10 @@ Define the projection matrix of $\bX$ by $\boldsymbol{P}_{\bX} = \bX (\bX^T \bX)
 \end{align*}
 where $\boldsymbol{\tau}$ quantifies bias in the estimated $\boldsymbol{\hat{\beta}'}$ and $\boldsymbol{\psi}$ is absorbed by the error term. In other words, any model specified in terms of $\bZ$ and $\bgamma$ is equivalent to a parameterization using $\bX$ and $\boldsymbol{\tau}$.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%------------------------------%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Results} \label{sec:results}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%------------------------------%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Overview of simulation... briefly define gamma structure, subpops size... more details in supplement...
-
 %------------------------------%
 \subsection{Simulation study}
 %------------------------------%
+\subsubsection{Pseudophenotype generation}
 
 Given the nature of environmental confounding in our setting of interest, and in order to assess these methodological performance in terms of estimation accuracy and bias specifically, we simulate according to a fixed $\bgamma$ framework and using the following data-generating model
 \begin{equation}
@@ -248,10 +239,36 @@ where $\by$ represents the pseudophenotype, and $a, b, c$ are scaling factors de
     \label{eqn:parition_y}
     \mathbb{V}(\by) = \eta + (1 - \eta) \xi + (1-\eta)(1-\xi).
 \end{equation}
-Here, $\eta$ is the proportion of the variance of $\by$ attributable to genetic factors, commonly referred to as the narrow-sense heritability, and $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. $\eta$ also represents our data-generating model's signal to noise ratio (SNR). So, for example $\eta = 0.5$ and $\xi = 0.8$ corresponds to a 1:1 SNR, and means that 50\% of the variability in $\by$ is due to additive genetic effects, and 40\% due to environmental effects. 
+Here, $\eta$ is the proportion of the variance of $\by$ attributable to genetic factors, commonly referred to as the narrow-sense heritability, and $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. $\eta$ also represents our data-generating model's signal to noise ratio (SNR). So, for example $\eta = 0.5$ and $\xi = 0.8$ corresponds to a 1:1 SNR, and means that 50\% of the variability in $\by$ is due to additive genetic effects, and 40\% due to environmental effects. The $\lambda$ that allowed for the first 50 variables to enter the model was selected for each method. 1000 simulations were performed for each unique combination of parameters, datatype, subpopulation structure, and environmental effect structure. 
 
-We generated these pseudophenotypes using three types of high-dimensional ($p > n$) $\bX$ matrices: (1) simulated SNP data from independent subpopulations, (2) simulated SNP data from admixed subpopulations, and (3) real genome-wide SNP data from known caucasian ($n = 417$), African American ($n = 134$), and Hispanic ($n = 37$) subpopulations. \anna{cite Vanderwas data} $p = 1000$ for all three data types, $n = 200$ for the simulated data types, and 50 causal SNPs were used throughout. The $\lambda$ that allowed for the first 50 variables to enter the model was selected for each method. For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation membership, \anna{or founding population membership in the case of the admixed data.} 1000 simulations were performed for each data type and parameter combination. 
+\subsubsection{Design matrix generation}
+We generated these pseudophenotypes using three types of high-dimensional ($p > n$) $\bX$ matrices: (1) simulated SNP data from independent subpopulations, (2) simulated SNP data from admixed subpopulations, and (3) real genome-wide SNP data from known caucasian ($n = 417$), African American ($n = 134$), and Hispanic ($n = 37$) subpopulations. \anna{cite Vanderwas data} $p = 1000$ for all three data types, $n = 200$ for the simulated data types, and 50 causal SNPs were used throughout. 
 
+\subsubsection{Subpopulation structure}
+For the fully simulated data, two subpopulation structures were considered: (1) fine and (2) coarse. We define a coarse structure to be one characterized by a few large subpopulations intended to model large-scale environmental heterogeneity and population stratification, such as that described in our motivating air quaility example. Conversely, we define a fine subpopulation structure to be one characterized by many small subpopulations, or founding populations, which corresponds to a finer grained continuum of environmental heterogeneity. Whether fine or coarse, the simulated data were generated such that subpopulations, or founding populations, are of equal size. We note that the fine and coarse subpopulation structures are distinct from the level of admixture in the simulated data. For example, the discrete nonoverlapping subpopulations in the simulated independent subpopulation data result in an RRM which more directly corresponds to the discrete and fixed environmental effects, fine or coarse, than do the continuous and overlapping subpopulations in the simulated admixture data. The empirical data is comprised of three racial subpopulations; one relatively large, one small, and one in the middle. Thus it represents a hybrid of our simulated coarse and fine structures, with little apparent admixture. Supplementary figures \anna{?, ?, and ?} illustrate the simulated kinship structures in the fine and coarse subpopulation settings, as well as that present in the empirical SNP data. 
+
+\subsubsection{Structure of environmental effects}
+For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation membership, or founding population membership in the case of the admixed data, which assigns the corresponding environmental effect found in $\bgamma$. Various $\bgamma$ structures were considered in order to investigate the effects of various forms of environmental confounding. 
+
+ Our initial hypothesis was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that are nonlinear in nature and as such do not lend themselves to such an approximation. To that end we investigated two forms of environmental effect magnitudes: (1) exponential, and (2) dichotomous. \anna{more details?} In addition to the magnitudes of effects, we also considered whether individuals in genetically similar subpopulations would experience similar environmental effects. For example, a geographic environmental exposure such as the air quality described in our motivating example is likely to be similar among genetically related individuals due to \anna{spatial population drift, cline... (???)}. However, more behavior-based environmental exposures may be less likely to be shared by genetically similar subpopulations. Consider cigarette smoking rates in France, England, and China. While French and English populations are more genetically similar than French and Chinese populations \anna{need citaiton}, the environmental exposure of cigarette smoking is more similar between French and Chinese populations due to cultural norms and practices \anna{need citaiton}. 
+ 
+ To evaluate the performance of penalized LMM methods in both scenarios, we consider exponential and dichotomous effect magnitudes with are (1) \anna{homogeneous/cis (?) - same direction}, or (2) \anna{heterogeneous/trans (?)} in nature for a total of four distinct $\bgamma$ structures. We define \anna{homogenous/cis} effects as those that are similar among genetically similar subpopulations, and \anna{heterogeneous/trans} effects as those that are not. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \anna{is this still unclear? Would a PCA picture help?}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.9]{figures/gamma_structure.png}
+    \caption{$\bgamma$ structures}
+    \label{fig:gamma_structures}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------------%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results} \label{sec:results}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------------%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %------------------------------%
 \subsection{PC-Lasso and LMM-Lasso outperform Lasso in the presence of environmental confounding}
@@ -272,19 +289,11 @@ We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level o
 \subsection{LMM-Lasso outperforms PC-Lasso when simulated subpopulations are small}
 %------------------------------%
 
-\pb{I find ``small'' subpopulations unclear; how do you feel about ``fine'' and ``coarse'' structure?}
+Given the superior performance of PC-Lasso and LMM-Lasso compared to the naive lasso in the presence of environmental confounding, we next compared these methods in the presence of fine and coarse subpopulation structures. 
 
-Given the superior performance of PC-Lasso and LMM-Lasso compared to the naive lasso in the presence of environmental confounding, we next compared these methods in the presence of two forms of simulated population structure: (1) coarse \anna{cut this?: relatedness characterized by a small number of large subpopulations to model large-scale environmental heterogeneity or population stratification, similar to that described in our motivating air quality example,} and (2) fine \anna{cut?: a large number of small subpopulations corresponding to finer grained environmental heterogeneity, such as household exposures or behavioral norms}. 
+Phenotypes were simulated using a 1:1 SNR, $\eta = 0.5$, and varying environmental confounding, $\xi \in \{0, 0.2, 0.5,0.8\}$. Figure \ref{fig:big_vs_small} summarizes the results of these simulations for the independent subpopulation simulated $\bX$ with environmental confounding simulated using a dichotomous-heterogeneous $\bgamma$ structure, though qualitatively similar results were observed for the other data types and $\gamma$ structures.
 
-\anna{the following sentence needs to change now that kinship figs are gone}
-Figure \anna{KINSHIP FIGS IN SUPP NOT HERE} illustrates the simulated kinship structures in these scenarios, as well as that present in the empirical SNP data. We note that we show results for simulated data generated such that subpopulations are of equal size, while the empirical SNP data illustrates a scenario of unequal subpopulation sizes.
-
-\pb{should describe our empirical structure here -- is it fine or coarse?}
-
-Phenotypes for these simulations were again simulated using a 1:1 SNR, $\eta = 0.5$, and in the presence of moderate environmental confounding, $\xi = 0.5$. Figure \ref{fig:big_vs_small} summarizes the results of these simulations with the y-axis displaying the difference in MSE (PC-Lasso - LMM-Lasso) for each simulation and for the various subpopulation structures. The dashed horizontal line at 0 indicates no difference in the performance of PC-Lasso and LMM-Lasso, while differences greater than 0 correspond to smaller MSE for LMM-Lasso, and thus superior estimation accuracy. In the presence of a small number of large subpopulations, there is some overlap in the estimation accuracy of PC-Lasso and LMM-Lasso, as evidenced by the corresponding box straddling the 0 line. However, the majority of the box falls below 0, indicating the superior performance of PC-Lasso in many of the simulations. In the presence of many small subpopulations, however, LMM-Lasso is clearly superior to PC-Lasso in estimation accuracy. This is consistent with \citep{hoffman2013correcting}, who showed that principal component adjustment methods represent a low dimensional approximation to linear mixed models. As such, it is reasonable that PC-Lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform well in the small-number-of-large-subpopulations setting, but fall short in the presence of many small subpopulations. 
-
-\anna{admixture simulated data sets do worse in the large subpops setting because their similarity matrix does not indicate as clearly who was exposed to one of e.g. 4 environmental exposures. the small subpopulations scenario more closely mimics gradations of environmental effects - what is usually simulated with a random draw from the MVN distn... we're simulating environmental heterogeneity in a way that allows us to examine the bias produced and these methods still do as well or better than pca}
-
+with the y-axis displaying the difference in MSE (PC-Lasso - LMM-Lasso) for each simulation and for the various subpopulation structures. The dashed horizontal line at 0 indicates no difference in the performance of PC-Lasso and LMM-Lasso, while differences greater than 0 correspond to smaller MSE for LMM-Lasso, and thus superior estimation accuracy. In the presence of a small number of large subpopulations, there is some overlap in the estimation accuracy of PC-Lasso and LMM-Lasso, as evidenced by the corresponding box straddling the 0 line. However, the majority of the box falls below 0, indicating the superior performance of PC-Lasso in many of the simulations. In the presence of many small subpopulations, however, LMM-Lasso is clearly superior to PC-Lasso in estimation accuracy. This is consistent with \citep{hoffman2013correcting}, who showed that principal component adjustment methods represent a low dimensional approximation to linear mixed models. As such, it is reasonable that PC-Lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform well in the small-number-of-large-subpopulations setting, but fall short in the presence of many small subpopulations. 
 \begin{figure}[H]
     \centering
     % \includegraphics[scale = 0.9]{figures/mse_diff_subpops}
@@ -298,19 +307,7 @@ Phenotypes for these simulations were again simulated using a 1:1 SNR, $\eta = 0
 \subsection{LMM-Lasso outperforms PC-Lasso when $\gamma$ is heterogeneous}
 %------------------------------%
 
-\pb{We should discuss this section; to me, this section comes across as overly complicated and the point is not really coming across}
-\anna{homogeneous reflects groups that are genetically similar have more similar environmental exposures, heterogeneous says this is not the case. For example... negative lung exposures that are geographic make more sense as a homogeneous exposure but something more behavior-based like smoking behaviors are more plausibly be heterogenous: e.g. smoking in China vs. France - similar behavior, different genetically}
-
-In addition to considering the effect of population structure, or forms of $\bZ$, on these methods' estimation accuracy, we also evaluated the effect of varying forms of $\bgamma$, the subpopulation-specific effect sizes. Our initial thinking was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that do not lend themselves to linear approximations. To that end we investigated six distinct $\bgamma$ structures: linear homogeneous, linear heterogeneous, nonlinear homogeneous, nonlinear heterogeneous, exponential homogeneous, and exponential heterogeneous. In our naming convention, linear/nonlinear refers to whether the coefficients follow a linear pattern versus a nonlinear form, while homogeneous/heterogeneous indicates whether coefficients have the same, or differing signs, respectively. For example, (1, -2, 3, -4) is an example of a linear-heterogeneous structure, whereas (2, 2, 1, 1) is a nonlinear-homogeneous form. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \\
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale = 0.9]{figures/gamma_structure.png}
-    \caption{$\bgamma$ structures}
-    \label{fig:gamma_structures}
-\end{figure}
-
-We thus evaluate PC-Lasso and LMM-Lasso in the presence of large and small subpopulations as well as distinct coefficient structures. Figure \ref{fig:big_small_gamma} shows the difference in MSE (PC-Lasso - LMM-Lasso) for all simulations, broken down by both subpopulation and coefficient structure. The right-hand panels of \ref{fig:big_small_gamma} are consistent with figure \ref{fig:big_vs_small}, showing superior LMM-Lasso performance in the presence of small subpopulations, regardless of coefficient linearity or homogeneity. The panel of figure \ref{fig:big_small_gamma} corresponding to large subpopulations with heterogeneous coefficients also appears to be a setting where LMM-Lasso consistently outperforms PC-Lasso, regardless of coefficient linearity. Only in the setting of large supopulations with homogeneous coefficients does PC-Lasso outperform LMM-Lasso. In line with our initial intuition, PC-Lasso performs best within this setting when coefficients are linear in nature. 
+We evaluate PC-Lasso and LMM-Lasso in the presence of large and small subpopulations as well as distinct coefficient structures. Figure \ref{fig:big_small_gamma} shows the difference in MSE (PC-Lasso - LMM-Lasso) for all simulations, broken down by both subpopulation and coefficient structure. The right-hand panels of \ref{fig:big_small_gamma} are consistent with figure \ref{fig:big_vs_small}, showing superior LMM-Lasso performance in the presence of small subpopulations, regardless of coefficient linearity or homogeneity. The panel of figure \ref{fig:big_small_gamma} corresponding to large subpopulations with heterogeneous coefficients also appears to be a setting where LMM-Lasso consistently outperforms PC-Lasso, regardless of coefficient linearity. Only in the setting of large supopulations with homogeneous coefficients does PC-Lasso outperform LMM-Lasso. In line with our initial intuition, PC-Lasso performs best within this setting when coefficients are linear in nature. 
 
 \begin{figure}[H]
     \centering
