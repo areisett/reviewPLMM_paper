@@ -9,13 +9,17 @@
 
 An objective of many genetic studies is to accurately identify variants associated with a particular trait or disease, and to estimate the effects of those variants. Such information is valuable for assessing an individual's risk of developing a particular condition, elucidating the underlying genetic architecture of a disease, and identifying potential drug targets. However, this effort may be hindered by several factors. 
 
-Genetic variants are often correlated with each other, meaning that univariate testing of genetic variants may result in false positives and biased effect estimates. This occurs when the variant being tested is correlated with other variants, so that the effects of these correlated variants are erroneously attributed to the variant in question. \anna{One method for analyzing data in the presence of correlated loci, or linkage disequilibrium (LD), is LD-pruning. In LD-pruning methods, SNPs are sequentially thinned, so that only SNPs correlated with each other below some desired threshold are used in modeling and testing procedures.} LD-pruning limits analysis to SNPs which are representative of a particular region. This may result in causal SNPs being removed from analysis, so that only SNPs in LD with the causal loci can be identified and their effects estimated. In addition, it has been shown that in the worst-case scenario, pruning algorithms may not select any representative SNPs in a particular region of the genome \citep{prive2018efficient}. However, LD-pruning does allow for the use of methods which assume uncorrelated loci such as \anna{BLAHHHHH: \url{https://www.nature.com/articles/srep27644/tables/1}}. In addition, LD-pruning may result in improved predictive accuracy \anna{because why}, which can be of particular benefit to polygenic risk score methods.  
+Genetic variants are often correlated with each other, meaning that univariate testing of genetic variants may result in false positives and biased effect estimates. This occurs when the variant being tested is correlated with other variants, so that the effects of these correlated variants are erroneously attributed to the variant in question. One method for analyzing data in the presence of correlated loci, or linkage disequilibrium (LD), is LD pruning. LD pruning can be an important preprocessing step in a GWAS analysis, for which there exist a variety of algorithms and methods. The overarching approach of these methods is to sequentially thin SNPs, so that only SNPs correlated with each other below some desired threshold are used in modeling and testing procedures. This may result in causal SNPs being removed from analysis, so that only SNPs in LD with the causal loci, as opposed to the causal loci themselves, can be identified and their effects estimated. 
+
+% LD pruning thus limits analysis to SNPs which are representative of a particular region. 
+
+% In some scenarios pruning algorithms may not select any representative SNPs in a particular region of the genome \citep{prive2018efficient}. However, LD-pruning has been shown to improve performance of principal component analysis (PCA) methods \citep{abdellaoui2013population} and \anna{what} \anna{because why}.  
 
 An alternative solution to the problem of LD is the use of multivariate methods such as multiple linear regression, which adjusts for and estimates the effects of numerous variants simultaneously. However, such methods rely on data where the number of observations is less than the number of features. This is often infeasible in genetic studies where the number of features typically exceeds the number of observations. Penalized regression methods make such problems tractable by constraining the solution space of coefficient estimates.
 
 The Lasso \citep{tibshirani1996regression} is a widely used penalized regression method. It relies on an assumption of sparsity, which means that coefficient estimation and variable selection can be accomplished simultaneously, and also provides considerable computational advantages, meaning that it scales up well to very large data sets. These features make the Lasso attractive for the analysis of high-dimensional genetic data where identifying a list of variants most highly associated with a particular trait is often of interest.
 
-Lasso penalized regression models typically assume independent observations and uncorrelated errors. In the presence of population structure, some samples are more correlated than others, violating the independent errors assumption. If unaccounted for, this dependency can result in the identification of spurious associations. Though methods to correct for population stratification and cryptic relatedness have been extensively investigated \citep{Amin2007, hoffman2013correcting, price2006principal, Rakitsch2012, bhatnagar2019simultaneous, Sillanpaeae2011}, there remain open and relevant problems \pb{this is vague} in analyzing structured genetic data \citep{lawson2019population, barton2019population}. 
+Lasso penalized regression models typically assume independent observations and uncorrelated errors. In the presence of population structure, some samples are more correlated than others, violating the independent errors assumption. If unaccounted for, this dependency can result in the identification of spurious associations. Though methods to correct for population stratification and cryptic relatedness have been extensively investigated \citep{Amin2007, hoffman2013correcting, price2006principal, Rakitsch2012, bhatnagar2019simultaneous, Sillanpaeae2011}, until recently the majority of this work has focused on plant and animal breeding data, much of which experimentally controlled. While many standard correction techniques may in principal be applied to human genetic data, their performance must be studied within the context of human ancestry as well as non-experimental conditions \citep{lawson2019population, barton2019population}.  
 
 One reason that population stratification warrants such concern in genetic studies is that due to ethnic and geographic segregation, population stratification tends to be associated with differing environmental exposures and cultural practices.  In other words, random genetic variation is likely to be associated with non-genetic factors that also influence the trait of interest, thereby confounding the genotype-phenotype relationship and leading to spurious associations and biased estimates of SNP effects. Biased estimates of this nature severely hinder prediction and understanding differences among populations \citep{barton2019population}. Although bias at individual loci may be small, this bias may become magnified when aggregated across thousands of SNPs, as is done when calculating polygenic risk scores \citep{barton2019population}.
 
@@ -138,7 +142,7 @@ PC-Lasso uses the first $k$ principal components of $\bX$ to approximate $\bZ\bg
 where $\bU_{1:k}$ is the $n \times k$ matrix of principal component vectors, $\boldsymbol{\alpha}$ their corresponding $k \times 1$ coefficient vector, and all other parameters are as defined in equation \eqref{eqn:model}. In a penalized regression framework, this model yields the objective function
 \begin{equation}
     \label{eqn:pca_obj}
-    Q(\boldsymbol{\beta, \alpha| X, y}) = \frac{1}{2n} ||\by - \Int - \bX \bbeta- \bU_{1:k}\boldsymbol{\alpha}||_2^2 + \lambda || \bbeta ||_1
+    Q(\bbeta, \boldsymbol{\alpha}|\bX, \by) = \frac{1}{2n} ||\by - \Int - \bX \bbeta- \bU_{1:k}\boldsymbol{\alpha}||_2^2 + \lambda || \bbeta ||_1
 \end{equation}
 where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j=1}^p |\beta_j|$ denotes the $\ell_1$ norm of the regression coefficients, and $||.||_2$ the $\ell_2$ norm. Note that the principal component regression coefficients, $\boldsymbol{\alpha}$, are not included in the penalty term. Modeling unobserved confounding using fixed effects in this manner thus requires the estimation of $p + k + 1$ parameters. 
 
@@ -151,7 +155,7 @@ $$\bgamma \sim N\left(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p \right).$$  Typic
     \label{eqn:lmm_reg}
     \by = \Int + \bX\bbeta + \bX\bgamma+ \beps,
 \end{equation}
-where we assume $\beps \independent \bX\bgamma$. Rather than assuming anything about $\bgamma$ directly, an equivalent representation lets $\bu=\bX\bgamma$ such that $\bu \sim N(\boldsymbol{0}, \sigmagg \bK)$, and yields the equivalent LMM model
+where we assume $\beps \independent \bX\bgamma$. Rather than assuming anything about $\bgamma$ directly, an equivalent representation lets $\bu=\bX\bgamma$ such that $\bu \sim N(\boldsymbol{0}, \sigmagg \bK)$, and yields the equivalent model
 \begin{equation}
     \label{eqn:lmm_reg_u}
     \by = \Int + \bX\bbeta + \bu + \beps.
@@ -174,7 +178,7 @@ Using the spectral decomposition of $\bK$ described in equation \eqref{eqn:k}, w
     &= (\bU (\sigmagg \bD^2 + \sigmaee \bI) \bU^T)^{-1}\\
     &=\bU (\sigmagg \bD^2 + \sigmaee \bI)^{-1} \bU^T.
 \end{align*}
-By incorporating these decompositions, the transformed data can be expressed as $\bW \bXT$ and $\bW \byT$, respectively, where $\bXT = \bU^T \bX$ and $\byT = \bU^T \left(\by - \Int \right)$, where we center the transformed $\by$ to simplify notation and computation.  $\bW = \text{diag}\{w_1, ... w_n\}$ where $w_i$ corresponds to the square root of the $i$th element of the diagonal matrix $(\sigmagg \boldsymbol{D}^2 + \sigmaee \bI)^{-1}$. Together, this yields the objective function
+By incorporating these decompositions, the transformed data can be expressed as $\bW \bXT$ and $\bW \byT$, respectively, where $\bXT = \bU^T \bX$ and $\byT = \bU^T \left(\by - \Int \right)$, where we center the transformed $\by$ to simplify notation and computation \anna{does this make sense?}.  $\bW = \text{diag}\{w_1, ... w_n\}$ where $w_i$ corresponds to the square root of the $i$th element of the diagonal matrix $(\sigmagg \boldsymbol{D}^2 + \sigmaee \bI)^{-1}$. Together, this yields the objective function
 \begin{equation}
 \label{eqn:lmm_obj}
 Q(\bbeta | \bXT, \byT, \bW) = || \bW (\byT - \bXT \bbeta)||_2^2 + \lambda || \bbeta ||_1.
@@ -212,7 +216,7 @@ In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_re
     &=  (\bX^T \bX)^{-1} \bX^T \mathbb{V}(\bX\bbeta + \bX\bgamma + \beps)\\
     &=  (\bX^T \bX)^{-1} \bX^T \mathbb{V}(\bX\bgamma + \beps) \bX  (\bX^T \bX)^{-1}.
 \end{align*}
-The assumption that environmental effects follow a random distribution, $\bgamma \sim N(\boldsymbol{0}, \sigmagg / p \bI_p)$, yields $\mathbb{E}(\hat{\bbeta}) = \bbeta$, and $\mathbb{V}(\hat{\bbeta}) = \sigmagg/p \bI + \sigmaee (\bX^T \bX)^{-1}$. Returning to our earlier example involving confounding due to air quality, randomly drawing a new value of $\bX\bgamma$ for each replication would mean that subpopulation A may be exposed to good air quality in one replication, and bad air quality in the next. Reporting the average across these situations is inconsistent with the question we are truly interested in, namely: what would happen if we took repeated samples from fixed populations A and B? Those repeated samples would show a systematic bias due to the difference in air quality, but this is masked if we generate new values of $\bX\bgamma$ with each replication. Considering $\bgamma$ as a fixed quantity is more consistent with the usual meaning of environmental confounding. Specifically, in the low-dimensional OLS setting, under the assumption that the quantity $\bgamma$ is fixed, $\mathbb{E}(\hat{\bbeta}) = \bbeta + \bgamma, \mathbb{V}(\hat{\bbeta}) = \sigmaee (\bX^T \bX)^{-1}$, which allows us to quantify bias in our estimates. 
+The assumption that environmental effects follow a random distribution, $\bgamma \sim N(\boldsymbol{0}, \sigmagg / p \bI_p)$, yields $\mathbb{E}(\bbetaHat) = \bbeta$, and $\mathbb{V}(\bbetaHat) = \sigmagg/p \bI + \sigmaee (\bX^T \bX)^{-1}$. Returning to our earlier example involving confounding due to air quality, randomly drawing a new value of $\bX\bgamma$ for each replication would mean that subpopulation A may be exposed to good air quality in one replication, and bad air quality in the next. Reporting the average across these situations is inconsistent with the question we are truly interested in, namely: what would happen if we took repeated samples from fixed populations A and B? Those repeated samples would show a systematic bias due to the difference in air quality, but this is masked if we generate new values of $\bX\bgamma$ with each replication. Considering $\bgamma$ as a fixed quantity is more consistent with the usual meaning of environmental confounding. Specifically, in the low-dimensional OLS setting, under the assumption that the quantity $\bgamma$ is fixed, $\mathbb{E}(\bbetaHat) = \bbeta + \bgamma, \mathbb{V}(\bbetaHat) = \sigmaee (\bX^T \bX)^{-1}$, which allows us to quantify bias in our estimates. 
 
 Although we derive these quantities under model \eqref{eqn:lmm_reg}, where $\bZ = \bX$, these results also hold for the more general model \eqref{eqn:model}, where $\bZ \ne \bX$. We see this by decomposing $\bZ \bgamma$ into components in and orthogonal to the column space of the projection matrix of $\bX$. 
 
@@ -222,7 +226,7 @@ Define the projection matrix of $\bX$ by $\boldsymbol{P}_{\bX} = \bX (\bX^T \bX)
     &= \bX\bbeta + \bX \boldsymbol{\tau} + \boldsymbol{\psi} + \beps\\
     &=  \bX \bbeta' + \beps'
 \end{align*}
-where $\boldsymbol{\tau}$ quantifies bias in the estimated $\boldsymbol{\hat{\beta}'}$ and $\boldsymbol{\psi}$ is absorbed by the error term. In other words, any model specified in terms of $\bZ$ and $\bgamma$ is equivalent to a parameterization using $\bX$ and $\boldsymbol{\tau}$.
+where $\boldsymbol{\tau}$ quantifies bias in the estimated $\bbetaHat'$ and $\boldsymbol{\psi}$ is absorbed by the error term. In other words, any model specified in terms of $\bZ$ and $\bgamma$ is equivalent to a parameterization using $\bX$ and $\boldsymbol{\tau}$.
 
 %------------------------------%
 \subsection{Simulation study}
@@ -284,7 +288,7 @@ We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level o
     \label{fig:mse}
 \end{figure}
 
-\pb{Just FYI, it's hard to tell bias and var apart in black and white} \anna{will fix this and greek letters}
+\pb{Just FYI, it's hard to tell bias and var apart in black and white} \anna{will fix this, greek letters, labels}
 
 %------------------------------%
 \subsection{LMM-Lasso outperforms PC-Lasso when simulated subpopulations are small}
