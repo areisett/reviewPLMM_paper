@@ -238,19 +238,19 @@ Overview of simulation... briefly define gamma structure, subpops size... more d
 \subsection{Simulation study}
 %------------------------------%
 
-Given the nature of environmental confounding in our setting of interest, and in order to assess these methodological performance in terms of estimation accuracy, we simulate according to a fixed $\bgamma$ framework and using the following data-generating model
+Given the nature of environmental confounding in our setting of interest, and in order to assess these methodological performance in terms of estimation accuracy and bias specifically, we simulate according to a fixed $\bgamma$ framework and using the following data-generating model
 \begin{equation}
     \label{eqn:sim}
     \by = a \bX \bbeta + b \bZ \bgamma + c \beps,
 \end{equation}
-where $\by$ represents the phenotype, and $a, b, c$ are scaling factors determined such that the variance of $\by$ is equal to 1, and is partitioned into signal, environmental confounding, and random noise components,
+where $\by$ represents the pseudophenotype, and $a, b, c$ are scaling factors determined such that the variance of $\by$ is equal to 1, and is partitioned into signal, environmental confounding, and random noise components,
 \begin{equation}
     \label{eqn:parition_y}
     \mathbb{V}(\by) = \eta + (1 - \eta) \xi + (1-\eta)(1-\xi).
 \end{equation}
-Here, $\eta$ is the proportion of the variance of $\by$ attributable to genetic factors, commonly referred to as the narrow-sense heritability, and $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. \pb{So, for example, $\eta=0.5$ and $\xi=0.7$ means that\ldots} Given our modeling objective of accurately estimating the effect sizes of observed SNPs, $\eta$ also represents our data-generating model's signal to noise ratio (SNR). 
+Here, $\eta$ is the proportion of the variance of $\by$ attributable to genetic factors, commonly referred to as the narrow-sense heritability, and $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. $\eta$ also represents our data-generating model's signal to noise ratio (SNR). So, for example $\eta = 0.5$ and $\xi = 0.8$ corresponds to a 1:1 SNR, and means that 50\% of the variability in $\by$ is due to additive genetic effects, and 40\% due to environmental effects. 
 
-We generated these pseudophenotypes using three types of high-dimensional ($p > n$) $\bX$ matrices: (1) simulated SNP data from independent subpopulations, (2) simulated SNP data from admixed subpopulations, and (3) real genome-wide SNP data from known caucasian ($n = 417$), African American ($n = 134$), and Hispanic ($n = 37$) subpopulations. \anna{cite Vanderwas data} For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation membership \pb{Is this true for the linear mixing case as well?}. 1000 simulations were performed for each data type and parameter combination.
+We generated these pseudophenotypes using three types of high-dimensional ($p > n$) $\bX$ matrices: (1) simulated SNP data from independent subpopulations, (2) simulated SNP data from admixed subpopulations, and (3) real genome-wide SNP data from known caucasian ($n = 417$), African American ($n = 134$), and Hispanic ($n = 37$) subpopulations. \anna{cite Vanderwas data} For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation membership \pb{Is this true for the linear mixing case as well?} \anna{yes}. 1000 simulations were performed for each data type and parameter combination.
 
 
 %------------------------------%
