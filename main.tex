@@ -178,7 +178,7 @@ Using the spectral decomposition of $\bK$ described in equation \eqref{eqn:k}, w
     &= (\bU (\sigmagg \bD^2 + \sigmaee \bI) \bU^T)^{-1}\\
     &=\bU (\sigmagg \bD^2 + \sigmaee \bI)^{-1} \bU^T.
 \end{align*}
-By incorporating these decompositions, the transformed data can be expressed as $\bW \bXT$ and $\bW \byT$, respectively, where $\bXT = \bU^T \bX$ and $\byT = \bU^T \left(\by - \Int \right)$, where we center the transformed $\by$ to simplify notation and computation \anna{does this make sense?}.  $\bW = \text{diag}\{w_1, ... w_n\}$ where $w_i$ corresponds to the square root of the $i$th element of the diagonal matrix $(\sigmagg \boldsymbol{D}^2 + \sigmaee \bI)^{-1}$. Together, this yields the objective function
+By incorporating these decompositions, the transformed data can be expressed as $\bW \bXT$ and $\bW \byT$, respectively, where $\bXT = \bU^T \bX$ and $\byT = \bU^T \left(\by - \Int \right)$, where we center the transformed $\by$ to simplify notation and computation.  $\bW = \text{diag}\{w_1, ... w_n\}$ where $w_i$ corresponds to the square root of the $i$th element of the diagonal matrix $(\sigmagg \boldsymbol{D}^2 + \sigmaee \bI)^{-1}$. Together, this yields the objective function
 \begin{equation}
 \label{eqn:lmm_obj}
 Q(\bbeta | \bXT, \byT, \bW) = || \bW (\byT - \bXT \bbeta)||_2^2 + \lambda || \bbeta ||_1.
@@ -207,7 +207,7 @@ Thus, whether modeled as a fixed or random effect, the underlying effect of $\bZ
 %------------------------------%
 \subsection{Simulating environmental confounding}
 
-In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_reg}, a common practice \citep{Rakitsch2012, bhatnagar2019simultaneous} is to draw a new value of the quantity $\bX\bgamma$ from a $N(\boldsymbol{0}, \sigmagg \bK)$ for each replication of the analysis.  We argue that this is somewhat misleading from the perspective of understanding the statistical properties of the method. Averaging over situations in which the environmental confounding is constantly changing direction and magnitude ``washes out'' bias in $\hat{\bbeta}$ while inflating the variance. To see why this is the case, consider the low-dimensional ordinary least squares (OLS) estimates of $\bbeta$ based on model \eqref{eqn:lmm_reg} where, without loss of generatlity, we assume $\mu = 0$ for ease of notation: \anna{intercept stuff would get messy here... does this work?}
+In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_reg}, a common practice \citep{Rakitsch2012, bhatnagar2019simultaneous} is to draw a new value of the quantity $\bX\bgamma$ from a $N(\boldsymbol{0}, \sigmagg \bK)$ for each replication of the analysis.  We argue that this is somewhat misleading from the perspective of understanding the statistical properties of the method. Averaging over situations in which the environmental confounding is constantly changing direction and magnitude ``washes out'' bias in $\hat{\bbeta}$ while inflating the variance. To see why this is the case, consider the low-dimensional ordinary least squares (OLS) estimates of $\bbeta$ based on model \eqref{eqn:lmm_reg} where, without loss of generatlity, we assume $\mu = 0$ for ease of notation: 
 \begin{align*}
     \mathbb{E}(\hat{\bbeta}) &= (\bX^T \bX)^{-1} \bX^T \mathbb{E}(\by)\\
     &=  (\bX^T \bX)^{-1} \bX^T \mathbb{E}(\bX\bbeta + \bX\bgamma + \beps)\\
@@ -256,8 +256,7 @@ For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s i
 
  Our initial hypothesis was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that are nonlinear in nature and as such do not lend themselves to such an approximation. To that end we investigated two forms of environmental effect magnitudes: (1) exponential, and (2) dichotomous. \anna{more details?} In addition to the magnitudes of effects, we also considered whether individuals in genetically similar subpopulations would experience similar environmental effects. For example, a geographic environmental exposure such as the air quality described in our motivating example is likely to be similar among genetically related individuals due to concordance between genetic clusters and geography. However, behavior-based environmental exposures may be less likely to be shared by subpopulations which are genetically and geographically similar. \anna{another citation?} As an example, \citep{ng2014smoking} found considerable within-region variation in smoking rates in Africa, Asia, and South America.
 
- \anna{CONCORDANT/DISCORDANT... synchronous/asynchronous}
- To evaluate the performance of penalized LMM methods in both scenarios, we consider exponential and dichotomous effect magnitudes with are (1) \anna{homogeneous/cis}, or (2) \anna{heterogeneous/trans} in nature for a total of four distinct $\bgamma$ structures. We define \anna{homogenous/cis} effects as those that are similar among genetically similar subpopulations, and \anna{heterogeneous/trans} effects as those that are not. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \anna{is this still unclear? Would a PCA picture help?}
+ To evaluate the performance of penalized LMM methods in both scenarios, we consider exponential and dichotomous effect magnitudes with are (1) concordant, or (2) discordant in nature for a total of four distinct $\bgamma$ structures. We define concordant effects as those that are similar among genetically similar subpopulations, and discordant effects as those that are not. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \anna{is this still unclear? Would a PCA picture help?}
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.9]{figures/gamma_structure.png}
@@ -284,7 +283,7 @@ We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level o
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 1.1]{figures/beta_mse.png}
-    \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with coarse subpopulation structure and dichotomous-\anna{heterogeneous/trans} environmental effects.}
+    \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with coarse subpopulation structure and dichotomous-discordant environmental effects.}
     \label{fig:mse}
 \end{figure}
 
@@ -303,7 +302,7 @@ with the y-axis displaying the difference in MSE (PC-Lasso - LMM-Lasso) for each
     \centering
     % \includegraphics[scale = 0.9]{figures/mse_diff_subpops}
      \includegraphics[scale = 0.9]{figures/mse_diff_subpops.png}
-    \caption{Relative performance of LMM-Lasso, PC-Lasso for fine and coarse subpopulation structures and varying levels of environmental confounding with independent subpopulation data, $\eta = 0.5$, and dichotomous-\anna{heterogeneous/trans} environmental effects.}
+    \caption{Relative performance of LMM-Lasso, PC-Lasso for fine and coarse subpopulation structures and varying levels of environmental confounding with independent subpopulation data, $\eta = 0.5$, and dichotomous-discordant environmental effects.}
     \label{fig:big_vs_small}
 \end{figure}
 
@@ -335,7 +334,7 @@ LMM-Lasso-Rakitsch estimates the variance components once, under the assumption 
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 1]{figures/eta_beta_hat.png}
-     \caption{$\bbeta$ and $\eta$ estimation accuracy of LMM-Lasso-Rakitsch and LMM-Lasso-ggmix for varying $\eta$ levels and sample sizes with independent subpopulation data, coarse subpopulation structure, $\xi = 0.8$, and dichotomous-\anna{heterogeneous/trans} environmental effect structure.}
+     \caption{$\bbeta$ and $\eta$ estimation accuracy of LMM-Lasso-Rakitsch and LMM-Lasso-ggmix for varying $\eta$ levels and sample sizes with independent subpopulation data, coarse subpopulation structure, $\xi = 0.8$, and dichotomous-discordant environmental effect structure.}
     \label{fig:eta_beta_mse}
 \end{figure}
 
@@ -343,7 +342,7 @@ LMM-Lasso-Rakitsch estimates the variance components once, under the assumption 
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.8]{figures/time_ratio.png}
-    \caption{Computing time of LMM-Lasso-Rakitsch compared with that of LMM-Lasso-ggmix for varying sample sizes with independent subpopulation structure, coarse subpopulation structure, $\eta = 0.5$, $\xi = 0.8$, and dichotomous-\anna{heterogeneous/trans} environmental effect structure.}
+    \caption{Computing time of LMM-Lasso-Rakitsch compared with that of LMM-Lasso-ggmix for varying sample sizes with independent subpopulation structure, coarse subpopulation structure, $\eta = 0.5$, $\xi = 0.8$, and dichotomous-discordant environmental effect structure.}
     \label{fig:time}
 \end{figure}
 
