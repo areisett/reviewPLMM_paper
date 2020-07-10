@@ -114,10 +114,12 @@ In section \ref{sec:results}, we compare the performance of PC-Lasso and LMM-Las
 %------------------------------%
 \subsection{Model}
 
+\anna{We show this in the absence of fixed covariates for the sake of a clear illustration.. $\bX_0 \bbeta_0$ unpenalized things}
+
 To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$. We denote the normalized version of this genotype matrix as $\bX$, where each $X_{ij} = (G_{ij} - 2 p_j) / \sqrt{p_j (1 - p_j)}$ and $p_j$ is the minor allele frequency (MAF) of SNP $j$ \citep{zhang2015principal, price2006principal}. We assume that an $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of additive SNP effects, environmental confounding, and observational noise and consider the linear mixed model,
 \begin{equation}
     \label{eqn:model}
-    \by = \Int + \bX\bbeta + \bZ\bgamma + \beps
+    \by = \text{\anna{unpenalized stuff}} + \bX\bbeta + \bZ\bgamma + \beps
 \end{equation}
 where $\Int$ is the intercept, $\bbeta$ is a $p \times 1$ vector of SNP effects, $\bgamma$ is a $q \times 1$ vector of environmental effects, $\bZ$ is an $n \times q$ matrix that allocates environmental effects, and $\beps \sim N(\boldsymbol{0}, \sigmaee \bI_n)$. Often it is assumed that subjects belong to $q \le p$ subpopulations, and $\bZ$ is a corresponding incidence matrix of 0s and 1s. However, as we will discuss, this is not the only possibility.
 
@@ -149,6 +151,10 @@ where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j
 
 %------------------------------%
 \subsection{LMM-Lasso}
+
+\anna{We show this in the absence of fixed covariates for the sake of a clear illustration.. $\bX_0 \bbeta_0$ unpenalized things}
+
+
 LMM-Lasso models $\bZ\bgamma$ as a random effect assuming 
 $$\bgamma \sim N\left(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p \right).$$  Typically, $\bZ$ is not observed directly, and a common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}.This results in the LMM regression model
 \begin{equation}
@@ -185,6 +191,8 @@ Q(\bbeta | \bXT, \byT, \bW) = || \bW (\byT - \bXT \bbeta)||_2^2 + \lambda || \bb
 \end{equation}
 An advantage to modeling unobserved confounding using a random effect, as opposed to fixed effects as in PC-Lasso, is that this requires the estimation of only $p + 3$ parameters. 
 
+\anna{In the presence of unpenalized covariates to adjust for like age and sex... equations 7 and 8 and X-tilde become this... penalty term only penalizes beta1 - betas corresponding to SNPs}
+
 
 %------------------------------%
 \subsubsection{LMM-Lasso variants}
@@ -202,6 +210,8 @@ We have so far used the term $\bW$ to describe the general LMM-Lasso method. How
 It has been shown that the random effect formulation of model \eqref{eqn:model} used by LMM-Lasso can be equivalently expressed in terms of fixed effects. \citep{zhang2015principal} derived this equivalence using a probabilistic PCA formulation, while \citep{hoffman2013correcting} used the singular value decomposition of $\bX$, and the decomposition of $\bK$ shown in equation \eqref{eqn:k}. 
 
 Thus, whether modeled as a fixed or random effect, the underlying effect of $\bZ \bgamma$ on phenotype remains the same, but its treatment as a fixed or random effect has important implications in terms of model fitting and estimation. Including principal components as fixed effects requires estimation of a greater number of parameters, which may result in a loss of power \citep{zhang2015principal}. Additionally, determining the appropriate number of principal components to adjust for is non-trivial, and has been the subject of numerous studies \citep{patterson2006population, zhao2018practical}. It has been shown that including too many or too few principal components can result in power loss or increased Type I errors, respectively \citep{zhang2015principal}. Nevertheless, a common practice is to include the ten largest principal components in the analysis \citep{zhao2018practical}, so this is the way we implement PC-Lasso throughout Section~\ref{sec:results}.
+
+\anna{put derivation comparing lmmlasso and pclasso back}
 
 
 %------------------------------%
