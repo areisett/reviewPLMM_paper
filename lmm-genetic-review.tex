@@ -19,14 +19,14 @@
 \usetikzlibrary{arrows}
 \providecommand{\pb}[1]{\textcolor{red}{#1}}
 \providecommand{\anna}[1]{\textcolor{blue}{#1}}
-\newcommand{\bbeta}{\boldsymbol{\beta}}
+\newcommand{\bbeta}[1][]{\boldsymbol{\beta}{#1}}
 \newcommand{\bbetaT}{\widetilde{\boldsymbol{\beta}}}
-\newcommand{\bbetaHat}{\widehat{\boldsymbol{\beta}}}
+\newcommand{\bbetaHat}[1][]{\widehat{\boldsymbol{\beta}{#1}}}
 \newcommand{\bgamma}{\boldsymbol{\gamma}}
-\newcommand{\beps}{\boldsymbol{\varepsilon}}
-\newcommand{\bepsT}{\widetilde{\boldsymbol{\varepsilon}}}
-\newcommand{\bX}{\textbf{X}}
-\newcommand{\bXT}{\widetilde{\textbf{X}}}
+\newcommand{\beps}[1][]{\boldsymbol{\varepsilon}{#1}}
+\newcommand{\bepsT}[1][]{\widetilde{\boldsymbol{\varepsilon}{#1}}}
+\newcommand{\bX}[1][]{\textbf{X}#1}
+\newcommand{\bXT}[1][]{\widetilde{\textbf{X}{#1}}}
 \newcommand{\bZ}{\textbf{Z}}
 \newcommand{\bZT}{\widetilde{\textbf{Z}}}
 \newcommand{\by}{\textbf{y}}
@@ -41,7 +41,7 @@
 \newcommand{\bW}{\textbf{W}} 
 \newcommand{\sigmaee}{\sigma^2_e}
 \newcommand{\sigmagg}{\sigma^2_g}
-\newcommand{\Int}{\mu \textbf{1}}
+\newcommand{\T}{\text{T}}
 
 \title{Review Paper Draft}
 \author{Anna Reisetter}
