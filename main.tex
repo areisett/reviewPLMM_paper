@@ -297,8 +297,6 @@ We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level o
     \label{fig:mse}
 \end{figure}
 
-\pb{Just FYI, it's hard to tell bias and var apart in black and white} \anna{will fix this, greek letters, labels}
-
 %------------------------------%
 \subsection{LMM-Lasso outperforms PC-Lasso in the presence of fine subpopulation structure}
 %------------------------------%
@@ -343,6 +341,7 @@ LMM-Lasso-Rakitsch estimates the variance components once, under the assumption 
      \caption{$\bbeta$ and $\eta$ estimation accuracy of LMM-Lasso-Rakitsch and LMM-Lasso-ggmix for varying $\eta$ levels and sample sizes with independent subpopulation data, coarse subpopulation structure, $\xi = 0.8$, and dichotomous-discordant environmental effect structure.}
     \label{fig:eta_beta_mse}
 \end{figure}
+\anna{beta-hat and eta-hat seems like a bug with ggplot2 update (?) - checking on this}
 
 
 \begin{figure}[H]
@@ -351,9 +350,18 @@ LMM-Lasso-Rakitsch estimates the variance components once, under the assumption 
     \caption{Computing time of LMM-Lasso-Rakitsch compared with that of LMM-Lasso-ggmix for varying sample sizes with independent subpopulation structure, coarse subpopulation structure, $\eta = 0.5$, $\xi = 0.8$, and dichotomous-discordant environmental effect structure.}
     \label{fig:time}
 \end{figure}
+\anna{Note figure \ref{fig:time} is on raw scale, not log10. This is because the negative values on the error bars create problems and become NaN on the log10 scale}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.8]{figures/time_ratio_box.png}
+    \caption{\anna{Alternate time fig} Computing time of LMM-Lasso-Rakitsch compared with that of LMM-Lasso-ggmix for varying sample sizes with independent subpopulation structure, coarse subpopulation structure, $\eta = 0.5$, $\xi = 0.8$, and dichotomous-discordant environmental effect structure.}
+    \label{fig:time_box}
+\end{figure}
 
 
-In addition, we have found that LMM-Lasso-ggmix performs poorly in a low-dimensional setting due to the ill-conditioning of the RRM. Given its intended use for the analysis of high-dimensional data, this fact could be of little consequence to practitioners. However, although its estimation accuracy in high dimensions is on par with that of LMM-Lasso-Rakitsch, as shown in figure \ref{fig:eta_beta_mse}, this is also a setting in which the computational time required may be prohibitive for practical applications. Figure \ref{fig:time} shows the ratio of computing time required for LMM-Lasso-ggmix compared to that of LMM-Lasso-Rakitsch, for various sample sizes. The horizontal dashed line at 1 indicates both methods require the same computing time. Despite its comparable performance in accurately estimating $\hat{\bbeta}$, LMM-Lasso-ggmix takes requires as much as 75 times the computing time of LMM-Lasso-Rakitsch. Thus, LMM-Lasso-Rakitsch seems to be a more attractive and scalable method than LMM-Lasso-ggmix.
+
+In addition, we have found that LMM-Lasso-ggmix performs poorly in a low-dimensional setting due to the ill-conditioning of the RRM. Given its intended use for the analysis of high-dimensional data, this fact could be of little consequence to practitioners. However, although its estimation accuracy in high dimensions is on par with that of LMM-Lasso-Rakitsch, as shown in figure \ref{fig:eta_beta_mse}, this is also a setting in which the computational time required may be prohibitive for practical applications. Figure \ref{fig:time} shows the ratio of computing time required for LMM-Lasso-ggmix compared to that of LMM-Lasso-Rakitsch, for various sample sizes. The horizontal dashed line at 1 indicates both methods require the same computing time. Despite its comparable performance in accurately estimating $\hat{\bbeta}$, LMM-Lasso-ggmix takes requires an average of \anna{73.4} times the computing time of LMM-Lasso-Rakitsch. Thus, LMM-Lasso-Rakitsch seems to be a more attractive and scalable method than LMM-Lasso-ggmix.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -369,7 +377,7 @@ We have detailed the assumptions made by PC-Lasso and LMM-Lasso, which model con
 
 Unsurprisingly, we find that PC-Lasso and LMM-Lasso outperform the naive lasso whenever environmental confounding effects are present. However, in the absence of such effects, PC-Lasso may hinder estimation accuracy and perform more poorly than even the naive lasso. This is due to the fact that the principal components are unpenalized and thus included in the final model, even when they do more harm than good in explaining phenotypic variability. Additionally, we find that LMM-Lasso outperforms PC-Lasso when (1) fine subpopulation structure is present and (2) when confounding effects are nonlinear and discordant in nature. In the presence of coarse subpopulation structure which corresponds to concordant, dichotomous environmental effects, PC-Lasso may outperform LMM-Lasso in estimation accuracy. However, LMM-Lasso is more robust to subpopulation structure as well as nonlinear and discordant environmental effects. Therefore, LMM-Lasso is a more robust method for practitioners seeking to obtain unbiased estimates when the exact nature of the population structure and corresponding environmental heterogeneity are unknown.  
 
-Finally, we considered two implementations of the LMM-Lasso method: LMM-Lasso-Rakitsch and LMM-Lasso-ggmix, which differ in their variance estimation procedures and computational implementations. Although we found that both methods perform similarly in terms of $\bbeta$ estimation accuracy, LMM-Lasso-ggmix has several drawbacks. Firstly, it suffers from instability in low dimensions. Secondly, although LMM-Lasso-Rakitsch and LMM-Lasso-ggmix perform comparably in high dimensions, LMM-Lasso-ggmix requires as much as \anna{75 - check} times the computing time of LMM-Lasso-Rakitsch due to its iterative estimation procedure. Thirdly, while the additional time required of LMM-Lasso-ggmix may be worthwhile if it yielded more accurate estimates of $\eta$, or narrow-sense heritability, we have been unable to identify a scenario where its narrow-sense heritability estimates are greatly superior to those of LMM-Lasso-Rakitsch. We have implemented the LMM-Lasso-Rakitsch method using the equivalent, but more interpretable, $\eta$ paramaterization in the \texttt{R} package, \texttt{penalizedLMM (final name tbd)}, available on the author's github page: \url{https://github.com/areisett/penalizedLMM}.
+Finally, we considered two implementations of the LMM-Lasso method: LMM-Lasso-Rakitsch and LMM-Lasso-ggmix, which differ in their variance estimation procedures and computational implementations. Although we found that both methods perform similarly in terms of $\bbeta$ estimation accuracy, LMM-Lasso-ggmix has several drawbacks. Firstly, it suffers from instability in low dimensions. Secondly, although LMM-Lasso-Rakitsch and LMM-Lasso-ggmix perform comparably in high dimensions, LMM-Lasso-ggmix requires an average of 73.4 and as much as 167.57 \anna{73.4 is the mean ratio + sd, but the max absolute ratio is 167.57 - which should I report?} times the computing time of LMM-Lasso-Rakitsch due to its iterative estimation procedure. Thirdly, while the additional time required of LMM-Lasso-ggmix may be worthwhile if it yielded more accurate estimates of $\eta$, or narrow-sense heritability, we have been unable to identify a scenario where its narrow-sense heritability estimates are greatly superior to those of LMM-Lasso-Rakitsch. We have implemented the LMM-Lasso-Rakitsch method using the equivalent, but more interpretable, $\eta$ paramaterization in the \texttt{R} package, \texttt{penalizedLMM (final name tbd)}, available on the author's github page: \url{https://github.com/areisett/penalizedLMM}.
 
 \pb{Introduce penalizedLMM here, or in next paper?}
 
