@@ -125,14 +125,14 @@ Although several studies have shown that LMMs outperform PC-adjustment methods i
 %------------------------------%
 \subsection{Model}
 
-To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$. We denote the normalized version of this genotype matrix as $\bX$, where each $X_{ij} = (G_{ij} - 2 p_j) / \sqrt{p_j (1 - p_j)}$ and $p_j$ is the minor allele frequency (MAF) of SNP $j$ \citep{zhang2015principal, price2006principal}. Additionally, we allow $\bX_0$ to represent an $n \times p_0$ matrix of unpenalized covariates. At a minimum, $\bX_0$ will be an $n \times 1$ vector of 1s to represent the intercept, in which case $\bbeta_0 \equiv \beta_0$ is the scalar intercept. However, $\bX_0$ may additionally include covariates, such as age and sex, which are of interest to include in the model without penalty. We assume that an $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of unpenalized covariates, additive SNP effects, environmental confounding, and observational noise and consider the linear mixed model,
+To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$. We denote the normalized version of this genotype matrix as $\bX$, where each $X_{ij} = (G_{ij} - 2 p_j) / \sqrt{p_j (1 - p_j)}$ and $p_j$ is the minor allele frequency (MAF) of SNP $j$ \citep{zhang2015principal, price2006principal}. Additionally, $\bX_0$ represents an $n \times p_0$ matrix of unpenalized covariates and the intercept. Thus, at a minimum, $\bX_0$ will be an $n \times 1$ vector of 1s to represent the intercept, in which case $\bbeta_0 \equiv \beta_0$ is the scalar intercept. However, $\bX_0$ may additionally include covariates such as age and sex, which are of interest to include in the model without penalty. We assume that the $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of these covariates, additive SNP effects, environmental effects, and observational noise, and consider the linear mixed model,
 \begin{equation}
     \label{eqn:model}
     \by = \bX_0 \bbeta_0 + \bX\bbeta + \bZ\bgamma + \beps
 \end{equation}
 where $\bbeta_0$ is a $p_0 \times 1$ vector which includes the intercept term and the effects of any unpenalized covariates, $\bbeta$ is a $p \times 1$ vector of SNP effects, $\bgamma$ is a $q \times 1$ vector of environmental effects, $\bZ$ is an $n \times q$ matrix that allocates environmental effects among subjects, and $\beps \sim N(\boldsymbol{0}, \sigmaee \bI_n)$. Often it is assumed that subjects belong to $q \le p$ subpopulations, and $\bZ$ is a corresponding incidence matrix of 0s and 1s. However, as we will discuss, this is not the only possibility.
 
-LMM-Lasso relies on matrix decompositions of $\bX$ and the realized relationship matrix (RRM), $\bK$, which describes the pair-wise genetic similarity among subjects \citep{hayes2009increased}. Using the singular value decomposition (SVD) of the normalized genotype matrix, we can derive the spectral decomposition of the RRM: 
+LMM-Lasso relies on matrix decompositions of $\bX$ and the realized relationship matrix (RRM), $\bK = p^{-1} \bX \bX^\T$, which describes the pair-wise genetic similarity among subjects \citep{hayes2009increased}. Using the singular value decomposition (SVD) of the standardized genotype matrix, we can derive the spectral decomposition of the RRM: 
 
 \begin{align}
     \label{eqn:k}
@@ -141,11 +141,11 @@ LMM-Lasso relies on matrix decompositions of $\bX$ and the realized relationship
                    &= \frac{1}{p} \bU \bD (\bU \bD)^\T \nonumber \\
                    &\propto \bR \bR^\T,
 \end{align}
-where $\bD^2$ is an $n \times n$ diagonal matrix containing the $k$ nonzero eigenvalues of $\bK$ (equivalently, the $k$ nonzero squared singular values of $\bX$) on the top-left diagonal, followed by $n - k$ zeroes on the bottom-right diagonal, and $\bU$ is the corresponding $n \times n$ orthonormal matrix of the left eigenvectors of $\bK$ (equivalently, the left singular vectors of $\bX$.) The first $k$ columns of $\bU$ correspond to the nonzero eigenvalues of $\bK$ (squared singular values of $\bX$.) The columns of $\bR$ are therefore proportional to the principal components of $\bX$ or $\bK$. 
+where $\bD^2$ is an $n \times n$ diagonal matrix containing the $k$ nonzero eigenvalues of $\bK$ (equivalently, the $k$ nonzero squared singular values of $\bX$) on the top-left diagonal, followed by $n - k$ zeroes on the bottom-right diagonal, and $\bU$ is the corresponding $n \times n$ orthonormal matrix of the left eigenvectors of $\bK$ (equivalently, the left singular vectors of $\bX$.) The first $k$ columns of $\bU$ correspond to the nonzero eigenvalues of $\bK$ (squared singular values of $\bX$.) The columns of $\bR$ are therefore proportional to the principal components of $\bK$. 
 
 %------------------------------%
 \subsection{PC-Lasso}
-PC-Lasso uses the first $k$ principal components of $\bX$ to approximate $\bZ\bgamma$ and includes them in the model as unpenalized covariates. It has been shown \citep{hoffman2013correcting} that this corresponds to the regression model
+PC-Lasso uses the first $k$ principal components of $\bK$ to approximate $\bZ\bgamma$ and includes them in the model as unpenalized covariates. It has been shown \citep{hoffman2013correcting} that this corresponds to the regression model
 \begin{equation}
     \label{eqn:pca_reg}
     \by = \bX_0\bbeta_0 + \bX\bbeta + \bU_{1:k}\boldsymbol{\alpha} + \beps 
@@ -160,25 +160,26 @@ where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j
 %------------------------------%
 \subsection{LMM-Lasso}
 
-LMM-Lasso models $\bZ\bgamma$ as a random effect assuming 
-$$\bgamma \sim N\left(\boldsymbol{0}, \frac{\sigmagg}{p} \bI_p \right).$$  Typically, $\bZ$ is not observed directly, and a common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}.This results in the LMM regression model
+Conversely, LMM-Lasso models $\bZ\bgamma$ as a random effect assuming $\bgamma \sim N\left(\boldsymbol{0}, p^{-1} \sigmagg \bI_p \right).$  Typically, $\bZ$ is not observed directly, and a common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}. This results in the LMM regression model
 \begin{equation}
     \label{eqn:lmm_reg}
     \by = \bX_0\bbeta_0 + \bX\bbeta + \bX\bgamma+ \beps,
 \end{equation}
-where we assume $\beps \independent \bX\bgamma$. Rather than assuming anything about $\bgamma$ directly, an equivalent representation lets $\bu=\bX\bgamma$ such that $\bu \sim N(\boldsymbol{0}, \sigmagg \bK)$, and yields the equivalent model
+where we assume $\beps \independent \bX\bgamma$. Rather than assuming anything about $\bgamma$ directly, an equivalent representation paramaterizes the model in terms of $\bu=\bX\bgamma$ where $\bu \sim N(\boldsymbol{0}, \sigmagg \bK)$, and yields the equivalent model
 \begin{equation}
     \label{eqn:lmm_reg_u}
     \by = \bX_0\bbeta_0 + \bX\bbeta + \bu + \beps.
 \end{equation}
-We will show LMM-Lasso derivations in the absence of unpenalized covariates for the sake of a clear illustration.
+We will first derive the LMM-Lasso objective function in the absence of unpenalized covariates for the sake of notational simplicity.
 
-In the absence of unpenalized covariates, the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso performs a weighted rotation of the original data, left-multiplying by $\bV^{-1/2}$ in a manner akin to generalized least squares to diagonalize the error term such that
+Following equations \eqref{eqn:lmm_reg} and \eqref{eqn:lmm_reg_u}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso uses \anna{an estimate of} the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generlized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
+
 \begin{equation}
 \label{eqn:rtY_distn}
-\bV^{-\frac{1}{2}}\by \sim N(\bV^{-\frac{1}{2}} \bX \bbeta, \bI).
+\bV^{-\frac{1}{2}}\by \sim N(\bV^{-\frac{1}{2}} \bX \bbeta, \bI)
 \end{equation}
-\anna{...however, as Karl Rohe paper shows, GLS does not completely translate to penalized regression...comment on this?}
+and a regular \anna{vanilla, naive, regular?} Lasso model can be fit on the transformed data, ($\bV^{-\frac{1}{2}}\bX, \bV^{-\frac{1}{2}}\by$). \anna{...however, as Karl Rohe paper shows, GLS does not completely translate to penalized regression...comment on this?}
+
 Using the spectral decomposition of $\bK$ described in equation \eqref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorization 
 \begin{align*}
     \bV^{-1} &= (\sigmagg \bK + \sigmaee \bI)^{-1}\\
@@ -200,7 +201,7 @@ where $\bX{^\prime} = \begin{bmatrix} \bX_0 & \bX \end{bmatrix}$ and $\bbeta{^\p
 \begin{equation}
 Q(\bbeta | \bX{^\prime}, \byT, \bW) = || \bW (\byT - \bXT{^\prime} \bbeta{^\prime})||_2^2 + \lambda || \bbeta ||_1
 \end{equation}
-where $\bXT{^\prime} = \bU^\T \bX{^\prime}$, and only the elements of $\bbeta{^\prime}$ corresponing to SNPs are penalized. 
+where $\bXT{^\prime} = \bU^\T \bX{^\prime}$, so that all of the data are transformed, but only the elements of $\bbeta{^\prime}$ corresponing to SNPs are penalized. 
 
 %------------------------------%
 \subsubsection{LMM-Lasso variants}
@@ -215,30 +216,27 @@ We have so far used the term $\bW$ to describe the general LMM-Lasso method. How
 %------------------------------%
 \subsection{Relationship between PC-Lasso and LMM-Lasso}
 
-It has been shown that the random effect formulation of model \eqref{eqn:model} used by LMM-Lasso can be equivalently expressed in terms of fixed effects. \citep{zhang2015principal} derived this equivalence using a probabilistic PCA formulation, while \citep{hoffman2013correcting} used the singular value decomposition of $\bX$, and the decomposition of $\bK$ shown in equation \eqref{eqn:k}. 
+It has been shown that the random effect formulation of model \eqref{eqn:model} used by LMM-Lasso can be equivalently expressed in terms of fixed effects. \citep{zhang2015principal} derived this equivalence using a probabilistic PCA formulation, while \citep{hoffman2013correcting} used the singular value decomposition of $\bX$, and the decomposition of $\bK$ \anna{which we briefly review here...}
 
-Thus, whether modeled as a fixed or random effect, the underlying effect of $\bZ \bgamma$ on phenotype remains the same, but its treatment as a fixed or random effect has important implications in terms of model fitting and estimation. Modeling unobserved confounding using fixed effects requires estimation of $p_0 + p + k$ parameters, compared to the $p_0 + p + 2$ required of an LMM. This may result in a loss of power \citep{zhang2015principal}. Additionally, determining the appropriate number of principal components to adjust for is non-trivial, and has been the subject of numerous studies \citep{patterson2006population, zhao2018practical}. It has been shown that including too many or too few principal components can result in power loss or increased Type I errors, respectively \citep{zhang2015principal}. Nevertheless, a common practice is to include the ten largest principal components in the analysis \citep{zhao2018practical}. This is the implementation of PC-Lasso throughout Section \ref{sec:results}.
+Thus, whether modeled as a fixed or random effect, the underlying effect of $\bZ \bgamma$ on phenotype remains the same, but its treatment as a fixed or random effect has important implications in terms of model fitting and estimation. Modeling unobserved confounding using fixed effects requires estimation of $p_0 + p + k$ parameters, compared to the $p_0 + p + 2$ required of an LMM, which may result in a loss of power \citep{zhang2015principal}. Additionally, when modeling $\bZ \bgamma$ using fixed effects, determining the appropriate number of principal components to adjust for is non-trivial, and has been the subject of numerous studies \citep{patterson2006population, zhao2018practical}. It has been shown that including too many or too few principal components can result in power loss or increased Type I errors, respectively \citep{zhang2015principal}. Nevertheless, a common practice is to include the ten largest principal components in the analysis \citep{zhao2018practical}. This is the implementation of PC-Lasso throughout Section \ref{sec:results}.
 
-\anna{put derivation comparing lmmlasso and pclasso back}
 
 
 %------------------------------%
 \subsection{Simulating environmental confounding}
 
-In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_reg}, a common practice \citep{Rakitsch2012, bhatnagar2019simultaneous} is to draw a new value of the quantity $\bX\bgamma$ from a $N(\boldsymbol{0}, \sigmagg \bK)$ for each replication of the analysis.  We argue that this is somewhat misleading from the perspective of understanding the statistical properties of the method. Averaging over situations in which the environmental confounding is constantly changing direction and magnitude ``washes out'' bias in $\hat{\bbeta}$ while inflating the variance. To see why this is the case, consider the low-dimensional ordinary least squares (OLS) estimates of $\bbeta$ based on model \eqref{eqn:lmm_reg} where, without loss of generatlity, we assume $\bX_0 \bbeta_0 = \boldsymbol{0}$ for ease of notation: 
-\begin{align*}
-    \mathbb{E}(\hat{\bbeta}) &= (\bX^\T \bX)^{-1} \bX^\T \mathbb{E}(\by)\\
-    &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{E}(\bX\bbeta + \bX\bgamma + \beps)\\
-    &\quad\\
-    \mathbb{V}(\hat{\bbeta}) &= (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\by)\\
-    &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\bX\bbeta + \bX\bgamma + \beps)\\
-    &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\bX\bgamma + \beps) \bX  (\bX^\T \bX)^{-1}.
-\end{align*}
-The assumption that environmental effects follow a random distribution, $\bgamma \sim N(\boldsymbol{0}, \sigmagg / p \bI_p)$, yields $\mathbb{E}(\bbetaHat) = \bbeta$, and $\mathbb{V}(\bbetaHat) = \sigmagg/p \bI + \sigmaee (\bX^\T \bX)^{-1}$. Returning to our earlier example involving confounding due to air quality, randomly drawing a new value of $\bX\bgamma$ for each replication would mean that subpopulation A may be exposed to good air quality in one replication, and bad air quality in the next. Reporting the average across these situations is inconsistent with the question we are truly interested in, namely: what would happen if we took repeated samples from fixed populations A and B? Those repeated samples would show a systematic bias due to the difference in air quality, but this is masked if we generate new values of $\bX\bgamma$ with each replication. Considering $\bgamma$ as a fixed quantity is more consistent with the usual meaning of environmental confounding. Specifically, in the low-dimensional OLS setting, under the assumption that the quantity $\bgamma$ is fixed, $\mathbb{E}(\bbetaHat) = \bbeta + \bgamma, \mathbb{V}(\bbetaHat) = \sigmaee (\bX^\T \bX)^{-1}$, which allows us to quantify bias in our estimates. 
+In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_reg}, a common practice \citep{Rakitsch2012, bhatnagar2019simultaneous} is to draw a new value of the quantity $\bX\bgamma$ from a $N(\boldsymbol{0}, \sigmagg \bK)$ for each replication of the analysis.  We argue that this is somewhat misleading from the perspective of understanding the statistical properties of the method. Averaging over situations in which the environmental confounding is constantly changing direction and magnitude is inconsistent with the confounding environmental effects. This has the effect of ``washing out'' bias in $\hat{\bbeta}$, which is of interest, while inflating the variance. To illustrate this concept, consider the low-dimensional ordinary least squares (OLS) estimates of $\bbeta$ based on model \eqref{eqn:lmm_reg} where, without loss of generatlity, we assume $\bX_0 \bbeta_0 = \boldsymbol{0}$ for ease of notation: 
+\begin{align}
+    \mathbb{E}(\bbetaHat) &= (\bX^\T \bX)^{-1} \bX^\T \mathbb{E}(\by) \notag \\
+    &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{E}(\bX\bbeta + \bX\bgamma + \beps) \label{eqn:expectation}\\
+    &\quad \notag\\
+    \mathbb{V}(\bbetaHat) &= (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\by) \notag\\
+    &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\bX\bbeta + \bX\bgamma + \beps) \notag\\
+    &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\bX\bgamma + \beps) \bX  (\bX^\T \bX)^{-1} \label{eqn:variance}.
+\end{align}
+Under the assumption that environmental effects arise from a random process, $\bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmagg I_p)$, equations \eqref{eqn:expectation} and \eqref{eqn:variance} yield $\mathbb{E}(\bbetaHat) = \bbeta$, and $\mathbb{V}(\bbetaHat) = p^{-1}\sigmagg\bI + \sigmaee (\bX^\T \bX)^{-1}$, respectively. Consider our earlier example involving confounding due to air quality. Simulating $\bgamma$ as a random quantity for each replication corresponds to subpopulation A being exposed to good air quality in one replication, and bad air quality in the next. Reporting the average across these situations is inconsistent with the question we are truly interested in, namely: what would happen if we took repeated samples from populations A and B, when these populations are subject to different environmental exposures? Those repeated samples would show a systematic bias due to the difference in air quality, but this is masked if $\bgamma$ is assumed to be random. Treating $\bgamma$ as a fixed quantity so that environmental effects are consistent across replications more closely approximates environmental confounding. Under the assumption that the quantity $\bgamma$ is fixed, equations \eqref{eqn:expectation} and \eqref{eqn:variance} yield $\mathbb{E}(\bbetaHat) = \bbeta + \bgamma, \mathbb{V}(\bbetaHat) = \sigmaee (\bX^\T \bX)^{-1}$, allowing us to quantify estimation bias due to environmental heterogeneity. 
 
-Although we derive these quantities under model \eqref{eqn:lmm_reg}, where $\bZ = \bX$, these results also hold for the more general model \eqref{eqn:model}, where $\bZ \ne \bX$. We see this by decomposing $\bZ \bgamma$ into components in and orthogonal to the column space of the projection matrix of $\bX$. 
-
-Define the projection matrix of $\bX$ by $\boldsymbol{P}_{\bX} = \bX (\bX^\T \bX)^{-1} \bX^\T$, and let $\mathcal{C}(\boldsymbol{P}_{\bX})$ and $\mathcal{N}(\boldsymbol{P}_{\bX})$ denote the column and null spaces of $\boldsymbol{P}_{\bX}$, respectively. Then, $\exists \boldsymbol{\tau, \psi}: \bZ \bgamma = \bX \boldsymbol{\tau + \psi}$ , $\boldsymbol{\tau} \in \mathcal{C}(\boldsymbol{P}_{\bX})$, and $\boldsymbol{\psi} \in \mathcal{N}(\boldsymbol{P}_{\bX})$ such that
+Although we derive these quantities under model \eqref{eqn:lmm_reg}, where $\bZ = \bX$, these results also hold for the more general model \eqref{eqn:model}, where $\bZ \ne \bX$. We see this by decomposing $\bZ \bgamma$ into components in and orthogonal to the column space of the projection matrix of $\bX$. Define the projection matrix of $\bX$ by $\boldsymbol{P}_{\bX} = \bX (\bX^\T \bX)^{-1} \bX^\T$, and let $\mathcal{C}(\boldsymbol{P}_{\bX})$ and $\mathcal{N}(\boldsymbol{P}_{\bX})$ denote the column and null spaces of $\boldsymbol{P}_{\bX}$, respectively. Then, $\exists \boldsymbol{\tau, \psi}: \bZ \bgamma = \bX \boldsymbol{\tau + \psi}$ , $\boldsymbol{\tau} \in \mathcal{C}(\boldsymbol{P}_{\bX})$, and $\boldsymbol{\psi} \in \mathcal{N}(\boldsymbol{P}_{\bX})$ such that
 \begin{align*}
     \by &= \bX\bbeta + \bZ\bgamma + \beps\\
     &= \bX\bbeta + \bX \boldsymbol{\tau} + \boldsymbol{\psi} + \beps\\
@@ -251,30 +249,36 @@ where $\boldsymbol{\tau}$ quantifies bias in the estimated $\bbetaHat{^\prime}$ 
 %------------------------------%
 \subsubsection{Pseudophenotype generation}
 
-Given the nature of environmental confounding in our setting of interest, and in order to assess these methodological performance in terms of estimation accuracy and bias specifically, we simulate according to a fixed $\bgamma$ framework and using the following data-generating model
+Given the nature of environmental confounding in our setting of interest, and in order to assess these methodological performance in terms of estimation accuracy and bias specifically, we simulate according to a fixed $\bgamma$ framework using the following data-generating model
 \begin{equation}
     \label{eqn:sim}
     \by = a \bX \bbeta + b \bZ \bgamma + c \beps,
 \end{equation}
-where $\by$ represents the pseudophenotype, and $a, b, c$ are scaling factors determined such that the variance of $\by$ is equal to 1, and is partitioned into signal, environmental confounding, and random noise components,
+where $\by$ represents the pseudophenotype, and $a, b, c$ are scaling factors determined such that the variance of $\by$ is equal to 1 and is partitioned into genetic signal, environmental confounding, and random noise components,
 \begin{equation}
     \label{eqn:parition_y}
     \mathbb{V}(\by) = \eta + (1 - \eta) \xi + (1-\eta)(1-\xi).
 \end{equation}
-Here, $\eta$ is the proportion of the variance of $\by$ attributable to genetic factors, commonly referred to as the narrow-sense heritability, and $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. $\eta$ also represents our data-generating model's signal to noise ratio (SNR). So, for example $\eta = 0.5$ and $\xi = 0.8$ corresponds to a 1:1 SNR, and means that 50\% of the variability in $\by$ is due to additive genetic effects, and 40\% due to environmental effects. The $\lambda$ that allowed for the first 50 variables to enter the model was selected for each method. 1000 simulations were performed for each unique combination of parameters, datatype, subpopulation structure, and environmental effect structure. 
+$\eta$ defines the proportion of the variance of $\by$ attributable to additive genetic factors, commonly referred to as the narrow-sense heritability, $h^2 = \sigmagg/(\sigmagg + \sigmaee)$. $\eta$ also describes the data-generating model's signal to noise ratio (SNR). $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. So, for example $\eta = 0.5$ and $\xi = 0.8$ corresponds to a 1:1 SNR, and means that 50\% of the variability in $\by$ is due to additive genetic effects, and 40\% due to environmental effects. \anna{more details about how/why this lambda selection method - cite CV as bad for LMMs, BIC not great bc different likelihoods} The $\lambda$ that allowed for the first 50 variables to enter the model was selected for each method. 1000 simulations were performed for each unique combination of parameters, datatype, subpopulation structure, and environmental effect structure. 
+
+%This method for selecting $\lambda$ was chosen to fairly compare the 
+
+%Cross-validation has generally been found to be inadvisable for penalized LMM methods \anna{cite thiiiiis}
+%Using an information criterion such as BIC to select $\lambda$ is not comparable across methods since Lasso, PC-Lasso, LMM-Lasso-Rakitsch, and LMM-Lasso-ggmix methods each use a different likelihood.
+
 
 \subsubsection{Design matrix generation}
-We generated these pseudophenotypes using three types of high-dimensional ($p > n$) $\bX$ matrices: (1) simulated SNP data from independent subpopulations, (2) simulated SNP data from admixed subpopulations, and (3) real genome-wide SNP data from known caucasian ($n = 417$), African American ($n = 134$), and Hispanic ($n = 37$) subpopulations. \anna{cite Vanderwas data} $p = 1000$ for all three data types, $n = 200$ for the simulated data types, and 50 causal SNPs were used throughout. 
+We generated these pseudophenotypes using three types of high-dimensional ($p > n$) $\bX$ matrices: (1) simulated SNP data from independent subpopulations, (2) simulated SNP data from admixed subpopulations, and (3) real genome-wide SNP data from known caucasian ($n = 417$), African American ($n = 134$), and Hispanic ($n = 37$) subpopulations. \anna{cite Vanderwas data} $p = 1000$, $n = \{200, 400, 600, 800 \}$ for the simulated data types, and 50 causal SNPs were used throughout. 
 
 \subsubsection{Subpopulation structure}
 For the fully simulated data, two subpopulation structures were considered: (1) fine and (2) coarse. We define a coarse structure to be one characterized by a few large subpopulations intended to model large-scale environmental heterogeneity and population stratification, such as that described in our motivating air quaility example. Conversely, we define a fine subpopulation structure to be one characterized by many small subpopulations, or founding populations, which corresponds to a finer grained continuum of environmental heterogeneity. Whether fine or coarse, the simulated data were generated such that subpopulations, or founding populations, are of equal size. We note that the fine and coarse subpopulation structures are distinct from the level of admixture in the simulated data. For example, the discrete nonoverlapping subpopulations in the simulated independent subpopulation data result in an RRM which more directly corresponds to the discrete and fixed environmental effects, fine or coarse, than do the continuous and overlapping subpopulations in the simulated admixture data. The empirical data is comprised of three racial subpopulations; one relatively large, one small, and one in the middle. Thus it represents a hybrid of our simulated coarse and fine structures, with little apparent admixture. Supplementary figures \anna{?, ?, and ?} illustrate the simulated kinship structures in the fine and coarse subpopulation settings, as well as that present in the empirical SNP data. 
 
 \subsubsection{Structure of environmental effects}
-For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation membership, or founding population membership in the case of the admixed data, which assigns the corresponding environmental effect found in $\bgamma$. Various $\bgamma$ structures were considered in order to investigate the effects of various forms of environmental confounding. 
+For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation, or founding population membership, which assigns the corresponding environmental effect found in $\bgamma$. Various $\bgamma$ structures were considered in order to investigate the effects of various forms of environmental confounding. 
 
- Our initial hypothesis was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that are nonlinear in nature and as such do not lend themselves to such an approximation. To that end we investigated two forms of environmental effect magnitudes: (1) exponential, and (2) dichotomous. \anna{more details?} In addition to the magnitudes of effects, we also considered whether individuals in genetically similar subpopulations would experience similar environmental effects. For example, a geographic environmental exposure such as the air quality described in our motivating example is likely to be similar among genetically related individuals due to concordance between genetic clusters and geography. However, behavior-based environmental exposures may be less likely to be shared by subpopulations which are genetically and geographically similar. \anna{another citation?} As an example, \citep{ng2014smoking} found considerable within-region variation in smoking rates in Africa, Asia, and South America.
+ Our initial hypothesis was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that are nonlinear in nature and as such do not lend themselves to such an approximation. To that end we investigated two forms of environmental effect magnitudes: (1) exponential, and (2) dichotomous. In addition to the magnitudes of effects, we also considered whether individuals in genetically similar subpopulations would experience similar environmental effects. For example, a geographic environmental exposure such as the air quality described in our motivating example is likely to be similar among genetically related individuals due to concordance between genetic clusters and geography. However, behavior-based environmental exposures may be less likely to be shared by subpopulations which are genetically and geographically similar. As an example, \citep{ng2014smoking} found considerable within-region variation in smoking rates in Africa, Asia, and South America.
 
- To evaluate the performance of penalized LMM methods in both scenarios, we consider exponential and dichotomous effect magnitudes with are (1) concordant, or (2) discordant in nature for a total of four distinct $\bgamma$ structures. We define concordant effects as those that are similar among genetically similar subpopulations, and discordant effects as those that are not. Figure \ref{fig:gamma_structures} displays a visual summary of these coefficient structures. \anna{is this still unclear? Would a PCA picture help?}
+ To evaluate the performance of penalized LMM methods in both scenarios, we consider exponential and dichotomous effect magnitudes with are concordant or discordant in nature, for a total of four distinct $\bgamma$ structures. We define concordant effects as those that are similar among genetically similar subpopulations, and discordant effects as those that are not. Figure \ref{fig:gamma_structures} displays a visual summary of these four coefficient structures. 
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.9]{figures/gamma_structure.png}
