@@ -44,14 +44,15 @@
 \newcommand{\T}{\text{T}}
 
 \title{Review Paper Draft}
-\author{Anna Reisetter}
+\author{Anna Reisetter \qquad Patrick Breheny\\
+  Department of Biostatistics\\University of Iowa}
 \date{\today}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Many genetic studies that aim to identify genetic variants associated with complex phenotypes are subject to unobserved confounding factors, such as environmental heterogeneity. This poses a challenge to the detection of multivariate associations of interest and is known to induce spurious associations when left unaccounted for. Penalized linear mixed models (LMMs) are an attractive method to correct for unobserved confounding. These methods correct for varying levels of relatedness and population structure by modeling it as a random effect with a covariance structure estimated from observed genetic data. Despite extensive literature on penalized regression, and LMMs, there is a need for a statistically rigorous review of penalized LMMs. Specifically, the ability of LMMs to accurately estimate fixed, sparse genetic effects in the presence of environmental heterogeneity, for which population structure may serve as a proxy, has not been well studied. Additionally, the non-genetic mechanism by which population stratification may confound the phenotype-genotype relationship is rarely discussed or treated explicitly in the statistical genetics literature. Considering this, we evaluate the performance of several penalized regression methods in terms of MSE \anna{Do we want to revisit any of the precision-recall curves?} in the presence of a number of confounding structures.
+Many genetic studies that aim to identify genetic variants associated with complex phenotypes are subject to unobserved confounding factors, such as environmental heterogeneity. This poses a challenge to detecting associations of interest and is known to induce spurious associations when left unaccounted for. Penalized linear mixed models (LMMs) are an attractive method to correct for unobserved confounding. These methods correct for varying levels of relatedness and population structure by modeling it as a random effect with a covariance structure estimated from observed genetic data. Despite an extensive literature on penalized regression and LMMs separately, the two are rarely discussed together. The aim of this review is to do so while offering a rigorous study of the statistical properties of penalized LMMs. Specifically, the ability of penalized LMMs to accurately estimate fixed, sparse genetic effects in the presence of environmental heterogeneity, for which population structure may serve as a proxy, has not been well studied. Additionally, the non-genetic mechanism by which population stratification may confound the phenotype-genotype relationship is rarely discussed or treated explicitly in the statistical genetics literature. Considering this, we evaluate the performance of several penalized regression methods in terms of MSE \anna{Do we want to revisit any of the precision-recall curves?} \pb {yes, let's talk about this today -- it is highly likely a reviewer will bring it up} in the presence of a number of confounding structures, comparing penalized LMMs to other approaches.
 % in the presence of confounding due to varying levels of environmental heterogeneity and relatedness.
 \end{abstract}
 
