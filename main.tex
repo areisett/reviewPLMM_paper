@@ -84,16 +84,16 @@ New statistical methods to control for the effects of confounding due to populat
     \node (3) [below = of 1] {Observbed SNPs};
     \node (4) [below = of 2] {Phenotype};
     \path[bidirected, -] (1) edge (2);
-    \path[red, line width = 0.5] (1) edge (3);
+    \path[magenta, line width = 0.5] (1) edge (3);
     \path (2) edge (4);
     \path (3) edge (4);
-    \tkzMarkSegment[color=red,pos=.5,mark=x](1,3)
+    \tkzMarkSegment[color=magenta,pos=.5,mark=x](1,3)
 \end{tikzpicture}
 \caption{The causal pathway between the environment and observed SNPs may be indirectly blocked by many methods that attempt to reduce confounding due to population structure.}
 \label{fig:ps_env_block}
 \end{figure}
 
-Whether or not such methods are effective at reducing confounding effects depends upon whether population structure can be accurately inferred, and if this is a good proxy for environmental effects. In the presence of unobserved heterogeneous environmental effects which are not well-approximated by inferred population structure, these effects will not confound SNP-phenotype associations. This is due to the absence of a causal pathway between population stratification and environment, as depicted in Figure \ref{fig:ps_env_block2}. In such a scenario, failing to account for unobserved environmental effects will result in greater phenotypic variability \anna{and as a result, greater SE in beta-hats... if we're talking about gls}, however, it will not bias SNP estimates \anna{cite something from causal inference here}. We will return to this idea and its mathematical justification in section \ref{sec:methods}. 
+Whether or not such methods are effective at reducing confounding effects depends upon whether population structure can be accurately inferred, and if this is a good proxy for environmental effects. In the presence of unobserved heterogeneous environmental effects which are not well-approximated by inferred population structure, these effects will not confound SNP-phenotype associations. This is due to the absence of a causal pathway between population stratification and environment, as depicted in Figure \ref{fig:ps_env_block2}. In such a scenario, failing to account for unobserved environmental effects will result in greater phenotypic variability \anna{and as a result, greater SE in beta-hats... see causal notes}, however, it will not bias SNP estimates \anna{cite something from causal inference here}. We will return to this idea and its mathematical justification in section \ref{sec:methods}. 
 
 \begin{figure}[H]
 \centering
@@ -102,11 +102,11 @@ Whether or not such methods are effective at reducing confounding effects depend
     \node (2) [right = of 1] {Environment};
     \node (3) [below = of 1] {Observbed SNPs};
     \node (4) [below = of 2] {Phenotype};
-    \path[bidirected, -, red] (1) edge (2);
+    \path[bidirected, -, magenta] (1) edge (2);
     \path (1) edge (3);
     \path (2) edge (4);
     \path (3) edge (4);
-    \tkzMarkSegment[color=red,pos=.5,mark=x](1,2)
+    \tkzMarkSegment[color=magenta,pos=.5,mark=x](1,2)
 \end{tikzpicture}
 \caption{The causal pathway between the environment and observed SNPs may be blocked if genetic information does not serve as an accurate proxy for it.}
 \label{fig:ps_env_block2}
