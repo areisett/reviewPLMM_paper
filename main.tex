@@ -154,17 +154,19 @@ LMM-Lasso relies on matrix decompositions of $\bX$ and the realized relationship
     \bK &= \frac{1}{p} \bX \bX^\T \nonumber \\
                    &= \frac{1}{p} \bU \bD^2 \bU^\T \nonumber \\
                    &= \frac{1}{p} \bU \bD (\bU \bD)^\T \nonumber \\
-                   &\propto \bR \bR^\T,
+                   &= \frac{1}{p} \bR \bR^\T,
 \end{align}
-where $\bD^2$ is an $n \times n$ diagonal matrix containing the $k$ nonzero eigenvalues of $\bK$ (equivalently, the $k$ nonzero squared singular values of $\bX$) on the top-left diagonal, followed by $n - k$ zeroes on the bottom-right diagonal, and $\bU$ is the corresponding $n \times n$ orthonormal matrix of the left eigenvectors of $\bK$ (equivalently, the left singular vectors of $\bX$.) The first $k$ columns of $\bU$ correspond to the nonzero eigenvalues of $\bK$ (squared singular values of $\bX$.) The columns of $\bR$ are therefore proportional to the principal components of $\bK$. 
+where $\bD^2$ is an $n \times n$ diagonal matrix containing the $k$ nonzero eigenvalues of $\bK$ (equivalently, the $k$ nonzero squared singular values of $\bX$) on the top-left diagonal, followed by $n - k$ zeroes on the bottom-right diagonal, and $\bU$ is the corresponding $n \times n$ orthonormal matrix of the left eigenvectors or principal components of $\bK$ (equivalently, the left singular vectors of $\bX$.) The first $k$ columns of $\bU$ correspond to the nonzero eigenvalues of $\bK$ (squared singular values of $\bX$.) The columns of $\bR$ are then the principal components of $\bK$ weighted by their corresponding singular values. 
 
 %------------------------------%
 \subsection{PC-Lasso}
-PC-Lasso uses the first $k$ principal components of $\bK$ to approximate $\bZ\bgamma$ and includes them in the model as unpenalized covariates. It has been shown \citep{hoffman2013correcting} that this corresponds to the regression model
+PC-Lasso uses the first $k$ principal components of $\bK$ to approximate $\bZ\bgamma$ and includes them in the model as unpenalized covariates. This corresponds to the regression model
 \begin{equation}
     \label{eqn:pca_reg}
     \by = \bX_0\bbeta_0 + \bX\bbeta + \bU_{1:k}\boldsymbol{\alpha} + \beps 
 \end{equation}
+$$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI), $$
+
 where $\bU_{1:k}$ is the $n \times k$ matrix of principal component vectors, $\boldsymbol{\alpha}$ their corresponding $k \times 1$ coefficient vector, and all other parameters are as defined in equation \eqref{eqn:model}. In a penalized regression framework, this model yields the objective function
 \begin{equation}
     \label{eqn:pca_obj}
@@ -175,19 +177,23 @@ where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j
 %------------------------------%
 \subsection{LMM-Lasso}
 
-Conversely, LMM-Lasso models $\bZ\bgamma$ as a random effect assuming $\bgamma \sim N\left(\boldsymbol{0}, p^{-1} \sigmagg \bI_p \right).$  Typically, $\bZ$ is not observed directly, and a common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}. This results in the LMM regression model
+Conversely, LMM-Lasso models $\bZ\bgamma$ as a random effect. Typically, $\bZ$ is not observed directly, and a common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}. This results in the LMM regression model
 \begin{equation}
     \label{eqn:lmm_reg}
     \by = \bX_0\bbeta_0 + \bX\bbeta + \bX\bgamma+ \beps,
 \end{equation}
-where we assume $\beps \independent \bX\bgamma$. Rather than assuming anything about $\bgamma$ directly, an equivalent representation paramaterizes the model in terms of $\bu=\bX\bgamma$ where $\bu \sim N(\boldsymbol{0}, \sigmagg \bK)$, and yields the equivalent model
+$$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI) $$
+$$ \bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI) \Rightarrow \bX \bgamma \sim N(\boldsymbol{0}, \sigmagg \bK), $$
+where $\sigmagg$ is the additive genetic variance, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation paramaterizes the model in terms of $\bu=\bX\bgamma$, which yields the equivalent model
 \begin{equation}
     \label{eqn:lmm_reg_u}
-    \by = \bX_0\bbeta_0 + \bX\bbeta + \bu + \beps.
+    \by = \bX_0\bbeta_0 + \bX\bbeta + \bu + \beps
 \end{equation}
+$$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI) $$
+$$ \bu \sim N(\boldsymbol{0}, \sigmagg \bK).$$
 We will first derive the LMM-Lasso objective function in the absence of unpenalized covariates for the sake of notational simplicity.
 
-Following equations \eqref{eqn:lmm_reg} and \eqref{eqn:lmm_reg_u}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso uses \anna{an estimate of} the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generlized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
+Following equations \eqref{eqn:lmm_reg} and \eqref{eqn:lmm_reg_u}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso uses the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generlized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
 
 \begin{equation}
 \label{eqn:rtY_distn}
@@ -231,9 +237,25 @@ We have so far used the term $\bW$ to describe the LMM-Lasso method. However, th
 %------------------------------%
 \subsection{Relationship between PC-Lasso and LMM-Lasso}
 
-It has been shown that the random effect formulation of model \eqref{eqn:model} used by LMM-Lasso can be equivalently expressed in terms of fixed effects. \citet{zhang2015principal} derived this equivalence using a probabilistic PCA formulation, while \citet{hoffman2013correcting} used the singular value decomposition of $\bX$, and the decomposition of $\bK$ \anna{which we briefly review here...}
+It has been shown that the random effect formulation of model \eqref{eqn:model} used by LMM-Lasso can be equivalently expressed in terms of fixed effects. \citet{zhang2015principal} derived this equivalence using a probabilistic PCA formulation, while \citet{hoffman2013correcting} used the singular value decomposition of $\bX$, and the decomposition of $\bK$, which we briefly review.
 
-Thus, whether modeled as a fixed or random effect, the underlying effect of $\bZ \bgamma$ on phenotype remains the same, but its treatment as a fixed or random effect has important implications in terms of model fitting and estimation. Modeling unobserved confounding using fixed effects requires estimation of $p_0 + p + k$ parameters, compared to the $p_0 + p + 2$ required of an LMM, which may result in a loss of power \citep{zhang2015principal}. Additionally, when modeling $\bZ \bgamma$ using fixed effects, determining the appropriate number of principal components to adjust for is non-trivial, and has been the subject of numerous studies \citep{patterson2006population, zhao2018practical}. It has been shown that including too many or too few principal components can result in power loss or increased Type I errors, respectively \citep{zhang2015principal}. Nevertheless, a common practice is to include the ten largest principal components in the analysis \citep{zhao2018practical}. This is the implementation of PC-Lasso throughout Section \ref{sec:results}.
+Using the result of the eigendecomposition from \eqref{eqn:k}, $\bK = p^{-1} \bR \bR^\T$ , the LMM model \eqref{eqn:lmm_reg_u} can be written equivalently as
+
+\begin{equation}
+    \label{eqn:pc_lmm_equiv}
+    \by = \bX_0 \bbeta_0 + \bX \bbeta + \bR \bgamma + \beps
+\end{equation}
+
+$$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI) $$
+$$ \bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI) \Rightarrow \bR \bgamma \sim N(\boldsymbol{0}, \sigmagg \bK).$$
+
+Based on the relationship between equations \eqref{eqn:pca_reg} and \eqref{eqn:pc_lmm_equiv}, we can see that modeling the principal components of $\bK$ as fixed or random effects relies on the same underlying regression model. However, while the LMM includes all the principal components, only $k < n$ are included in the fixed effects model. 
+
+Additionally, while the fixed effects model considers the principal components, $\bU$, of $\bK$, the LMM considers the principal components weighted by their corresponding eigenvalues. The eigenvalues have been shown to serve as a measure of biological relevance of each principal component in relation to underlying population structure \citep{hoffman2013correcting, price2006principal}. 
+
+From a Bayesian perspective, using the first $k$ principal components as regression covariates can be viewed as assigning uniform priors to the first $k$ components of $\bgamma$, while the remaining $n - k$ components receive a prior with unit mass at zero. These assignments imply certainty that the effect of population structure on the phenotype is fully captured by the first $k$ PCs. In contrast, the LMM approach can be viewed as assigning a Gaussian prior on each component of $\bgamma$, with variances proportional to the corresponding eigenvalues \citep{astle2009population}. 
+
+Whether modeled as a fixed or random effect, the underlying effect of $\bZ \bgamma$ on phenotype remains the same, but its treatment as a fixed or random effect has important implications in terms of model fitting and estimation. Modeling unobserved confounding using fixed effects requires estimation of $p_0 + p + k$ parameters, compared to the $p_0 + p + 2$ required of an LMM, which may result in a loss of power \citep{zhang2015principal}. Additionally, when modeling $\bZ \bgamma$ using fixed effects, determining the appropriate number of principal components, $k$, to adjust for is non-trivial, and has been the subject of numerous studies \citep{patterson2006population, zhao2018practical}. It has been shown that including too many or too few principal components can result in power loss or increased Type I errors, respectively \citep{zhang2015principal}. Nevertheless, a common practice is to include the ten largest principal components in the analysis \citep{zhao2018practical}. This is the implementation of PC-Lasso throughout Section \ref{sec:results}.
 
 
 
