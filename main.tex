@@ -7,6 +7,8 @@
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\anna{REPLACE FIGURES WITH RESULTS FROM PLMM-LASSO ONCE FINISHED}
+
 The objective of many genetic studies is to accurately identify variants associated with complex traits or disease, and to estimate the effects of those variants. Such information is valuable for assessing an individual's risk of developing a particular condition, elucidating the underlying genetic architecture of a trait or disease, and identifying potential drug targets. However, this effort may be hindered by several factors such as non-independent samples, large numbers of variants, and linkage disequilibrium (LD). 
 
 % \anna{keep this for later use when talking about genetic background?} Genetic variants are often correlated with each other such that univariate testing may be prone to false positives and biased estimates. When a genetic variant of interest is highly correlated with others, the effects of these will be attributed to the variant in question. This may result in causal SNPs being removed from analysis, so that only SNPs in LD with the causal loci, as opposed to the causal loci themselves, can be identified and their effects estimated. 
@@ -277,9 +279,7 @@ Although we derive these quantities under model \eqref{eqn:lmm_reg}, where $\bZ 
 \end{align*}
 where $\boldsymbol{\tau}$ quantifies bias in the estimated $\bbetaHat^*$ and $\boldsymbol{\psi}$ is absorbed by the residual error term. In other words, any model specified in terms of $\bZ$ and $\bgamma$ is equivalent to a parameterization using $\bX$ and $\boldsymbol{\tau}$.
 
-This result also allows us to mathematically justify the statement from section \ref{sec:background}, that SNP-phenotype associations will be unbiased in the presence of environmental heterogeneity which does not correspond to population structure. The proportion of the environmental effect which is in the column space of $\boldsymbol{P}_{\bX}$ is equal to $||\bX \boldsymbol{\tau}||_F / ||\bZ \bgamma||_F \in [0, 1]$. Since $\bX$ is fixed, this quantity is reflected in $||\boldsymbol{\tau}||_F$, which also quantifies the estimation bias due environmental heterogeneity. In the case where $\bZ \bgamma$ is entirely independent of population structure, $\bZ \bgamma \in \mathcal{N}(\boldsymbol{P}_{\bX})$ and $\boldsymbol{\tau} = \boldsymbol{0}$ so that $\mathbb{E}(\bbetaHat^*) = \bbeta$. Thus the SNP-phenotype associations will be unbiased, but the residual variance will be increased. Although we focus our attention on accurately estimating fixed SNP effects, we note that this result could lead to substantial bias in narrow-sense heritability estimates.
-
-In practical applications $\bZ \bgamma$ is unlikely to be entirely orthogonal to population structure. However, the degree to which it reflects population structure that can be inferred from $\bX$ will impact the extent to which environmental heterogeneity confounds SNP-phenotype associations.
+This result also allows us to mathematically justify the statement from section \ref{sec:background}, that SNP-phenotype associations will be unbiased in the presence of environmental heterogeneity which does not correspond to population structure. We can quantify the proportion of the environmental effect which is in the column space of $\boldsymbol{P}_{\bX}$ using the ratio $||\bX \boldsymbol{\tau}||_2 / ||\bZ \bgamma||_2 \in [0, 1]$. In the case where $\bZ \bgamma$ is entirely independent of population structure, $\bZ \bgamma \in \mathcal{N}(\boldsymbol{P}_{\bX})$ and $\bX \boldsymbol{\tau} = \boldsymbol{0}$ so that $\mathbb{E}(\bbetaHat^*) = \bbeta$. Thus the SNP-phenotype associations will be unbiased, but the residual variance will be increased. Although we focus our attention on accurately estimating fixed SNP effects, we note that this result could lead to substantial bias in narrow-sense heritability estimates. In practical applications $\bZ \bgamma$ is unlikely to be entirely orthogonal to population structure. However, the degree to which it reflects population structure that can be inferred from $\bX$, as quantified by $||\bX \boldsymbol{\tau}||_2 / ||\bZ \bgamma||_2$, will impact the extent to which environmental heterogeneity confounds SNP-phenotype associations.
 
 %------------------------------%
 \subsection{Simulation study}
@@ -333,7 +333,7 @@ The $\lambda$ that allowed for the first 50 variables to enter the model was sel
 \subsection{PC-Lasso and LMM-Lasso outperform Lasso in the presence of environmental confounding}
 %------------------------------%
 
-We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level of environmental confounding is varied. Estimation accuracy for lasso, PC-Lasso, and LMM-Lasso was evaluated based on mean squared error (MSE) in various settings and broken down into bias and variance components.  Figure \ref{fig:mse} presents these results for all three data types in a 1:1 signal to noise (SNR) setting, where $\eta = 0.5$. The top row of Figure \ref{fig:mse} shows that when $\xi = 0$ (i.e., no environmental confounding), lasso and LMM-Lasso perform comparably. PC-Lasso results in a slight inflation in MSE compared to the other methods due to the fact that 10 additional predictors have been added to the model, but none of them actually explain any variability in the outcome. The bottom row of Figure \ref{fig:mse} shows the MSE when $\xi = 0.8$. In this case, both PC-Lasso and LMM-Lasso clearly outperform the naive lasso. This improvement is more substantial in the independent subpopulations simulated data than the admixed simulated data. This is due to the fact that the discrete, nonoverlapping genetic subpopulations more directly correspond to the distinct fixed environmental effects than do the more continuous and blended subpopulations in the admixture data. In other words, a greater amount of the environmental effect is in the column space of the projection matrix of $\bX$ for the independent subpopulations data than in the admixed data. As such, there is a greater amount of confounding in the independent subpopulations which can be corrected by the PC-Lasso and LMM-Lasso methods. 
+We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level of environmental confounding is varied. Estimation accuracy for lasso, PC-Lasso, and LMM-Lasso was evaluated based on mean squared error (MSE) in various settings and broken down into bias and variance components.  Figure \ref{fig:mse} presents these results for all three data types in a 1:1 signal to noise (SNR) setting, where $\eta = 0.5$. The top row of Figure \ref{fig:mse} shows that when $\xi = 0$ (i.e., no environmental confounding), lasso and LMM-Lasso perform comparably. PC-Lasso results in a slight inflation in MSE compared to the other methods due to the fact that 10 additional predictors have been added to the model, but none of them actually explain any variability in the outcome. The bottom row of Figure \ref{fig:mse} shows the MSE when $\xi = 0.8$. In this case, both PC-Lasso and LMM-Lasso clearly outperform the naive lasso. This improvement is more substantial in the independent subpopulations simulated data than the admixed simulated data. \anna{quantify this for all 3 data settings using $||\bX \boldsymbol{\tau}||_2 / ||\bZ \bgamma||_2$} This is due to the fact that the discrete, nonoverlapping genetic subpopulations more directly correspond to the distinct fixed environmental effects than do the more continuous and blended subpopulations in the admixture data. In other words, a greater amount of the environmental effect is in the column space of the projection matrix of $\bX$ for the independent subpopulations data than in the admixed data. As such, there is a greater amount of confounding in the independent subpopulations which can be corrected by the PC-Lasso and LMM-Lasso methods. 
 
 \begin{figure}[H]
     \centering
@@ -342,7 +342,7 @@ We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level o
     \label{fig:mse}
 \end{figure}
 
-\anna{Obviously these need to be formatted...}\\
+\anna{Obviously these need to be formatted... just use TP rates - FP not adding much}\\
 
 \anna{True positive rates}
 \begin{verbatim}
@@ -377,41 +377,6 @@ structureX    xi    method      `round(mean(value), 2)` `round(sd(value), 2)`
 28 other         0.8   lmm_ggmix                     0.61                   0.06
 29 other         0.8   lmm_lasso                     0.580                  0.06
 30 other         0.8   plmm_lasso                    0.580                  0.06
-\end{verbatim}
-
-\anna{False positive rates}
-\begin{verbatim}
-   structureX    xi    method      `round(mean(value), 3)` `sd(value)`
- 1 1d_linear     0     lasso                         0.038     0.00309
- 2 1d_linear     0     lasso_pca10                   0.038     0.00317
- 3 1d_linear     0     lmm_ggmix                     0.037     0.00343
- 4 1d_linear     0     lmm_lasso                     0.037     0.00320
- 5 1d_linear     0     plmm_lasso                    0.038     0.00311
- 6 1d_linear     0.8   lasso                         0.039     0.00295
- 7 1d_linear     0.8   lasso_pca10                   0.036     0.00307
- 8 1d_linear     0.8   lmm_ggmix                     0.035     0.00328
- 9 1d_linear     0.8   lmm_lasso                     0.035     0.00327
-10 1d_linear     0.8   plmm_lasso                    0.036     0.00298
-11 indep_subpops 0     lasso                         0.039     0.00301
-12 indep_subpops 0     lasso_pca10                   0.039     0.00310
-13 indep_subpops 0     lmm_ggmix                     0.038     0.00367
-14 indep_subpops 0     lmm_lasso                     0.038     0.00315
-15 indep_subpops 0     plmm_lasso                    0.039     0.00301
-16 indep_subpops 0.8   lasso                         0.038     0.00307
-17 indep_subpops 0.8   lasso_pca10                   0.032     0.00321
-18 indep_subpops 0.8   lmm_ggmix                     0.03      0.00338
-19 indep_subpops 0.8   lmm_lasso                     0.03      0.00338
-20 indep_subpops 0.8   plmm_lasso                    0.031     0.00318
-21 other         0     lasso                         0.031     0.00326
-22 other         0     lasso_pca10                   0.031     0.00335
-23 other         0     lmm_ggmix                     0.025     0.00451
-24 other         0     lmm_lasso                     0.028     0.00358
-25 other         0     plmm_lasso                    0.029     0.00335
-26 other         0.8   lasso                         0.036     0.00300
-27 other         0.8   lasso_pca10                   0.026     0.00338
-28 other         0.8   lmm_ggmix                     0.016     0.00348
-29 other         0.8   lmm_lasso                     0.02      0.00298
-30 other         0.8   plmm_lasso                    0.021     0.00291
 \end{verbatim}
 
 %------------------------------%
@@ -452,13 +417,15 @@ In section \ref{sec:rak-ggmix} we briefly mentioned the existence of two LMM-Las
 
 LMM-Lasso-Rakitsch estimates the variance components once, under the assumption of a null model. LMM-Lasso-ggmix seeks to improve upon this by re-estimating the variance components and $\bbeta$ iteratively. Although this seems a reasonable approach, we have been unable to find a scenario where LMM-Lasso-ggmix outperforms the LMM-Lasso-Rakitsch in estimation accuracy of $\bbeta$. Figure \ref{fig:eta_beta_mse} shows the MSE for estimation of both $\bbeta$ and $\eta$ in the presence of varying $\eta$ values and sample sizes, $n$, for both LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. The bottom panel of this figure shows a modest improvement in the estimation of $\eta$ for the LMM-Lasso-ggmix method, particularly in the presence of lower $\eta$ values. However, these apparent improvements in estimating $\eta$ do not improve the $\bbeta$ estimation accuracy of LMM-Lasso-ggmix. This is evidenced by the top panel of Figure \ref{fig:eta_beta_mse}, which shows nearly identical performances of both methods in terms of $\bbeta$ MSE. 
 
+\anna{add some info/figure on convergence and number of iterations for lmm-lasso vs ggmix, delete the following time figures and references to them}
+
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 1]{figures/eta_beta_hat.png}
      \caption{$\bbeta$ and $\eta$ estimation accuracy of LMM-Lasso-Rakitsch and LMM-Lasso-ggmix for varying $\eta$ levels and sample sizes with independent subpopulation data, coarse subpopulation structure, $\xi = 0.8$, and dichotomous-discordant environmental effect structure.}
     \label{fig:eta_beta_mse}
 \end{figure}
-\anna{add time to this figure? third row...}
+\anna{replace this figure with one that includes time in the third row}
 
 
 \begin{figure}[H]
