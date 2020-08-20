@@ -346,8 +346,77 @@ We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level o
     \label{fig:mse}
 \end{figure}
 
-\anna{add variable selection tables for these settings}
+\anna{Obviously these need to be formatted...}\\
 
+\anna{True positive rates}
+\begin{verbatim}
+structureX    xi    method      `round(mean(value), 2)` `round(sd(value), 2)`
+ 1 1d_linear     0     lasso                         0.25                   0.05
+ 2 1d_linear     0     lasso_pca10                   0.23                   0.05
+ 3 1d_linear     0     lmm_ggmix                     0.25                   0.05
+ 4 1d_linear     0     lmm_lasso                     0.25                   0.05
+ 5 1d_linear     0     plmm_lasso                    0.25                   0.05
+ 6 1d_linear     0.8   lasso                         0.23                   0.05
+ 7 1d_linear     0.8   lasso_pca10                   0.28                   0.05
+ 8 1d_linear     0.8   lmm_ggmix                     0.28                   0.05
+ 9 1d_linear     0.8   lmm_lasso                     0.28                   0.05
+10 1d_linear     0.8   plmm_lasso                    0.290                  0.05
+11 indep_subpops 0     lasso                         0.23                   0.05
+12 indep_subpops 0     lasso_pca10                   0.21                   0.05
+13 indep_subpops 0     lmm_ggmix                     0.22                   0.05
+14 indep_subpops 0     lmm_lasso                     0.23                   0.05
+15 indep_subpops 0     plmm_lasso                    0.23                   0.05
+16 indep_subpops 0.8   lasso                         0.25                   0.05
+17 indep_subpops 0.8   lasso_pca10                   0.36                   0.06
+18 indep_subpops 0.8   lmm_ggmix                     0.38                   0.06
+19 indep_subpops 0.8   lmm_lasso                     0.38                   0.06
+20 indep_subpops 0.8   plmm_lasso                    0.39                   0.06
+21 other         0     lasso                         0.37                   0.06
+22 other         0     lasso_pca10                   0.36                   0.06
+23 other         0     lmm_ggmix                     0.4                    0.06
+24 other         0     lmm_lasso                     0.4                    0.06
+25 other         0     plmm_lasso                    0.41                   0.06
+26 other         0.8   lasso                         0.290                  0.06
+27 other         0.8   lasso_pca10                   0.47                   0.06
+28 other         0.8   lmm_ggmix                     0.61                   0.06
+29 other         0.8   lmm_lasso                     0.580                  0.06
+30 other         0.8   plmm_lasso                    0.580                  0.06
+\end{verbatim}
+
+\anna{False positive rates}
+\begin{verbatim}
+   structureX    xi    method      `round(mean(value), 3)` `sd(value)`
+ 1 1d_linear     0     lasso                         0.038     0.00309
+ 2 1d_linear     0     lasso_pca10                   0.038     0.00317
+ 3 1d_linear     0     lmm_ggmix                     0.037     0.00343
+ 4 1d_linear     0     lmm_lasso                     0.037     0.00320
+ 5 1d_linear     0     plmm_lasso                    0.038     0.00311
+ 6 1d_linear     0.8   lasso                         0.039     0.00295
+ 7 1d_linear     0.8   lasso_pca10                   0.036     0.00307
+ 8 1d_linear     0.8   lmm_ggmix                     0.035     0.00328
+ 9 1d_linear     0.8   lmm_lasso                     0.035     0.00327
+10 1d_linear     0.8   plmm_lasso                    0.036     0.00298
+11 indep_subpops 0     lasso                         0.039     0.00301
+12 indep_subpops 0     lasso_pca10                   0.039     0.00310
+13 indep_subpops 0     lmm_ggmix                     0.038     0.00367
+14 indep_subpops 0     lmm_lasso                     0.038     0.00315
+15 indep_subpops 0     plmm_lasso                    0.039     0.00301
+16 indep_subpops 0.8   lasso                         0.038     0.00307
+17 indep_subpops 0.8   lasso_pca10                   0.032     0.00321
+18 indep_subpops 0.8   lmm_ggmix                     0.03      0.00338
+19 indep_subpops 0.8   lmm_lasso                     0.03      0.00338
+20 indep_subpops 0.8   plmm_lasso                    0.031     0.00318
+21 other         0     lasso                         0.031     0.00326
+22 other         0     lasso_pca10                   0.031     0.00335
+23 other         0     lmm_ggmix                     0.025     0.00451
+24 other         0     lmm_lasso                     0.028     0.00358
+25 other         0     plmm_lasso                    0.029     0.00335
+26 other         0.8   lasso                         0.036     0.00300
+27 other         0.8   lasso_pca10                   0.026     0.00338
+28 other         0.8   lmm_ggmix                     0.016     0.00348
+29 other         0.8   lmm_lasso                     0.02      0.00298
+30 other         0.8   plmm_lasso                    0.021     0.00291
+\end{verbatim}
 
 %------------------------------%
 \subsection{LMM-Lasso outperforms PC-Lasso in the presence of fine subpopulation structure}
@@ -424,6 +493,8 @@ In addition, we have found that LMM-Lasso-ggmix performs poorly in a low-dimensi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\anna{this to change somewhat based on time/convergence results...}
+
 In this work, we have reviewed the concept of population stratification and explicitly defined the environmental mechanism by which it may confound the genotype-phenotype relationship. We have provided a broad outline of existing methods for ameliorating the effects of these unobserved confounding influences. In addition, we have provided a thorough review of two popular approaches for correcting for population structure in genetic data: PC-Lasso and LMM-Lasso. 
 
 We have detailed the assumptions made by PC-Lasso and LMM-Lasso, which model confounding influences as fixed and random effects, respectively. We have also described the ways in which simulation schemes to evaluate these methods may fail to accurately capture the effects of environmental heterogeneity. In turn, we propose and utilize a simulation approach in which the estimation bias introduced by environmental heterogeneity may be evaluated. We then compare the estimation accuracy of a \anna{naive} Lasso, PC-Lasso, and LMM-Lasso in various confounding scenarios.
