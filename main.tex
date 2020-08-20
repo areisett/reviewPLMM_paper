@@ -313,7 +313,7 @@ For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s i
 
  Our initial hypothesis was that structures of $\bgamma$ that can be well-approximated by a linear combination of the observed genetic data would be well-approximated and corrected for by PC-Lasso, whereas LMM-Lasso may be more able to correct for subpopulation-specific effects that are nonlinear in nature and as such do not lend themselves to such an approximation. To that end we investigated two forms of environmental effect magnitudes: (1) exponential, and (2) dichotomous. In addition to the magnitudes of effects, we also considered whether individuals in genetically similar subpopulations would experience similar environmental effects. For example, a geographic environmental exposure such as the air quality described in our motivating example is likely to be similar among genetically related individuals due to concordance between genetic clusters and geography. However, behavior-based environmental exposures may be less likely to be shared by subpopulations which are genetically and geographically similar. As an example, \citet{ng2014smoking} found considerable within-region variation in smoking rates in Africa, Asia, and South America.
 
- To evaluate the performance of penalized LMM methods in both scenarios, we consider exponential and dichotomous effect magnitudes with are concordant or discordant in nature, for a total of four distinct $\bgamma$ structures. We define concordant effects as those that are similar among genetically similar subpopulations, and discordant effects as those that are not. Figure \ref{fig:gamma_structures} displays a visual summary of these four coefficient structures. 
+ To evaluate the performance of penalized LMM methods in both scenarios, we consider exponential and dichotomous effect magnitudes with are concordant or discordant in nature, for a total of four distinct $\bgamma$ structures. We define concordant effects as those that are similar among genetically similar subpopulations, and discordant effects as those that are not. Figure \ref{fig:gamma_structures} provides a visual summary of the four coefficient structures. 1000 simulations were performed for each unique combination of parameters, datatype, subpopulation structure, and environmental effect structure. 
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.9]{figures/gamma_structure.png}
@@ -322,13 +322,7 @@ For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s i
 \end{figure}
 
 \subsubsection{$\lambda$ selection}
-\anna{more details about how/why this lambda selection method - cite CV as bad for LMMs, BIC not great bc different likelihoods... tie this into evaluating performance of each method in terms of variable selection} The $\lambda$ that allowed for the first 50 variables to enter the model was selected for each method. 1000 simulations were performed for each unique combination of parameters, datatype, subpopulation structure, and environmental effect structure. 
-
-%This method for selecting $\lambda$ was chosen to fairly compare the 
-
-%Cross-validation has generally been found to be inadvisable for penalized LMM methods \anna{cite thiiiiis}
-%Using an information criterion such as BIC to select $\lambda$ is not comparable across methods since Lasso, PC-Lasso, LMM-Lasso-Rakitsch, and LMM-Lasso-ggmix methods each use a different likelihood.
-
+The $\lambda$ that allowed for the first 50 variables to enter the model was selected for each method, where 50 was the true number of causal SNPs. This method for selecting $\lambda$ was chosen in an attempt to compare the performance of all methods fairly, and as a strategy to evaluate methods in terms of variable selection, as it allows for direct comparison of the first 50 variables each method lets into the model. Alternative $\lambda$ selection methods were also considered. Cross-validation has been found to be inadvisable for LMMs, and in the presence of non-inedpendent samples as is the case here. While information criterion methods such as BIC present another option for selecting $\lambda$, they may be unstable in high dimensions. In addition, because Lasso, PC-Lasso, and LMM-Lasso use different likelihoods an information-criterion-based approach would not lend itself to comparable results across methods. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -345,14 +339,15 @@ For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s i
 
 We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level of environmental confounding is varied. Estimation accuracy for lasso, PC-Lasso, and LMM-Lasso was evaluated based on mean squared error (MSE) in various settings and broken down into bias and variance components.  Figure \ref{fig:mse} presents these results for all three data types in a 1:1 signal to noise (SNR) setting, where $\eta = 0.5$. The top row of Figure \ref{fig:mse} shows that when $\xi = 0$ (i.e., no environmental confounding), lasso and LMM-Lasso perform comparably. PC-Lasso results in a slight inflation in MSE compared to the other methods due to the fact that 10 additional predictors have been added to the model, but none of them actually explain any variability in the outcome. The bottom row of Figure \ref{fig:mse} shows the MSE when $\xi = 0.8$. In this case, both PC-Lasso and LMM-Lasso clearly outperform the naive lasso. This improvement is more substantial in the independent subpopulations simulated data than the admixed simulated data. This is due to the fact that the discrete, nonoverlapping genetic subpopulations more directly correspond to the distinct fixed environmental effects than do the more continuous and blended subpopulations in the admixture data. In other words, a greater amount of the environmental effect is in the column space of the projection matrix of $\bX$ for the independent subpopulations data than in the admixed data. As such, there is a greater amount of confounding in the independent subpopulations which can be corrected by the PC-Lasso and LMM-Lasso methods. 
 
-\anna{add variable selection tables for these settings}
-
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 1.1]{figures/beta_mse.png}
     \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with coarse subpopulation structure and dichotomous-discordant environmental effects.}
     \label{fig:mse}
 \end{figure}
+
+\anna{add variable selection tables for these settings}
+
 
 %------------------------------%
 \subsection{LMM-Lasso outperforms PC-Lasso in the presence of fine subpopulation structure}
