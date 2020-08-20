@@ -156,7 +156,7 @@ LMM-Lasso relies on matrix decompositions of $\bX$ and the realized relationship
                    &= \frac{1}{p} \bU \bD (\bU \bD)^\T \nonumber \\
                    &= \frac{1}{p} \bR \bR^\T,
 \end{align}
-where $\bD^2$ is an $n \times n$ diagonal matrix containing the $k$ nonzero eigenvalues of $\bK$ (equivalently, the $k$ nonzero squared singular values of $\bX$) on the top-left diagonal, followed by $n - k$ zeroes on the bottom-right diagonal, and $\bU$ is the corresponding $n \times n$ orthonormal matrix of the left eigenvectors or principal components of $\bK$ (equivalently, the left singular vectors of $\bX$.) The first $k$ columns of $\bU$ correspond to the nonzero eigenvalues of $\bK$ (squared singular values of $\bX$.) The columns of $\bR$ are then the principal components of $\bK$ weighted by their corresponding singular values. 
+where $\bD^2$ is an $n \times n$ diagonal matrix containing the $k$ nonzero eigenvalues of $\bK$ (equivalently, the $k$ nonzero squared singular values of $\bX$) on the top-left diagonal, followed by $n - k$ zeroes on the bottom-right diagonal, and $\bU$ is the corresponding $n \times n$ orthonormal matrix of the left eigenvectors or principal components of $\bK$ (equivalently, the left singular vectors of $\bX$.) The first $k$ columns of $\bU$ correspond to the nonzero eigenvalues of $\bK$ (squared singular values of $\bX$.) The columns of $\bR$ are thus the principal components of $\bK$ weighted by their corresponding singular values. 
 
 %------------------------------%
 \subsection{PC-Lasso}
@@ -166,7 +166,6 @@ PC-Lasso uses the first $k$ principal components of $\bK$ to approximate $\bZ\bg
     \by = \bX_0\bbeta_0 + \bX\bbeta + \bU_{1:k}\boldsymbol{\alpha} + \beps 
 \end{equation}
 $$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI), $$
-
 where $\bU_{1:k}$ is the $n \times k$ matrix of principal component vectors, $\boldsymbol{\alpha}$ their corresponding $k \times 1$ coefficient vector, and all other parameters are as defined in equation \eqref{eqn:model}. In a penalized regression framework, this model yields the objective function
 \begin{equation}
     \label{eqn:pca_obj}
@@ -191,15 +190,13 @@ where $\sigmagg$ is the additive genetic variance, and we assume $\beps \indepen
 \end{equation}
 $$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI) $$
 $$ \bu \sim N(\boldsymbol{0}, \sigmagg \bK).$$
-We will first derive the LMM-Lasso objective function in the absence of unpenalized covariates for the sake of notational simplicity.
-
-Following equations \eqref{eqn:lmm_reg} and \eqref{eqn:lmm_reg_u}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso uses the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generlized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
+We will first derive the LMM-Lasso objective function in the absence of unpenalized covariates for the sake of notational simplicity. Following equations \eqref{eqn:lmm_reg} and \eqref{eqn:lmm_reg_u}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso uses the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generlized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
 
 \begin{equation}
 \label{eqn:rtY_distn}
-\bV^{-\frac{1}{2}}\by \sim N(\bV^{-\frac{1}{2}} \bX \bbeta, \bI)
+\bV^{-\frac{1}{2}}\by \sim N(\bV^{-\frac{1}{2}} \bX \bbeta, \bI),
 \end{equation}
-and a regular \anna{vanilla, naive, regular?} Lasso model can be fit on the transformed data, ($\bV^{-\frac{1}{2}}\bX, \bV^{-\frac{1}{2}}\by$). \anna{...however, as Karl Rohe paper shows, GLS does not completely translate to penalized regression...comment on this?}
+and thus a regular \anna{vanilla, naive, regular?} Lasso model can be fit on the transformed data, ($\bV^{-\frac{1}{2}}\bX, \bV^{-\frac{1}{2}}\by$). \anna{...however, as Karl Rohe paper shows, GLS does not completely translate to penalized regression...comment on this?}
 
 Using the spectral decomposition of $\bK$ described in equation \eqref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorization 
 \begin{align*}
@@ -216,7 +213,7 @@ Q(\bbeta | \bXT, \byT, \bW) = || \bW (\byT - \bXT \bbeta)||_2^2 + \lambda || \bb
 \end{equation}
 In the presence of an intercept and unpenalized covariates, \eqref{eqn:rtY_distn} becomes 
 \begin{equation}
-\bV^{-\frac{1}{2}}\by \sim N\left(\bV^{-\frac{1}{2}} \bX{^\prime} \bbeta{^\prime}, \bI \right)
+\bV^{-\frac{1}{2}}\by \sim N\left(\bV^{-\frac{1}{2}} \bX{^\prime} \bbeta{^\prime}, \bI \right),
 \end{equation}
 where $\bX{^\prime} = \begin{bmatrix} \bX_0 & \bX \end{bmatrix}$ and $\bbeta{^\prime} = \begin{bmatrix} \bbeta_0^\T & \bbeta^\T \end{bmatrix}^\T$. This in turn leads to a new version of \eqref{eqn:lmm_obj}, our objective function,  
 \begin{equation}
@@ -248,7 +245,6 @@ Using the result of the eigendecomposition from \eqref{eqn:k}, $\bK = p^{-1} \bR
 
 $$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI) $$
 $$ \bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI) \Rightarrow \bR \bgamma \sim N(\boldsymbol{0}, \sigmagg \bK).$$
-
 Based on the relationship between equations \eqref{eqn:pca_reg} and \eqref{eqn:pc_lmm_equiv}, we can see that modeling the principal components of $\bK$ as fixed or random effects relies on the same underlying regression model. However, while the LMM includes all the principal components, only $k < n$ are included in the fixed effects model. 
 
 Additionally, while the fixed effects model considers the principal components, $\bU$, of $\bK$, the LMM considers the principal components weighted by their corresponding eigenvalues. The eigenvalues have been shown to serve as a measure of biological relevance of each principal component in relation to underlying population structure \citep{hoffman2013correcting, price2006principal}. 
@@ -277,7 +273,7 @@ Although we derive these quantities under model \eqref{eqn:lmm_reg}, where $\bZ 
 \begin{align*}
     \by &= \bX\bbeta + \bZ\bgamma + \beps\\
     &= \bX\bbeta + \bX \boldsymbol{\tau} + \boldsymbol{\psi} + \beps\\
-    &=  \bX \bbeta{^*} + \beps{^*}
+    &=  \bX \bbeta{^*} + \beps{^*},
 \end{align*}
 where $\boldsymbol{\tau}$ quantifies bias in the estimated $\bbetaHat^*$ and $\boldsymbol{\psi}$ is absorbed by the residual error term. In other words, any model specified in terms of $\bZ$ and $\bgamma$ is equivalent to a parameterization using $\bX$ and $\boldsymbol{\tau}$.
 
