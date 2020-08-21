@@ -342,42 +342,25 @@ We begin by comparing the ordinary lasso, PC-Lasso, and LMM-Lasso as the level o
     \label{fig:mse}
 \end{figure}
 
-\anna{Obviously these need to be formatted... just use TP rates - FP not adding much}\\
-
-\anna{True positive rates}
-\begin{verbatim}
-structureX    xi    method      `round(mean(value), 2)` `round(sd(value), 2)`
- 1 1d_linear     0     lasso                         0.25                   0.05
- 2 1d_linear     0     lasso_pca10                   0.23                   0.05
- 3 1d_linear     0     lmm_ggmix                     0.25                   0.05
- 4 1d_linear     0     lmm_lasso                     0.25                   0.05
- 5 1d_linear     0     plmm_lasso                    0.25                   0.05
- 6 1d_linear     0.8   lasso                         0.23                   0.05
- 7 1d_linear     0.8   lasso_pca10                   0.28                   0.05
- 8 1d_linear     0.8   lmm_ggmix                     0.28                   0.05
- 9 1d_linear     0.8   lmm_lasso                     0.28                   0.05
-10 1d_linear     0.8   plmm_lasso                    0.290                  0.05
-11 indep_subpops 0     lasso                         0.23                   0.05
-12 indep_subpops 0     lasso_pca10                   0.21                   0.05
-13 indep_subpops 0     lmm_ggmix                     0.22                   0.05
-14 indep_subpops 0     lmm_lasso                     0.23                   0.05
-15 indep_subpops 0     plmm_lasso                    0.23                   0.05
-16 indep_subpops 0.8   lasso                         0.25                   0.05
-17 indep_subpops 0.8   lasso_pca10                   0.36                   0.06
-18 indep_subpops 0.8   lmm_ggmix                     0.38                   0.06
-19 indep_subpops 0.8   lmm_lasso                     0.38                   0.06
-20 indep_subpops 0.8   plmm_lasso                    0.39                   0.06
-21 other         0     lasso                         0.37                   0.06
-22 other         0     lasso_pca10                   0.36                   0.06
-23 other         0     lmm_ggmix                     0.4                    0.06
-24 other         0     lmm_lasso                     0.4                    0.06
-25 other         0     plmm_lasso                    0.41                   0.06
-26 other         0.8   lasso                         0.290                  0.06
-27 other         0.8   lasso_pca10                   0.47                   0.06
-28 other         0.8   lmm_ggmix                     0.61                   0.06
-29 other         0.8   lmm_lasso                     0.580                  0.06
-30 other         0.8   plmm_lasso                    0.580                  0.06
-\end{verbatim}
+\anna{var selection results}
+\begin{table}[H]
+\centering
+\begin{tabularx}{400pt}{cclYYY}
+\toprule
+$\eta$ & $\xi$ & \multicolumn{1}{c}{Method} & 1D Linear Admixture & Independent Subpopulations & Semi-Empirical \\ 
+\midrule
+\multirow{6}{*}{0.5} & \multirow{3}{*}{0} & Lasso & 0.25 (0.05) & 0.23 (0.05) & 0.37 (0.06) \\ 
+& & PC-Lasso & 0.23 (0.05) & 0.21 (0.05) & 0.36 (0.06) \\ 
+& & LMM-Lasso & 0.25 (0.05) & 0.23 (0.05) & 0.41 (0.06) \\
+\cmidrule{2-6}
+& \multirow{3}{*}{0.8} & Lasso & 0.23 (0.05) & 0.25 (0.05) & 0.29 (0.06) \\ 
+& & PC-Lasso & 0.28 (0.05) & 0.36 (0.06) & 0.47 (0.06) \\ 
+& & LMM-Lasso & 0.29 (0.05) & 0.39 (0.06) & 0.58 (0.06) \\ 
+\bottomrule
+\end{tabularx}
+\label{tab:var_sel}
+\caption{True positive rates, mean (SD), for different data types in the presence and absence of environmental confounding with coarse subpopulation structure and dichotomous-discordant environmental effects.}
+\end{table}
 
 %------------------------------%
 \subsection{LMM-Lasso outperforms PC-Lasso in the presence of fine subpopulation structure}

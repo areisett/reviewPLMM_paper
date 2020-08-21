@@ -9,6 +9,13 @@
 \usepackage{tikz}
 \usepackage{tkz-euclide}
 
+% table packages and commands
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tabularx}
+\renewcommand\tabularxcolumn[1]{m{#1}} % for vertical centering in tables
+\newcolumntype{Y}{>{\centering\arraybackslash}X} % centering for X columns
+
 % Tikz settings optimized for causal graphs.
 % Just copy-paste this part
 \usetikzlibrary{shapes,decorations,decorations.markings,arrows,calc,arrows.meta,fit,positioning}
