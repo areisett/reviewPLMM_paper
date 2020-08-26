@@ -7,8 +7,6 @@
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\anna{REPLACE FIGURES WITH RESULTS FROM PLMM-LASSO ONCE FINISHED}
-
 The objective of many genetic studies is to accurately identify variants associated with complex traits or disease, and to estimate the effects of those variants. Such information is valuable for assessing an individual's risk of developing a particular condition, elucidating the underlying genetic architecture of a trait or disease, and identifying potential drug targets. However, this effort may be hindered by several factors such as non-independent samples, large numbers of variants, and linkage disequilibrium (LD). 
 
 % \anna{keep this for later use when talking about genetic background?} Genetic variants are often correlated with each other such that univariate testing may be prone to false positives and biased estimates. When a genetic variant of interest is highly correlated with others, the effects of these will be attributed to the variant in question. This may result in causal SNPs being removed from analysis, so that only SNPs in LD with the causal loci, as opposed to the causal loci themselves, can be identified and their effects estimated. 
@@ -407,7 +405,7 @@ LMM-Lasso-ggmix achieves a moderate improvement in the estimation of $\eta$ comp
 
 Overall these results show that LMM-Lasso-ggmix performs as well as LMM-Lasso-Rakitsch in estimating $\bbeta$ and outperforms LMM-Lasso-Rakitsch in estimating $\eta$ when $n << p$. However, these are also the settings in which LMM-Lasso-ggmix is most computationally inefficient. The bottom panel of Figure \ref{fig:eta_beta_mse} shows the computing time required of each method in the various simulation settings, and shows that when $n << p$, LMM-Lasso-ggmix is up to 60 times slower than LMM-Lasso-Rakitsch.
 
-Conversely, in settings where $n \ge p$, LMM-Lasso-ggmix is up to 10 times faster than LMM-Lasso-Rakitsch. However, these are also settings in which LMM-Lasso Rakitsch outperforms LMM-Lasso-ggmix in estimating $\bbeta$ and $\eta$ accurately and consistently, likely due to the ill-conditioning of the RRM \anna{cite French paper (?)}.
+Conversely, in settings where $n \ge p$, LMM-Lasso-ggmix is up to 10 times faster than LMM-Lasso-Rakitsch. However, these are also settings in which LMM-Lasso Rakitsch outperforms LMM-Lasso-ggmix in estimating $\bbeta$ and $\eta$ accurately and consistently, likely due to the ill-conditioned RRM \citep{ledoit2004well}.
 
 % Given the intended use of these methods for the analysis of genetic data, where the number of genetic variants often outnumber the number of subjects, these results could be of little consequence to practitioners. 
 
@@ -418,10 +416,6 @@ Conversely, in settings where $n \ge p$, LMM-Lasso-ggmix is up to 10 times faste
      \caption{$\bbeta$ and $\eta$ estimation accuracy of LMM-Lasso-Rakitsch and LMM-Lasso-ggmix for varying $\eta$ levels and sample sizes with independent subpopulation data, coarse subpopulation structure, $\xi = 0.8$, and dichotomous-discordant environmental effect structure.}
     \label{fig:eta_beta_mse}
 \end{figure}
-
-\anna{add some info/figure on convergence and number of iterations for lmm-lasso vs ggmix}
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
