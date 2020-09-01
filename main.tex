@@ -139,31 +139,26 @@ Several studies have shown that LMMs outperform PC-adjustment methods in the uni
 
 
 %------------------------------%
-\pb{I think we need a more descriptive section title than ``Model''}
-\subsection{Model}
+\subsection{LMM and PC models}
 
-\pb{(1) should we use something besides p for MAF?  Seems like we're overloading p. (2) Mention motivation for standardizing?}
+\pb{(2) Mention motivation for standardizing?}
 
-To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$. We denote the standardized version of this genotype matrix as $\bX$, where each $X_{ij} = (G_{ij} - 2 p_j) / \sqrt{2 p_j (1 - p_j)}$ and $p_j$ is the minor allele frequency (MAF) of SNP $j$ \citep{zhang2015principal, price2006principal}. Additionally, $\bX_0$ represents an $n \times p_0$ matrix of unpenalized covariates and the intercept. Thus, at a minimum, $\bX_0$ will be an $n \times 1$ vector of 1s to represent the intercept, in which case $\bbeta_0 \equiv \beta_0$ is the scalar intercept. However, $\bX_0$ may additionally include \anna{observed (?)} covariates such as age, sex, or smoking history, which are included in the model without penalty. We assume that the $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of these covariates, additive SNP effects, environmental effects, and observational noise, and consider the linear mixed model,
+To describe and compare PC-Lasso and LMM-Lasso, we consider an $n \times p$ matrix of genotype data $\boldsymbol{G}$ for $n$ subjects and $p$ SNPs, where each $G_{i,j} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$. \anna{in practice we standardize this matrix because reasons...} We denote the standardized version of this genotype matrix as $\bX$, where each $X_{ij} = (G_{ij} - 2 \pi_j) / \sqrt{\pi_j (1 - \pi_j)}$ and $\pi_j$ is the minor allele frequency (MAF) of SNP $j$ \citep{zhang2015principal, price2006principal}. Additionally, $\bX_0$ represents an $n \times p_0$ matrix of unpenalized covariates and the intercept. Thus, at a minimum, $\bX_0$ will be an $n \times 1$ vector of 1s to represent the intercept, in which case $\bbeta_0 \equiv \beta_0$ is the scalar intercept. However, $\bX_0$ may additionally include observed covariates such as age, sex, or smoking history, which are included in the model without penalty. We assume that the $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of these covariates, additive SNP effects, environmental effects, and observational noise, and consider the linear model,
 \begin{equation}
     \label{eqn:model}
     \by = \bX_0 \bbeta_0 + \bX\bbeta + \bZ\bgamma + \beps
 \end{equation}
 where $\bbeta_0$ is a $p_0 \times 1$ vector which includes the intercept term and the effects of any unpenalized covariates, $\bbeta$ is a $p \times 1$ vector of SNP effects, $\bgamma$ is a $q \times 1$ vector of environmental effects, $\bZ$ is an $n \times q$ matrix that allocates environmental effects among subjects, and $\beps \sim N(\boldsymbol{0}, \sigmaee \bI_n)$. Often it is assumed that subjects belong to $q \le p$ subpopulations, and $\bZ$ is a corresponding incidence matrix of 0s and 1s. However, as we will discuss, this is not the only possibility.
 
-\pb{Need to discuss fact that Z is not observed.  Perhaps move discussion of decomposition to here?  Or at least mention it?} \anna{how is Z different from X0? introduce this earlier... explicityly state that Z is not directly observed}
+A key feature which differentiates \eqref{eqn:model} from traditional linear mixed models is that in our setting, $\bZ$ is not observed directly, but must be corrected for in order to remove the effects of confounding influences. A common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}. This, in turn, motivates the ways in which LMM-Lasso and PC-Lasso attempt to model unobserved confounding effects. 
 
-LMM-Lasso relies on matrix decompositions of $\bX$ and the realized relationship matrix (RRM), $\bK = p^{-1} \bX \bX^\T$, which describes the pair-wise genetic similarity among subjects \citep{hayes2009increased}. Using the singular value decomposition (SVD) of the standardized genotype matrix, we can derive the spectral decomposition of the RRM: 
+Both PC-Lasso and LMM-Lasso rely on matrix decompositions of $\bX$ and the realized relationship matrix (RRM), $\bK = p^{-1} \bX \bX^\T$, which describes the pair-wise genetic similarity among subjects \citep{hayes2009increased}. Using the singular value decomposition (SVD) of the standardized genotype matrix, we can derive the spectral decomposition of the RRM: 
 
-\pb{make one line?}
-\begin{align}
+\begin{equation}
     \label{eqn:k}
-    \bK &= \frac{1}{p} \bX \bX^\T \nonumber \\
-                   &= \frac{1}{p} \bU \bD^2 \bU^\T \nonumber \\
-                   &= \frac{1}{p} \bU \bD (\bU \bD)^\T \nonumber \\
-                   &= \frac{1}{p} \bR \bR^\T,
-\end{align}
-where $\bD^2$ is an $n \times n$ diagonal matrix containing the $k$ nonzero eigenvalues of $\bK$ (equivalently, the $k$ nonzero squared singular values of $\bX$) on the top-left diagonal, followed by $n - k$ zeroes on the bottom-right diagonal, and $\bU$ is the corresponding $n \times n$ orthonormal matrix of the left eigenvectors or principal components of $\bK$ (equivalently, the left singular vectors of $\bX$.) The first $k$ columns of $\bU$ correspond to the nonzero eigenvalues of $\bK$ (squared singular values of $\bX$.) The columns of $\bR$ are thus the principal components of $\bK$ weighted by their corresponding singular values. \anna{cut some of this?}
+    \bK = \frac{1}{p} \bX \bX^\T = \frac{1}{p} \bU \bD^2 \bU^\T = \frac{1}{p} \bR \bR^\T,
+\end{equation}
+where $\bD^2$ is an $n \times n$ diagonal matrix containing the $k$ nonzero eigenvalues of $\bK$ on the top-left diagonal, followed by $n - k$ zeroes on the bottom-right diagonal. $\bU$ is the corresponding $n \times n$ orthonormal matrix of left eigenvectors, or principal components, of $\bK$. The first $k$ columns of $\bU$ correspond to the nonzero eigenvalues of $\bK$, and the columns of $\bR$ are thus the principal components of $\bK$ weighted by their corresponding singular values. 
 
 %------------------------------%
 \subsection{PC-Lasso}
@@ -182,24 +177,18 @@ where $\lambda$ is a tuning parameter, and $|| \boldsymbol{\beta} ||_1 = \sum_{j
 
 %------------------------------%
 \subsection{LMM-Lasso}
+\label{sec:lmmlasso}
 
-Conversely, LMM-Lasso models $\bZ\bgamma$ as a random effect.
-\pb{I think this needs to be discuss much earlier, in Section 3.1}
-Typically, $\bZ$ is not observed directly, and a common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}. This results in the LMM regression model
+Conversely, LMM-Lasso models $\bZ\bgamma$ as a random effect, which corresponds to the LMM model
 \begin{equation}
     \label{eqn:lmm_reg}
     \by = \bX_0\bbeta_0 + \bX\bbeta + \bX\bgamma+ \beps,
 \end{equation}
 $$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI) $$
 $$ \bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI) \Rightarrow \bX \bgamma \sim N(\boldsymbol{0}, \sigmagg \bK), $$
-where $\sigmagg$ is the additive genetic variance, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation paramaterizes the model in terms of $\bu=\bX\bgamma$, which yields the equivalent model \pb{Writing these equations out twice seems redundant}
-\begin{equation}
-    \label{eqn:lmm_reg_u}
-    \by = \bX_0\bbeta_0 + \bX\bbeta + \bu + \beps
-\end{equation}
-$$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI) $$
-$$ \bu \sim N(\boldsymbol{0}, \sigmagg \bK).$$
-We will first derive the LMM-Lasso objective function in the absence of unpenalized covariates for the sake of notational simplicity. Following equations \eqref{eqn:lmm_reg} and \eqref{eqn:lmm_reg_u}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso uses the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generlized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
+where $\sigmagg$ is the additive genetic variance, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation paramaterizes the model in terms of $\bu=\bX\bgamma$, which yields an equivalent model. 
+
+We will first derive the LMM-Lasso objective function in the absence of unpenalized covariates for the sake of notational simplicity. Following equation \eqref{eqn:lmm_reg}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-Lasso uses the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generlized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
 
 \begin{equation}
 \label{eqn:rtY_distn}
@@ -231,11 +220,8 @@ Q(\bbeta | \bXT{^\prime}, \byT, \bW) = || \bW (\byT - \bXT{^\prime} \bbeta{^\pri
 where $\bXT{^\prime} = \bU^\T \bX{^\prime}$, so that all of the data are transformed, but only the elements of $\bbeta{^\prime}$ corresponing to SNPs are penalized. 
 
 %------------------------------%
-\subsubsection{LMM-Lasso variants}
-\label{sec:rak-ggmix}
-\anna{remove this as a section}
 
-\anna{make this sentence less weird... how to estimate W leads to different ways leads to 2 different variants...} We have so far used the term $\bW$ to describe the LMM-Lasso method. However, the form of $\bW$ and method of variance component estimation differs between LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. LMM-Lasso-Rakitsch uses a two-step procedure for estimating the variance components, $\sigmaee$ and $\delta := \sigmaee / \sigmagg$ \citep{Rakitsch2012}. These variance components and the corresponding weights are estimated once under the assumption of a null model. A Lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \citep{glmnet} or \texttt{ncvreg} \citep{ncvreg}. LMM-Lasso-ggmix iteratively updates $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm \citep{bhatnagar2019simultaneous}. This iterative update scheme necessitates the use of the corresponding \texttt{R} package \texttt{ggmix} \citep{ggmix}. We postpone further discussion of the differences between these methods to section \ref{sec:results}.
+Different variance component estimation methods lead to two different forms of $\widehat{\bW}$ and LMM-Lasso variants: LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. LMM-Lasso-Rakitsch uses a two-step procedure for estimating the variance components, $\sigmaee$ and $\delta := \sigmaee / \sigmagg$ \citep{Rakitsch2012}. These variance components and the corresponding weights are estimated once under the assumption of a null model. A Lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \citep{glmnet} or \texttt{ncvreg} \citep{ncvreg}. LMM-Lasso-ggmix iteratively updates $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm \citep{bhatnagar2019simultaneous}. This iterative update scheme necessitates the use of the corresponding \texttt{R} package \texttt{ggmix} \citep{ggmix}. We postpone further discussion of the differences between these methods to section \ref{sec:results}.
 
 %------------------------------%
 % \subsubsection{\anna{Intuition from GLS (?) p-values and SEs in response to rotation?}}
@@ -246,7 +232,7 @@ where $\bXT{^\prime} = \bU^\T \bX{^\prime}$, so that all of the data are transfo
 
 It has been shown that the random effect formulation of model \eqref{eqn:model} used by LMM-Lasso can be equivalently expressed in terms of fixed effects. \citet{zhang2015principal} derived this equivalence using a probabilistic PCA formulation, while \citet{hoffman2013correcting} used the singular value decomposition of $\bX$, and the decomposition of $\bK$, which we briefly review.
 
-Using the result of the eigendecomposition from \eqref{eqn:k}, $\bK = p^{-1} \bR \bR^\T$ , the LMM model \eqref{eqn:lmm_reg_u} can be written equivalently as
+Using the result of the eigendecomposition from \eqref{eqn:k}, $\bK = p^{-1} \bR \bR^\T$ , the LMM model \eqref{eqn:lmm_reg} can be written equivalently as
 
 \begin{equation}
     \label{eqn:pc_lmm_equiv}
@@ -406,7 +392,7 @@ In addition to evaluating PC-Lasso and LMM-Lasso in the presence of coarse and f
 \subsection{Different implementations of LMM-Lasso}
 %------------------------------%
 
-In section \ref{sec:rak-ggmix} we briefly mentioned the existence of two LMM-Lasso variants: LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. Both methods perform quite similarly in terms of $\bbeta$ MSE and variable selection. Becasue of this, the preceding results, though generated using the LMM-Lasso-Rakitsch implementation, are representative of both LMM-Lasso methods in the $n = 200, p = 1000$ setting. The primary purpose of this review is to compare LMM-Lasso to other penalized regression methods with respect to correcting for population structure and environmental confounding. However, given the generally strong performance of LMM-Lasso, we also wish to discuss the key differences between these two implementations and provide guidance for potential users.
+In section \ref{sec:lmmlasso} we briefly mentioned the existence of two LMM-Lasso variants: LMM-Lasso-Rakitsch and LMM-Lasso-ggmix. Both methods perform quite similarly in terms of $\bbeta$ MSE and variable selection. Becasue of this, the preceding results, though generated using the LMM-Lasso-Rakitsch implementation, are representative of both LMM-Lasso methods in the $n = 200, p = 1000$ setting. The primary purpose of this review is to compare LMM-Lasso to other penalized regression methods with respect to correcting for population structure and environmental confounding. However, given the generally strong performance of LMM-Lasso, we also wish to discuss the key differences between these two implementations and provide guidance for potential users.
 
 LMM-Lasso-Rakitsch uses a two-step approach. First, the variance components are estimated under the assumption of a null model. Then, the estimated variance components are used to transform the data, and the $\bbeta$ are estimated using coordinate descent. LMM-Lasso-ggmix seeks to improve upon this procedure by re-estimating the variance components and $\bbeta$ iteratively. Although this seems a reasonable approach, we have been unable to find a scenario where LMM-Lasso-ggmix outperforms the LMM-Lasso-Rakitsch in estimation accuracy of $\bbeta$. In order to systematically compare both methods, we carried out simulations where $p = 1000$, $n = \{200, 400, 600, 800, 1000, 1200, 1400\}$, and $\eta = \{0.2, 0.5, 0.8\}$. Figure \ref{fig:eta_beta_mse} shows the MSE for estimation of the parameters $\bbeta$ and $\eta$, in addition to the corresponding computing time required. 
 
