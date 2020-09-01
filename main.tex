@@ -91,7 +91,7 @@ New statistical methods to control for the effects of confounding due to populat
 \label{fig:ps_env_block}
 \end{figure}
 
-\pb{The flow of ideas here does not make sense to me; let's discuss} \anna{earlier or later paragraph} Whether or not such methods are effective at reducing confounding effects depends upon whether population structure can be accurately inferred. \anna{an important point to note, and one that we will return to later in 3.5, is that this only leads to confounding if pop structure is correlated with the environment...}
+Whether or not such methods are effective at reducing confounding effects depends upon whether population structure can be accurately inferred. An important concept to note, and one that we will return to in section \ref{sec:sim_env_conf}, is that population structure only leads to confounding if it is correlated with the environment.
 In the presence of environmental heterogeneity which affects the phenotype of interest, and which is not well-approximated by inferred population structure, SNP-phenotype associations will not be confounded. This is due to the absence of a causal pathway between population stratification and environment, as depicted in Figure \ref{fig:ps_env_block2}. In such a scenario, failing to account for unobserved environmental effects is likely to result in greater residual variability, however, SNP effect estimates will be unbiased \citep{greenland1999causal}. We will return to this idea and its mathematical justification in section \ref{sec:methods}. 
 
 \begin{figure}[H]
@@ -267,6 +267,7 @@ Whether modeled as a fixed or random effect, the underlying effect of $\bZ \bgam
 
 %------------------------------%
 \subsection{Simulating environmental confounding}
+\label{sec:sim_env_conf}
 
 In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_reg}, a common practice is to draw a new value of the quantity $\bX\bgamma$ from a $N(\boldsymbol{0}, \sigmagg \bK)$ for each replication of the analysis \citep{Rakitsch2012, bhatnagar2019simultaneous}.  We argue that this is somewhat misleading from the perspective of understanding the statistical properties of the method. Averaging over situations in which the environmental confounding is constantly changing direction and magnitude is inconsistent with the confounding environmental effects. This has the effect of ``washing out'' bias in $\bbetaHat$, which is of interest, while inflating the variance. To illustrate this concept, consider the low-dimensional ordinary least squares (OLS) estimates of $\bbeta$ based on model \eqref{eqn:lmm_reg} where, without loss of generatlity, we assume $\bX_0 \bbeta_0 = \boldsymbol{0}$ for ease of notation: 
 \begin{align}
