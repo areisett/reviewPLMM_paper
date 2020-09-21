@@ -249,10 +249,8 @@ Whether modeled as a fixed or random effect, the underlying effect of $\bZ \bgam
 
 
 %------------------------------%
-\subsection{\anna{Decomposing (Quantifying?) the effect of environmental confounding}}
+\subsection{Partitioning the effects of environmental confounding}
 \label{sec:sim_env_conf}
-
-\pb{How about ``Partitioning the effects of environmental confounding''}
 
 In carrying out simulation studies of the LMM regression model \eqref{eqn:lmm_reg}, a common practice is to draw a new value of the quantity $\bX\bgamma$ from a $N(\boldsymbol{0}, \sigmagg \bK)$ for each replication of the analysis \citep{Rakitsch2012, bhatnagar2019simultaneous}.  We argue that this is somewhat misleading from the perspective of understanding the statistical properties of the method in the presence of environmental heterogeneity. Averaging over situations in which the environmental confounding is constantly changing direction and magnitude has the effect of ``washing out'' bias in $\bbetaHat$. 
 
@@ -272,25 +270,21 @@ To illustrate this concept mathematically, consider the low-dimensional ordinary
 Under the assumption that environmental effects arise from a random process, $\bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI)$, equations \eqref{eqn:expectation} and \eqref{eqn:variance} yield $\mathbb{E}(\bbetaHat) = \bbeta$, and $\mathbb{V}(\bbetaHat) = p^{-1}\sigmagg\bI + \sigmaee (\bX^\T \bX)^{-1}$, respectively. However, under the assumption that the quantity $\bgamma$ is fixed, equations \eqref{eqn:expectation} and \eqref{eqn:variance} yield $\mathbb{E}(\bbetaHat) = \bbeta + \bgamma, \mathbb{V}(\bbetaHat) = \sigmaee (\bX^\T \bX)^{-1}$, allowing us to quantify estimation bias due to environmental heterogeneity. 
 
 Although we derive these quantities under model \eqref{eqn:lmm_reg}, where $\bZ = \bX$, these results also hold for the more general model \eqref{eqn:model}, where $\bZ \ne \bX$. We see this by decomposing $\bZ \bgamma$ into components in and orthogonal to the column space of the projection matrix of $\bX$.  Let $\boldsymbol{P}_{\bX} = \bX (\bX^\T \bX)^{-1} \bX^\T$ denote the projection matrix of $\bX$, with $\mathcal{C}(\boldsymbol{P}_{\bX})$ and $\mathcal{N}(\boldsymbol{P}_{\bX})$ denoting the column and null spaces of $\boldsymbol{P}_{\bX}$, respectively. Then there exist $\boldsymbol{\tau}, \boldsymbol{\psi}: \bZ \bgamma = \bX \boldsymbol{\tau + \psi}$, where $\bX \boldsymbol{\tau} \in \mathcal{C}(\boldsymbol{P}_{\bX})$ and $\boldsymbol{\psi} \in \mathcal{N}(\boldsymbol{P}_{\bX})$.  This in turn means that
-\begin{align*}
-    \by &= \bX\bbeta + \bZ\bgamma + \beps\\
-    &= \bX\bbeta + \bX \boldsymbol{\tau} + \boldsymbol{\psi} + \beps\\
+\begin{align}
+    \label{eqn:partition_e}    \by &= \bX\bbeta + \bZ\bgamma + \beps \notag \\
+    &= \bX\bbeta + \bX \boldsymbol{\tau} + \boldsymbol{\psi} + \beps \notag\\
     &=  \bX \bbeta{^*} + \beps{^*};
-\end{align*}
+\end{align}
 note that $\boldsymbol{\tau}$ quantifies bias in the estimated $\bbetaHat^*$ and $\boldsymbol{\psi}$ is absorbed by the residual error term. In other words, any model specified in terms of $\bZ$ and $\bgamma$ is equivalent to a parameterization using $\bX$ and $\boldsymbol{\tau}$.  This result provides the explicit mathematical justification for our statement from section \ref{sec:background}, that SNP-phenotype associations will be unbiased in the presence of environmental heterogeneity which does not correspond to population structure.
 
 Furthermore, the proportion of the environmental effect in the column space of $\boldsymbol{P}_{\bX}$ (i.e., the portion that will cause confounding) is given by 
 \begin{equation}
     \label{eqn:ratio}
-    \anna{||\bX \boldsymbol{\tau}||_2^2 / ||\bZ \bgamma||_2^2},
+    ||\bX \boldsymbol{\tau}||_2^2 / ||\bZ \bgamma||_2^2,
 \end{equation}
-\pb{should we have a symbol for this?}
-which can range from 0 (no confounding) to 1 (entirely confounding). In the case where $\bZ \bgamma$ is entirely independent of population structure, $\bZ \bgamma \in \mathcal{N}(\boldsymbol{P}_{\bX})$ and $\bX \boldsymbol{\tau} = \boldsymbol{0}$ so that $\mathbb{E}(\bbetaHat^*) = \bbeta$. In this scenario, the SNP-phenotype associations will be unbiased, but the residual variance will be increased. Although we focus our attention on accurately estimating fixed SNP effects, we note that this result could lead to substantial bias in narrow-sense heritability estimates. \pb{Hmm...could this sentence be moved somewhere else?  I feel that narrow-sense heritability deserves a paragraph somewhere} \anna{move to discussion do a paragraph on narrow-sense heritability... reference this eq - and give it a label}
+which we refer to as the Confounding Proportion (CP). CP can range from 0 (no confounding) to 1 (entirely confounded). In the extreme case where $\bZ \bgamma$ is entirely independent of population structure, $\bZ \bgamma \in \mathcal{N}(\boldsymbol{P}_{\bX})$ and $\bX \boldsymbol{\tau} = \boldsymbol{0}$ so that $\mathbb{E}(\bbetaHat^*) = \bbeta$. In this scenario, the SNP-phenotype associations will be unbiased, but the residual variance will be increased. 
 
-\anna{In practical applications $\bZ \bgamma$ is unlikely to be entirely orthogonal to population structure. However, the degree to which it reflects population structure and has the potential to bias SNP-phenotype associations can be inferred from $\bX$ and quantified by \eqref{eqn:ratio}. We will use this metric in our analysis of our simulation results in Section \ref{sec:results}. Given the high-dimensional nature of our data, we use a low-rank approximation of $(\bX^\T \bX)^{-1}$. We use this approach as opposed to a generalized inverse in order to ensure a unique solution.}
-
-  \pb{Need to mention that this ratio is difficult/impossible to estimate with real data, but can be calculated in simulations and is informative, etc.}
-In practical applications $\bZ \bgamma$ is unlikely to be entirely orthogonal to population structure. However, the degree to which it reflects population structure \anna{and has the potential to bias SNP-phenotype associations can be inferred from $\bX$ and quantified by \anna{\eqref{eqn:ratio}}. We will use this metric in our analysis of our simulation results in Section \ref{sec:results}. Given the high-dimensional nature of our data, we will approximate $(\bX^\T \bX)^{-1}$ using a low-rank approximation. We use this approach as opposed to that of a generalized inverse in order to ensure a unique solution.}\pb{no need to mention generalized inverses}
+In real data settings CP cannot be calculated since $\bZ \bgamma$ is not directly observed. In simulation settings, however, this ratio is a useful metric for quantifying the degree to which $\bZ \bgamma$ reflects population structure and has the potential to bias SNP-phenotype associations. We will use CP in our interpretation of the simulation results in Section \ref{sec:results}. Given the high-dimensional nature of our data, we approximate $(\bX^\T \bX)^{-1}$ using a low-rank approximation. We use this approach in order to ensure a unique solution.
 
 %------------------------------%
 \subsection{Simulation study}
@@ -469,7 +463,10 @@ We considered two implementations of the LMM-Lasso method: LMM-Lasso-Rakitsch an
 
 As an additional point of interest, recall that we provide qualitative and mathematical explanations of how the degree to which differential environmental exposures may confound the genotype-phenotype relationship is dependent upon its similarity to population structure. While the objective of these explanations, and this work as a whole, is to elucidate the manner in which failing to correct for unobserved environmental effects can bias SNP effect estimates, it also highlights the manner in which such unobserved environmental effects have the potential to inflate residual model variance and bias narrow-sense heritability estimates. A more detailed treatment of narrow-sense heritability estimation is beyond the scope of this paper. However, we hope this emphasizes the broad implications and importance of the subtle distinction between the effect of population structure and unobserved environmental heterogeneity. 
 
-Finally, it is worth nothing that even in scenarios where LMM-Lasso outperforms other methods, its estimation accuracy still suffers due to the bias inherent in penalized regression methods. Because of this, bias-reduction techniques for penalized LMMs are an attractive avenue for future research.
+Finally, it is worth nothing that even in scenarios where LMM-Lasso outperforms other methods, its estimation accuracy still suffers due to the bias inherent in penalized regression methods. Because of this, bias-reduction techniques for penalized LMMs are an attractive avenue for future research.\\
+
+\anna{HERITABILITY PARAGRAPH}\\
+Although we focus our attention on accurately estimating fixed SNP effects, we note that the result shown in \ref{eqn:partition_e} could lead to substantial bias in narrow-sense heritability estimates. \pb{Hmm...could this sentence be moved somewhere else?  I feel that narrow-sense heritability deserves a paragraph somewhere} 
 
 
 
