@@ -280,7 +280,7 @@ note that $\boldsymbol{\tau}$ quantifies bias in the estimated $\bbetaHat^*$ and
 Furthermore, the proportion of the environmental effect in the column space of $\boldsymbol{P}_{\bX}$ (i.e., the portion that will cause confounding) is given by
 \begin{equation}
     \label{eqn:ratio}
-    ||\bX \boldsymbol{\tau}||_2^2 / ||\bZ \bgamma||_2^2,
+    \text{CP} = ||\bX \boldsymbol{\tau}||_2^2 / ||\bZ \bgamma||_2^2,
 \end{equation}
 which we refer to as the Confounding Proportion (CP). The CP can range from 0 (no confounding) to 1 (entirely confounded). In the extreme case where $\bZ \bgamma$ is completely independent of population structure, $\bZ \bgamma \in \mathcal{N}(\boldsymbol{P}_{\bX})$ and $\bX \boldsymbol{\tau} = \boldsymbol{0}$ so that $\mathbb{E}(\bbetaHat^*) = \bbeta$. In this scenario, the SNP-phenotype associations will be unbiased, but the residual error will be inflated. 
 
@@ -325,7 +325,7 @@ Environmental effects may be complex in different ways. Firstly, we considered w
     \caption{An illustration of four distinct patterns of environmental effects and corresponding $\bgamma$ values in the presence of 10 subpopulations ordered by genetic similarity.}
     \label{fig:gamma_structures}
 \end{figure}
-\noindent In the case of concordant and dichotomous effects, Figure \ref{fig:gamma_structures} shows that the first five ordered subpopulations are subject to an effect size of 1, while the second five are subject to an effect size of $-$1. In the case of discordant dichotomous effects, the first five subpopulations experience an effect size with an absolute value of \anna{1}, and the second five an absolute effect size of \anna{0.5}. However, the directions of these absolute effects sizes alternate among the ordered subpopulations so that genetically similar subpopulations do not experience similar environmental effects. \anna{not quite 1 and 0.5 because of centering and standardization...how to word this so it's not confusing?}
+\noindent In the case of concordant and dichotomous effects, Figure \ref{fig:gamma_structures} shows that the first five ordered subpopulations are subject to an effect size of 1, while the second five are subject to an effect size of $-$1. In the case of discordant dichotomous effects, the first five subpopulations experience an effect size with an absolute value of \anna{1}, and the second five an absolute effect size of \anna{0.5}. However, the directions of these absolute effects sizes alternate among the ordered subpopulations so that genetically similar subpopulations do not experience similar environmental effects. \anna{not quite 1 and 0.5 because of centering and standardization...how to word this so it's not confusing? - trying better version of dichotomous-discordant...}
 
 \subsubsection{Tuning parameter selection}
 Selection of the tuning parameter $\lambda$ plays an important role in all penalized regression methods, with many possible approaches. Here, for each model, we selected the $\lam$ value such that 50 SNPs were selected (recall that 50 is also the true number of causal SNPs). This method for selecting $\lambda$ was chosen in an attempt to compare the performance of all methods fairly, and as a strategy to evaluate methods in terms of variable selection, as it allows for direct comparison of the first 50 variables each method lets into the model.
@@ -353,10 +353,13 @@ The bottom row of Figure \ref{fig:mse} shows the MSE when $\xi = 0.8$. In this c
 
 Qualitatively, this is due to the fact that the Independent Subpopulations and Empirical data sets are characterized by more discrete, nonoverlapping genetic subpopulations, which more directly correspond to the nonoverlapping environmental effects than do the continuous and blended subpopulations of the 1D Linear Admixture data. In other words, a greater proportion of the environmental effect is in the column space of $\boldsymbol{P}_{\bX}$ for the Empirical and Independent Subpopulations data than for the 1D Linear Admixture data. We can quantify the proportion of the environmental component in the column space of $\boldsymbol{P}_{\bX}$ for each data type using the CP metric defined in \eqref{eqn:ratio} of Section \ref{sec:sim_env_conf}. CP $= 0.46, 0.99, 0.64$ for the 1D Linear Admixture, Independent Subpopulations, and Empirical data, respectively. The large CP of the Independent Subpopulations model reflects the extreme confounding and estimation bias for this data, for which the PC-Lasso and LMM-Lasso methods are able to correct. Meanwhile, the less dramatic improvement in MSE for the 1D Linear Admixture data by the PC-Lasso and LMM-Lasso methods confirms what we know from this data's substantially smaller CP value; that there is less confounding and bias which can be corrected for.
 
-Due to the differing sample sizes and subpopulation structures, a direct comparison of the Empirical CP with those from the simulated data sets is more complex...
+Due to the differing sample sizes and subpopulation structures, a direct comparison of the Empirical CP with those from the simulated data sets is more complex... this increases with equal subpopulation sizes
 
 \anna{\textbf{check this value for sampsizes of 588 for admixture and independent...maybe even diff subpop sizes? at least to pin down the issue - more comparable with same sampesize and subpop sizes but still different...}}
-
+ 
+ \anna{correlation between columns of X..., mspe vs mse- for various reasons CP is a reasonable measure but not perfect...} 
+ 
+ 
 \anna{with the same sample size and subpopulation structure as the vanderwas data, I can replicate the CP for the indepenent subpopulations data when simulating using a lower Fst value (as defined in the ochoa and storey papers: the mean inbreeding coefficient of the individuals’ local populations relative to their last common ancestral population. This FST naturally yields a useful pairwise FST between individuals.) So, this suggests that the greater improvement in the semi-empirical data is because there is less inbreeding (?????) still thinking about this...}
 
 \begin{figure}[H]
