@@ -284,7 +284,7 @@ Furthermore, the proportion of the environmental effect in the column space of $
 \end{equation}
 which we refer to as the Confounding Proportion (CP). The CP can range from 0 (no confounding) to 1 (entirely confounded). In the extreme case where $\bZ \bgamma$ is completely independent of population structure, $\bZ \bgamma \in \mathcal{N}(\boldsymbol{P}_{\bX})$ and $\bX \boldsymbol{\tau} = \boldsymbol{0}$ so that $\mathbb{E}(\bbetaHat^*) = \bbeta$. In this scenario, the SNP-phenotype associations will be unbiased, but the residual error will be inflated. 
 
-In real data settings CP cannot be calculated since $\bZ \bgamma$ is not directly observed. In simulation settings, however, this ratio is a useful metric for quantifying the degree to which $\bZ \bgamma$ reflects population structure and has the potential to bias SNP-phenotype associations. We will use CP in our interpretation of the simulation results in Section \ref{sec:results}. Given the high-dimensional nature of our data, we approximate $(\bX^\T \bX)^{-1}$ using a low-rank approximation. We use this approach in order to ensure a unique solution.
+In real data settings CP cannot be calculated since $\bZ \bgamma$ is not directly observed. In simulation settings, however, this ratio is a useful metric for quantifying the degree to which $\bZ \bgamma$ reflects population structure and has the potential to bias SNP-phenotype associations. We will use CP in our interpretation of the simulation results in Section \ref{sec:results}. Given the high-dimensional nature of our data, we use a low-rank approximation of $(\bX^\T \bX)^{-1}$ in order to ensure a unique solution.
 
 %------------------------------%
 \subsection{Simulation study}
