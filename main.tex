@@ -414,7 +414,7 @@ The right-hand panels of Figure \ref{fig:big_small_gamma} are consistent with Fi
     \centering
     % \includegraphics[scale = 0.9]{figures/fig2b.png}
     \includegraphics[scale = 0.9]{figures/mse_diff_hetero.png}
-    \caption{Relative performance of LMM-Lasso, PC-Lasso for fine and coarse subpopulation structures and varying environmental effect structures with Independent Subpopulations data, $\eta = 0.5$, and $\xi = 0.8$}
+    \caption{Relative performance of LMM-Lasso, PC-Lasso for fine and coarse subpopulation structures and varying environmental effect structures with Independent Subpopulations data, $\eta = 0.5$, and $\xi = 0.8$.}
     \label{fig:big_small_gamma}
 \end{figure}
 
@@ -432,7 +432,7 @@ LMM-Lasso-ggmix achieves an improvement in the estimation of $\eta$ compared to 
 
 Overall these results show that LMM-Lasso-ggmix performs as well as LMM-Lasso-Rakitsch in estimating $\bbeta$ and outperforms LMM-Lasso-Rakitsch in estimating $\eta$ when $n << p$. However, these are also the settings in which LMM-Lasso-ggmix is most computationally inefficient. The bottom panel of Figure \ref{fig:eta_beta_mse} shows the computing time required of each method in the various simulation settings, and shows that when $n << p$, LMM-Lasso-ggmix is up to 60 times slower than LMM-Lasso-Rakitsch. Conversely, in settings where $n \ge p$, LMM-Lasso-ggmix is up to 10 times faster than LMM-Lasso-Rakitsch. However, these are also settings in which LMM-Lasso Rakitsch substantially outperforms LMM-Lasso-ggmix in estimating $\bbeta$ and $\eta$ accurately and consistently. 
 
-LMM-Lasso-ggmix's poor performance in these scenarios are likely attributable to a number of a factors such as an ill-conditioned RRM  in $n \ge p$ settings \citep{ledoit2004well}. In addition, because LMM-Lasso-ggmix attempts to estimate more parameters than LMM-Lasso-Rakitsch, its optimization problem is not necessarily convex, making it prone to getting stuck in local minima before it is able to extensively explore the coefficient path. An examination of the number of iterations required for convergence for each $\lambda$ in the coefficient path suggests that this is the case for our various simulation settings \anna{Supplementary figure - in progress, stuck on dumb facet labeling with a factor issue}. Getting stuck in this manner would lead to few iterations required for each $\lambda$ value before convergence, allowing for an advantage in terms of computational speed, but poor estimation, as we see in Figure \ref{fig:eta_beta_mse}.
+LMM-Lasso-ggmix's poor performance in these scenarios are likely attributable to a number of a factors such as an ill-conditioned RRM  in $n \ge p$ settings \citep{ledoit2004well}. In addition, because LMM-Lasso-ggmix attempts to estimate more parameters than LMM-Lasso-Rakitsch, its optimization problem is not necessarily convex, making it prone to getting stuck in local minima before it is able to extensively explore the coefficient path. An examination of the number of iterations required for convergence for each $\lambda$ in the coefficient path suggests that this is the case for our various simulation settings (Supplementary Figure \ref{fig:s4}). Getting stuck in this manner would lead to few iterations required for each $\lambda$ value before convergence, allowing for an advantage in terms of computational speed, but poor estimation, as we see in Figure \ref{fig:eta_beta_mse}.
 
 \begin{figure}[H]
     \centering
