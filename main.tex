@@ -47,13 +47,11 @@ As an example, consider a genome wide association study (GWAS) to assess genetic
 
 % \anna{description of DAG below, in reference to previous one}
 
-This mechanism of environmental confounding is summarized in the directed acyclic graph displayed in Figure \ref{fig:ps_env}. The undirected dashed line between population stratification and environmental exposure indicates that while we assume these elements are correlated, we do not assume any causal direction. Otherwise stated, we do not assume that environmental factors directly influence population-specific allele frequencies, or vice versa, only that the two may be related. In the context of our air quality example, this means that we assume air quality is not directly altering individuals' allele frequencies, nor are allele frequencies causing individuals to move to regions of better or worse air quality. Genetic relatedness and environmental effects may become associated over time for any number of complex reasons beyond the scope of this paper. However, as we will discuss, many methods of correcting for population structure rely on this relationship and do not formally differentiate between effects of population structure and those of environment. Such methods assume that genetic relatedness serves as an accurate proxy for environmental exposures, which may or may not be the case depending on the exposure and population in question.
+This mechanism of environmental confounding is summarized in the directed acyclic graph displayed in diagram \eqref{diag:ps_env}. The undirected dashed line between population stratification and environmental exposure indicates that while we assume these elements are correlated, we do not assume any causal direction. Otherwise stated, we do not assume that environmental factors directly influence population-specific allele frequencies, or vice versa, only that the two may be related. In the context of our air quality example, this means that we assume air quality is not directly altering individuals' allele frequencies, nor are allele frequencies causing individuals to move to regions of better or worse air quality. Genetic relatedness and environmental effects may become associated over time for any number of complex reasons beyond the scope of this paper. However, as we will discuss, many methods of correcting for population structure rely on this relationship and do not formally differentiate between effects of population structure and those of environment. Such methods assume that genetic relatedness serves as an accurate proxy for environmental exposures, which may or may not be the case depending on the exposure and population in question.
 
-\pb{Just an FYI, you may want not to call this diagram a ``Figure''.  Sometimes you're restricted in terms of the number of figures you can include, and this doesn't really need to be a figure, just a diagram (like an equation).  Same thing for the other DAG}
-
-\begin{figure}[H]
+\begin{equation}
 \centering
-\begin{tikzpicture}
+\begin{tikzpicture}[baseline=(current  bounding  box.center)]
     \node (1) at (0,0) {Population Stratification};
     \node (2) [right = of 1] {Environment};
     \node (3) [below = of 1] {Observbed SNPs};
@@ -63,9 +61,9 @@ This mechanism of environmental confounding is summarized in the directed acycli
     \path (2) edge (4);
     \path (3) edge (4);
 \end{tikzpicture}
-\caption{Directed acyclic graph (DAG) of confounding due to population structure.}
-\label{fig:ps_env}
-\end{figure}
+%\caption{Directed acyclic graph (DAG) of confounding due to population structure.}
+\label{diag:ps_env}
+\end{equation}
 
 An additional source of confounding in genetic studies that we will briefly mention is that of confounding due to genetic background. This occurs in univariate association methods when a non-causal SNP is tested for association with a trait of interest, and that SNP is correlated with a causal SNP. As \citet{vilhjalmsson2012nature} note, any trait that has some genetic basis will be subject to genetic background effects, just as traits that are influenced by the environment may be subject to environmental confounding. Given the importance of both genetic and environmental contributions to many complex phenotypes, both genetic background and environmental confounding are important factors in our ability to identify true causal genetic relationships between SNPs and phenotype. LD pruning is commonly employed to reduce confounding due to genetic background in univariate association testing. However, we will focus on methods which address this via genomewide multivariate analysis.
 
@@ -74,46 +72,46 @@ An additional source of confounding in genetic studies that we will briefly ment
 
 One of the first methods to address the problem of confounding due to population structure is the genomic control (GC) method. Because the effect of this confounding is to inflate the distribution of test statistics, GC introduces a factor to counteract this effect and restore the appropriate null distribution. This deflation factor is estimated using loci independent of the phenotype of interest and the loci being tested for association \citep{devlin1999genomic, bacanu2000power, wang2009testing}. However, quantifying the extent of inflation is not trivial, and is sensitive to the nature and quantity of the loci used to estimate it \citep{hellwege2017population, marchini2004effects}. Additionally, GC does not correct effect size estimates, so resulting coefficient estimates will be unreliable after GC is applied, even if their corresponding test statistics and p-values have been appropriately adjusted \citep{hellwege2017population}.
 
-New statistical methods to control for the effects of confounding due to population stratification have proliferated as computational advances have allowed for the analysis of genetic data from large cohorts. Many of these methods attempt to block the causal pathway between population structure and observed SNP data. This is illustrated by the blocked arrow in Figure \ref{fig:ps_env_block}. As the figure shows, these methods do not directly address the environmental component of confounding due to population structure, instead controlling confounding by indirectly blocking the causal pathway between the environment and observed SNPs. 
+New statistical methods to control for the effects of confounding due to population stratification have proliferated as computational advances have allowed for the analysis of genetic data from large cohorts. Many of these methods attempt to block the causal pathway between population structure and observed SNP data. This is illustrated by the blocked arrow in diagram \eqref{diag:ps_env_block}. As the figure shows, these methods do not directly address the environmental component of confounding due to population structure, instead controlling confounding by indirectly blocking the causal pathway between the environment and observed SNPs. 
 
-\begin{figure}[H]
+\begin{equation}
 \centering
-\begin{tikzpicture}
+\begin{tikzpicture}[baseline=(current  bounding  box.center)]
     \node (1) at (0,0) {Population Stratification};
     \node (2) [right = of 1] {Environment};
     \node (3) [below = of 1] {Observed SNPs};
     \node (4) [below = of 2] {Phenotype};
     \path[bidirected, -] (1) edge (2);
-    \path[magenta, line width = 0.5] (1) edge (3);
+    \path[red, line width = 0.5] (1) edge (3);
     \path (2) edge (4);
     \path (3) edge (4);
-    \tkzMarkSegment[color=magenta,pos=.5,mark=x](1,3)
+    \tkzMarkSegment[color=red,pos=.5,mark=x](1,3)
 \end{tikzpicture}
-\caption{The causal pathway between the environment and observed SNPs may be indirectly blocked by many methods that attempt to reduce confounding due to population structure.}
-\label{fig:ps_env_block}
-\end{figure}
+%\caption{The causal pathway between the environment and observed SNPs may be indirectly blocked by many methods that attempt to reduce confounding due to population structure.}
+\label{diag:ps_env_block}
+\end{equation}
 
 Whether or not such methods are effective at reducing confounding effects depends upon whether population structure can be accurately inferred. An important concept to note, and one that we will return to in Section \ref{sec:sim_env_conf}, is that population structure only leads to confounding if it is correlated with the environment.
-In the presence of environmental heterogeneity which affects the phenotype of interest in a manner that is orthogonal to population structure, SNP-phenotype associations will not be confounded. This is due to the absence of a causal pathway between population stratification and environment, as depicted in Figure \ref{fig:ps_env_block2}. In such a scenario, failing to account for unobserved environmental effects is likely to result in greater variability, but SNP effect estimates will remain unbiased \citep{greenland1999causal}. We will return to this idea and its mathematical justification in Section \ref{sec:methods}. 
+In the presence of environmental heterogeneity which affects the phenotype of interest in a manner that is orthogonal to population structure, SNP-phenotype associations will not be confounded. This is due to the absence of a causal pathway between population stratification and environment, as depicted in diagram \eqref{diag:ps_env_block2}. In such a scenario, failing to account for unobserved environmental effects is likely to result in greater variability, but SNP effect estimates will remain unbiased \citep{greenland1999causal}. We will return to this idea and its mathematical justification in Section \ref{sec:methods}. 
 
-\begin{figure}[H]
+\begin{equation}
 \centering
-\begin{tikzpicture}
+\begin{tikzpicture}[baseline=(current  bounding  box.center)]
     \node (1) at (0,0) {Population Stratification};
     \node (2) [right = of 1] {Environment};
     \node (3) [below = of 1] {Observed SNPs};
     \node (4) [below = of 2] {Phenotype};
-    \path[bidirected, -, magenta] (1) edge (2);
+    \path[bidirected, -, red] (1) edge (2);
     \path (1) edge (3);
     \path (2) edge (4);
     \path (3) edge (4);
-    \tkzMarkSegment[color=magenta,pos=.5,mark=x](1,2)
+    \tkzMarkSegment[color=red,pos=.5,mark=x](1,2)
 \end{tikzpicture}
-\caption{The causal pathway between the environment and observed SNPs may be blocked if genetic information does not serve as an accurate proxy for it.}
-\label{fig:ps_env_block2}
-\end{figure}
+%\caption{The causal pathway between the environment and observed SNPs may be blocked if genetic information does not serve as an accurate proxy for it.}
+\label{diag:ps_env_block2}
+\end{equation}
 
-Assuming for now that population structure is correlated with environmental exposures and can be accurately inferred from available data, we return to our consideration of methods that attempt to control for confounding via the mechanism depicted in Figure \ref{fig:ps_env_block}. Such methods include LMMs, principal-component-based approaches, and stratified analyses. Stratified analyses refer to a general class of methods which attempt to infer subject membership within a discrete number of nonoverlapping subpopulations. Subsequent analyses are conducted within each subpopulation, and the subpopulation-specific results may then be combined via meta-analysis \citep{pritchard1999use, pritchard2000association}. By partitioning the overall sample size in this manner, the structured association method is vulnerable to a loss of power. Additionally, it relies on the assumption that these subpopulations are distinct and nonoveralapping. This assumption may not accurately reflect the characteristics of a particular sample, such as one consisting of admixed populations, or recent relatedness. Considered in the context of our air quality example, rather than the existence of two subpopulations with exposure to either good or bad air quality, there may also be individuals who fall between these two extremes and are characterized by continuously varying relatedness and a gradient of air quality. By clustering those individuals within in one subpopulation or another, we lose information about relatedness by oversimplifying the population structure.
+Assuming for now that population structure is correlated with environmental exposures and can be accurately inferred from available data, we return to our consideration of methods that attempt to control for confounding via the mechanism depicted in diagram \eqref{diag:ps_env_block}. Such methods include LMMs, principal-component-based approaches, and stratified analyses. Stratified analyses refer to a general class of methods which attempt to infer subject membership within a discrete number of nonoverlapping subpopulations. Subsequent analyses are conducted within each subpopulation, and the subpopulation-specific results may then be combined via meta-analysis \citep{pritchard1999use, pritchard2000association}. By partitioning the overall sample size in this manner, the structured association method is vulnerable to a loss of power. Additionally, it relies on the assumption that these subpopulations are distinct and nonoveralapping. This assumption may not accurately reflect the characteristics of a particular sample, such as one consisting of admixed populations, or recent relatedness. Considered in the context of our air quality example, rather than the existence of two subpopulations with exposure to either good or bad air quality, there may also be individuals who fall between these two extremes and are characterized by continuously varying relatedness and a gradient of air quality. By clustering those individuals within in one subpopulation or another, we lose information about relatedness by oversimplifying the population structure.
 
 A different approach is to create an approximation of population structure using surrogate variables, and to adjust for these as an additional model covariates. Principal component-adjustment (PC-adjustment) methods use the first several left singular vectors of a pairwise similarity matrix as these surrogate variables \citep{price2006principal}. This approach may be used in univariate or multivariate frameworks, and allows for analysis on the entirety of a structured sample. 
 
