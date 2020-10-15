@@ -194,7 +194,7 @@ We will first derive the LMM-Lasso objective function in the absence of unpenali
 \end{equation}
 and thus an ordinary Lasso model can be fit on the transformed data, ($\bV^{-\frac{1}{2}}\bX, \bV^{-\frac{1}{2}}\by$). 
 
-Using the spectral decomposition of $\bK$ described in equation \eqref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorization 
+Using the decomposition of $\bK$ described in equation \eqref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorization 
 \begin{align*}
     \bV^{-1} &= (\sigmagg \bK + \sigmaee \bI)^{-1}\\
     &=(\sigmagg \bU \bD^2 \bU^\T + \sigmaee \bU \bU^\T)^{-1}\\
@@ -228,7 +228,7 @@ Different variance component estimation methods lead to different forms of $\wid
 %------------------------------%
 \subsection{Relationship between PC-Lasso and LMM-Lasso}
 
-It has been shown that the random effect formulation of model \eqref{eqn:model} used by LMM-Lasso can be equivalently expressed in terms of fixed effects in the absence of penalization?. \citet{zhang2015principal} derived this equivalence using a probabilistic PCA formulation, while \citet{hoffman2013correcting} used the singular value decomposition of $\bX$, which we briefly review.
+It has been shown that the random effect formulation of model \eqref{eqn:model} used by LMM-Lasso can be equivalently expressed in terms of fixed effects, in the absence of penalization. \citet{zhang2015principal} derived this equivalence using a probabilistic PCA formulation, while \citet{hoffman2013correcting} used the singular value decomposition of $\bX$, which we briefly review.
 
 Using the result of the decomposition from \eqref{eqn:k}, $\bK = p^{-1} \bR \bR^\T$ , the LMM model \eqref{eqn:lmm_reg} can be written equivalently as
 
@@ -241,7 +241,7 @@ $$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI) $$
 $$ \bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI) \Rightarrow \bR \bgamma \sim N(\boldsymbol{0}, \sigmagg \bK).$$
 Based on the relationship between equations \eqref{eqn:pca_reg} and \eqref{eqn:pc_lmm_equiv}, we can see that modeling the principal components of $\bK$ as fixed or random effects relies on the same underlying regression model. However, while the LMM includes all the principal components, only $k < n$ are included in the fixed effects model. 
 
-Additionally, while the fixed effects model considers the principal components $\bU$ of $\bK$, the LMM considers the principal components weighted by their corresponding eigenvalues. The eigenvalues have been shown to serve as a measure of biological relevance of each principal component in relation to underlying population structure \citep{hoffman2013correcting, price2006principal}. 
+Additionally, while the fixed effects model considers the principal components of $\bK$, the LMM considers the principal components weighted by their corresponding eigenvalues. The eigenvalues have been shown to serve as a measure of biological relevance of each principal component in relation to underlying population structure \citep{hoffman2013correcting, price2006principal}. 
 
 From a Bayesian perspective, using the first $k$ principal components as regression covariates can be viewed as assigning uniform priors to the first $k$ components of $\bgamma$, while the remaining $n - k$ components receive a prior with unit mass at zero. These assignments imply certainty that the effect of population structure on the phenotype is fully captured by the first $k$ PCs. In contrast, the LMM approach can be viewed as assigning a Gaussian prior on each component of $\bgamma$, with variances proportional to the corresponding eigenvalues \citep{astle2009population}. 
 
@@ -348,7 +348,7 @@ Although cross-validation and information criterion-based methods are commonly u
 \subsection{PC-Lasso and LMM-Lasso outperform the ordinary Lasso in the presence of environmental confounding}
 %------------------------------%
 
-We begin by comparing the ordinary Lasso, PC-Lasso, and LMM-Lasso as the level of environmental confounding is varied. Estimation accuracy for Lasso, PC-Lasso, and LMM-Lasso was evaluated based on mean squared error (MSE) \anna{MSPE sims running - maybe add here}. Figure \ref{fig:mse} presents these results for all three data types in a 1:1 signal to noise (SNR) setting, where $\eta = 0.5$. The top row of Figure \ref{fig:mse} shows that when $\xi = 0$ (i.e., no environmental confounding), Lasso and LMM-Lasso perform comparably. PC-Lasso results in a slight inflation in MSE compared to the other methods in the simulated data sets due to the fact that 10 additional predictors (PCs) have been added to the model, but none of them actually explain any variability in the outcome. 
+We begin by comparing the ordinary Lasso, PC-Lasso, and LMM-Lasso as the level of environmental confounding is varied. Estimation accuracy for Lasso, PC-Lasso, and LMM-Lasso was evaluated based on mean squared error (MSE) \anna{MSPE sims running - maybe add here}. Figure \ref{fig:mse} presents these results for all three data types in a 1:1 SNR setting, where $\eta = 0.5$. The top row of Figure \ref{fig:mse} shows that when $\xi = 0$ (i.e., no environmental confounding), Lasso and LMM-Lasso perform comparably. PC-Lasso results in a slight inflation in MSE compared to the other methods in the simulated data sets due to the fact that 10 additional predictors (PCs) have been added to the model, but none of them actually explain any variability in the outcome. 
 
 \begin{figure}[H]
     \centering
@@ -359,7 +359,7 @@ We begin by comparing the ordinary Lasso, PC-Lasso, and LMM-Lasso as the level o
 
 The bottom row of Figure \ref{fig:mse} shows the MSE when $\xi = 0.8$. In this case, both PC-Lasso and LMM-Lasso clearly outperform the ordinary Lasso. This improvement is more substantial in the Empirical and Independent Subpopulations data than in the 1D Linear Admixture data. This is due to the fact that the Independent Subpopulations and Empirical data sets are characterized by nonoverlapping genetic subpopulations, meaning that a greater proportion of the environmental effect is in the column space of $\boldsymbol{P}_{\bX}$. We can quantify the proportion of the environmental component in the column space of $\boldsymbol{P}_{\bX}$ for each data type using the CP metric defined in \eqref{eqn:ratio} of Section \ref{sec:sim_env_conf}. Here, we have CP $= 0.47, 0.99$ for the 1D Linear Admixture and Independent Subpopulations, respectively. The large CP of the Independent Subpopulations model reflects the extreme confounding and estimation bias for this data, for which the PC-Lasso and LMM-Lasso methods are able to correct. Meanwhile, the less dramatic improvement in MSE for the 1D Linear Admixture data by the PC-Lasso and LMM-Lasso methods confirms what we know from this data's substantially smaller CP value; that there is less confounding and bias which can be corrected for. 
 
-Due to the differing sample sizes and subpopulation structures, a direct comparison of the Empirical CP $= 0.61$ with those from the simulated data sets is not straightforward. We note that the CP decreases in the presence of subpopulations of unequal sizes and with more outbred subpopulations as in the Empirical data. 
+Due to the differing sample sizes and subpopulation structures, a direct comparison of the Empirical data, which has a CP $= 0.61$, with those from the simulated data sets is not straightforward. We note that the CP decreases in the presence of subpopulations of unequal sizes and with more outbred subpopulations as is the case in the Empirical data. 
 
 % \anna{MSPE here (?)}
 
@@ -390,7 +390,7 @@ $\eta$ & $\xi$ & \multicolumn{1}{c}{Method} & 1D Linear Admixture & Independent 
 \subsection{LMM-Lasso outperforms PC-Lasso for finer population structures}
 %------------------------------%
 
-Given the superior performance of PC-Lasso and LMM-Lasso compared to the ordinary Lasso in the presence of environmental confounding, we next compare these methods in the presence of fine and coarse subpopulation structures as defined in section \ref{sec:subpopulation_structure}. Synthetic phenotypes were simulated using a 1:1 SNR, $\eta = 0.5$, and varying levels of environmental confounding, $\xi \in \{0.2, 0.5,0.8\}$. 
+Given the superior performance of PC-Lasso and LMM-Lasso compared to the ordinary Lasso in the presence of environmental confounding, we next compare these methods in the presence of fine and coarse subpopulation structures as defined in Section \ref{sec:subpopulation_structure}. Synthetic phenotypes were simulated using a 1:1 SNR, $\eta = 0.5$, and varying levels of environmental confounding, $\xi \in \{0.2, 0.5,0.8\}$. 
 
 \begin{figure}[H]
     \centering
@@ -399,22 +399,20 @@ Given the superior performance of PC-Lasso and LMM-Lasso compared to the ordinar
     \label{fig:big_vs_small}
 \end{figure}
 
-Figure \ref{fig:big_vs_small} summarizes the results of these simulations for the Independent Subpopulations and a dichotomous-discordant environmental confounding pattern, though qualitatively similar results were observed for other settings. The y-axis displays the difference in MSE (PC-Lasso - LMM-Lasso) for each simulation and for the various subpopulation structures. The dashed horizontal line at 0 indicates no difference in the performance of PC-Lasso and LMM-Lasso, while differences above 0 correspond to LMM-Lasso outperforming PC-Lasso.
+Figure \ref{fig:big_vs_small} summarizes the results of these simulations for the Independent Subpopulations and a dichotomous-discordant environmental confounding pattern, though qualitatively similar results were observed for other settings. The y-axis displays the difference in MSE (PC-Lasso $-$ LMM-Lasso) for each simulation and for the various subpopulation structures. The dashed horizontal line at 0 indicates no difference in the performance of PC-Lasso and LMM-Lasso, while differences above 0 correspond to LMM-Lasso outperforming PC-Lasso, and vice versa.
 
-Overall, in all of the settings, LMM-Lasso outperformed PC-Lasso, although the difference was considerably more pronounced when the subpopulation structure was fine.  These findings are consistent with \citet{hoffman2013correcting}, who showed that principal component adjustment methods represent a low dimensional approximation to linear mixed models. As such, it is reasonable that PC-Lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform reasonably well in the coarse subpopulation setting, but fall short in the presence of fine structure. 
+In all of these settings, LMM-Lasso outperformed PC-Lasso, although the difference was considerably more pronounced when the subpopulation structure was fine.  These findings are consistent with \citet{hoffman2013correcting}, who showed that PC adjustment methods represent a low dimensional approximation to LMMs. As such, it is reasonable that PC-Lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform reasonably well in the coarse subpopulation setting, but fall short in the presence of fine structure. 
 
 
 %------------------------------%
 \subsection{LMM-Lasso outperforms PC-Lasso when environmental effects are discordant}
 %------------------------------%
 
-In addition to evaluating PC-Lasso and LMM-Lasso in the presence of coarse and fine subpopulation structure, we also consider various patterns of environmental effects. Figure \ref{fig:big_small_gamma} shows the difference in MSE (PC-Lasso - LMM-Lasso) broken down by both subpopulation and \anna{environmental effect pattern}. Results are shown for phenotypes generated with $\eta = 0.5$, $\xi = 0.8$, and Independent Subpopulations.
+In addition to evaluating PC-Lasso and LMM-Lasso in the presence of coarse and fine subpopulation structure, we also consider various patterns of environmental effects. Figure \ref{fig:big_small_gamma} shows the difference in MSE (PC-Lasso $-$ LMM-Lasso) broken down by both subpopulation and \anna{environmental effect pattern}. Results are shown for phenotypes generated with $\eta = 0.5$, $\xi = 0.8$, and Independent Subpopulations.
 
 % \pb{What do you think about dropping the exponential/dichotomous thing and just going with dichotomous throughout?  Doesn't really seem super important.  Well, we can just keep it in mind and if we need to cut down on space / figures, we can think about it.} \anna{so leave for now?}
 
-The right-hand panels of Figure \ref{fig:big_small_gamma} are consistent with Figure \ref{fig:big_vs_small}, showing superior LMM-Lasso performance in the presence of fine subpopulation structure, regardless of coefficient magnitude or concordance. 
-
-LMM-Lasso appears to perform as well, or better than, PC-Lasso in the presence of coarse subpopulation structure, as shown by the left-hand panels of Figure \ref{fig:big_small_gamma}. The upper left-hand facet in particular shows that PC-Lasso and LMM-Lasso perform more comparably when environmental effect magnitudes are exponential and concordant in nature. 
+The right-hand panels of Figure \ref{fig:big_small_gamma} are consistent with Figure \ref{fig:big_vs_small}, showing superior LMM-Lasso performance in the presence of fine subpopulation structure, regardless of coefficient magnitude or concordance. LMM-Lasso appears to perform as well, or better than, PC-Lasso in the presence of coarse subpopulation structure, as shown by the left-hand panels of Figure \ref{fig:big_small_gamma}. The upper left-hand facet in particular shows that PC-Lasso and LMM-Lasso perform more comparably when environmental effect magnitudes are exponential and concordant in nature. 
 These findings align with our initial hypothesis that PC-Lasso will perform well in the presence of simple environmental effect patterns that can be well-approximated by a linear combination of the observed data. When that is not the case, either due to the presence of fine subpopulation structure, dichotomous effects, or genetic similarity that does not reflect similar environmental effects, LMM-Lasso exhibits estimation accuracy superior to that of PC-Lasso.
 
 \begin{figure}[H]
