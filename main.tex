@@ -350,7 +350,7 @@ We begin by comparing the ordinary lasso, PC-lasso, and LMM-lasso as the level o
 
 The bottom row of Figure \ref{fig:mse} shows the MSE when $\xi = 0.8$. In this case, both PC-lasso and LMM-lasso clearly outperform the ordinary lasso. This improvement is more substantial in the Empirical and Independent Subpopulations data than in the 1D Linear Admixture data. This is due to the fact that the Independent Subpopulations and Empirical data sets are characterized by nonoverlapping genetic subpopulations, meaning that a greater proportion of the environmental effect is in the column space of $\boldsymbol{P}_{\bX}$. We can quantify the proportion of the environmental component in the column space of $\boldsymbol{P}_{\bX}$ for each data type using the CP metric defined in \eqref{eqn:ratio} of Section \ref{sec:sim_env_conf}. Here, we have CP $= 0.47, 0.99$ for the 1D Linear Admixture and Independent Subpopulations, respectively. The large CP of the Independent Subpopulations model reflects the extreme confounding and estimation bias for this data, for which the PC-lasso and LMM-lasso methods are able to correct. Meanwhile, the less dramatic improvement in MSE for the 1D Linear Admixture data by the PC-lasso and LMM-lasso methods confirms what we know from this data's substantially smaller CP value; that there is less confounding and bias which can be corrected for. 
 
-\anna{Due to the differing sample sizes and subpopulation structures, a direct comparison of the Empirical data, which has a CP $= 0.61$, with those from the simulated data sets is not straightforward. We note that the CP decreases in the presence of subpopulations of unequal sizes and with more outbred subpopulations as is the case in the Empirical data.} 
+Due to the differing sample sizes and subpopulation structures, a direct comparison of the Empirical data, which has a CP $= 0.87$, with those from the simulated data sets is not straightforward. We note that the CP decreases in the presence of subpopulations of unequal sizes and with more outbred subpopulations as is the case in the Empirical data.
 
 % \anna{MSPE here (?)}
 
@@ -368,14 +368,25 @@ $\eta$ & $\xi$ & \multicolumn{1}{c}{Method} & 1D Linear Admixture & Independent 
 & & PC-lasso & 0.23 (0.05) & 0.21 (0.05) & 0.36 (0.06) \\ 
 & & LMM-lasso & 0.25 (0.05) & 0.23 (0.05) & 0.41 (0.06) \\ 
 \cmidrule{2-6}
-& \multirow{3}{*}{0.8} & lasso & 0.24 (0.05) & 0.26 (0.06) & 0.29 (0.06) \\
+& \multirow{3}{*}{0.8} & lasso & 0.24 (0.05) & 0.26 (0.06) & 0.29 (0.06) \\ 
 & & PC-lasso & 0.28 (0.05) & 0.36 (0.06) & 0.46 (0.06) \\ 
-& & LMM-lasso & 0.28 (0.05) & 0.39 (0.06) & 0.57 (0.05) \\
+& &  LMM-lasso & 0.28 (0.05) & 0.39 (0.06) & 0.61 (0.06) \\ 
 \bottomrule
 \end{tabularx}
 \caption{True positive rates, mean (SD), for different data types in the presence and absence of environmental confounding with coarse subpopulation structure and dichotomous-discordant environmental effects.}
 \label{tab:var_sel}
 \end{table}
+
+%------------------------------%
+\subsection{\anna{Lasso and PC-lasso select more population-informative SNPs than LMM-Lasso}}
+%------------------------------%
+
+ \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.9]{figures/popInfSNPs_n=200.png}
+    \caption{Causal and non-causal SNP selection in the presence of varying levels of population informative SNPs with a coarse 2 Independent Subpopulation structure, dichotomous-discordant effects, $\eta = 0.5$, and $\xi = 0.8$.}
+    \label{fig:big_small_gamma}
+\end{figure}
 
 %------------------------------%
 \subsection{LMM-lasso outperforms PC-lasso for finer population structures}
@@ -395,18 +406,6 @@ Figure \ref{fig:big_vs_small} summarizes the results of these simulations for th
 In all of these settings, LMM-lasso outperformed PC-lasso, although the difference was considerably more pronounced when the subpopulation structure was fine.  These findings are consistent with \citet{hoffman2013correcting}, who showed that PC adjustment methods represent a low dimensional approximation to LMMs. As such, it is reasonable that PC-lasso, which corrects for population structure using a low dimensional set of surrogate variables, would perform reasonably well in the coarse subpopulation setting, but fall short in the presence of fine structure. 
 
 \anna{Similar results were observed in the presence of other patterns of environmental effects. No meaningful differences in methodological performance were observed for dichotomous versus exponential effect magnitudes or concordant versus discordant effects. }
-
-
-%------------------------------%
-\subsection{\anna{Lasso and PC-lasso select more population-informative SNPs than LMM-Lasso}}
-%------------------------------%
-
-% \begin{figure}[H]
-%    \centering
-%    \includegraphics[scale = 0.9]{figures/mse_diff_hetero.png}
-%    \caption{Relative performance of LMM-lasso, PC-lasso for fine and coarse subpopulation structures and varying environmental effect structures with Independent Subpopulations data, $\eta = 0.5$, and $\xi = 0.8$.}
-%    \label{fig:big_small_gamma}
-%\end{figure}
 
 %------------------------------%
 \subsection{Different implementations of LMM-lasso}
