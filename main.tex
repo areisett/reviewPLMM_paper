@@ -41,7 +41,7 @@ In this review we focus on methods to account for unobserved relatedness such as
 
 
 %------------------------------%
-\subsection{Motivating example}
+\subsection{Motivating example} \label{sec:example}
 
 As an example, consider a genome wide association study (GWAS) to assess genetic variants associated with lung cancer in a sample comprised of subjects from two distinct subpopulations, A and B. Assume the minor allele of SNP $X$ is present with higher frequency in subpopulation A compared to subpopulation B, but has no direct effect on lung cancer. Also suppose these subpopulations are geographically segregated in a such a way that subpopulation A is exposed to good air quality, and subpopulation B to poor air quality, and that air quality does have a direct effect on lung cancer. A GWAS of data from these subpopulations would find SNP $X$ to be significantly associated with lung cancer. This spurious association is not identified because of the presence of population stratification itself, but because that stratification is related to a causal environmental exposure. Indeed, if subpopulations A and B were not subject to different air qualities, all else being equal, SNP $X$ would not be found to be associated with the phenotype.
 
@@ -378,15 +378,22 @@ $\eta$ & $\xi$ & \multicolumn{1}{c}{Method} & 1D Linear Admixture & Independent 
 \end{table}
 
 %------------------------------%
-\subsection{\anna{Lasso and PC-lasso select more population-informative SNPs than LMM-Lasso}}
+\subsection{\anna{Lasso and PC-lasso select more population-informative SNPs than LMM-lasso}}
+\anna{LMM-lasso is more robust to spurious associations due to allele frequency differences than lasso and PC-lasso }\\
 %------------------------------%
+
+As described in Section \ref{sec:example}, differences in allele frequencies have the potential to lead to spurious associations. In the previous section we saw how in the presence of confounding, LMM-lasso and PC-lasso outperform the ordinary lasso in terms of selection accuracy. It is of interest to characterize these methods' selection accuracy in terms of how robust they are to allele frequency differences. To that end, we considered a simplified scenario, with a coarse 2 Independent Subpopulations structure and dichotomous-discordant environmental effects. Figure \ref{fig:pop_inf} shows the relationship between how often a given SNP is selected by the various methods and its absolute difference in  standardized allele frequencies between the two supopulations. 
 
  \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.9]{figures/popInfSNPs_n=200.png}
     \caption{Causal and non-causal SNP selection in the presence of varying levels of population informative SNPs with a coarse 2 Independent Subpopulation structure, dichotomous-discordant effects, $\eta = 0.5$, and $\xi = 0.8$.}
-    \label{fig:big_small_gamma}
+    \label{fig:pop_inf}
 \end{figure}
+
+A method which is robust to differences in allele frequencies should show no systematic association between selection proportion and differences in allele frequencies. We see that for both causal and non-causal SNPs, the LMM-lasso and PC-lasso methods exhibit no such association, while the ordinary lasso demonstrates a \anna{substantial} positive trend. \anna{pearson corr with pvalues?}
+
+The presence of this trend for the lasso, and the lack thereof for LMM-lasso and PC-lasso, illustrates the underlying mechanism leading to the superior TPRs of LMM-lasso and PC-lasso compared to that of the lasso in Table \ref{tab:var_sel}.
 
 %------------------------------%
 \subsection{LMM-lasso outperforms PC-lasso for finer population structures}
