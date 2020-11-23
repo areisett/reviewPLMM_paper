@@ -378,22 +378,50 @@ $\eta$ & $\xi$ & \multicolumn{1}{c}{Method} & 1D Linear Admixture & Independent 
 \end{table}
 
 %------------------------------%
-\subsection{\anna{Lasso and PC-lasso select more population-informative SNPs than LMM-lasso}}
-\anna{LMM-lasso is more robust to spurious associations due to allele frequency differences than lasso and PC-lasso }\\
+\subsection{\anna{Lasso selects more population-informative SNPs than PC-lasso and LMM-lasso}}
 %------------------------------%
 
-As described in Section \ref{sec:example}, differences in allele frequencies have the potential to lead to spurious associations. In the previous section we saw how in the presence of confounding, LMM-lasso and PC-lasso outperform the ordinary lasso in terms of selection accuracy. It is of interest to characterize these methods' selection accuracy in terms of how robust they are to allele frequency differences. To that end, we considered a simplified scenario, with a coarse 2 Independent Subpopulations structure and dichotomous-discordant environmental effects. Figure \ref{fig:pop_inf} shows the relationship between how often a given SNP is selected by the various methods and its absolute difference in  standardized allele frequencies between the two supopulations. 
+In the previous section we saw how in the presence of confounding, LMM-lasso and PC-lasso outperform the ordinary lasso in terms of selection accuracy. Additionally, as we described in Section \ref{sec:example}, differences in allele frequencies are known to have the potential to lead to spurious associations. As such, it is also of interest to characterize these methods' selection accuracy in terms of how robust they are to allele frequency differences. A method which is robust to differences in allele frequencies and thus show no association between selection proportion and differences in allele frequencies.
+
+In order to assess the behavior of these methods in this context, we considered the same parameter settings as those presented in Figure \ref{fig:mse} and Table \ref{tab:var_sel}, albeit with a slightly simpler  population structure. We examined the case of two distinct Independent Subpopulations in order to quantify the absolute difference in subpopulation-specific allele frequencies in an interpretable manner. 
+
+Figure \ref{fig:pop_inf} shows the relationship between how often a given SNP is selected by the various methods and its absolute difference in  standardized allele frequencies between the two supopulations in the presence and absence of environmental confounding. 
 
  \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.9]{figures/popInfSNPs_n=200.png}
-    \caption{Causal and non-causal SNP selection in the presence of varying levels of population informative SNPs with a coarse 2 Independent Subpopulation structure, dichotomous-discordant effects, $\eta = 0.5$, and $\xi = 0.8$.}
+    \caption{Causal and non-causal SNP selection in the presence of varying levels of population informative SNPs with a coarse 2 Independent Subpopulation structure, dichotomous-discordant effects, $\eta = 0.5$.}
     \label{fig:pop_inf}
 \end{figure}
 
-A method which is robust to differences in allele frequencies should show no systematic association between selection proportion and differences in allele frequencies. We see that for both causal and non-causal SNPs, the LMM-lasso and PC-lasso methods exhibit no such association, while the ordinary lasso demonstrates a \anna{substantial} positive trend. \anna{pearson corr with pvalues?}
+\anna{maybe no table ? If table, make more like table 1}
+\begin{table}[H]
+\centering
+\begin{tabularx}{225pt}{llrrr}
+\toprule
+\multicolumn{1}{c}{Method} & \multicolumn{1}{c}{SNPs} & \multicolumn{1}{c}{$\xi$}& \multicolumn{1}{c}{$r$} & \multicolumn{1}{c}{p} \\ 
+\midrule
+lasso & Causal & 0.0 & 0.13 & 0.3862 \\ 
+  lasso & Causal & 0.8 & 0.46 & 0.0009 \\ 
+  lasso & Non-causal & 0.0 & 0.04 & 0.1928 \\ 
+  lasso & Non-causal & 0.8 & 0.12 & 0.0003 \\ 
+  PC-lasso & Causal & 0.0 & 0.10 & 0.4963 \\ 
+  PC-lasso & Causal & 0.8 & -0.01 & 0.9422 \\ 
+  PC-lasso & Non-causal & 0.0 & -0.01 & 0.8467 \\ 
+  PC-lasso & Non-causal & 0.8 & -0.04 & 0.2371 \\ 
+  LMM-lasso & Causal & 0.0 & 0.06 & 0.6950 \\ 
+  LMM-lasso & Causal & 0.8 & -0.11 & 0.4469 \\ 
+  LMM-lasso & Non-causal & 0.0 & 0.03 & 0.3233 \\ 
+  LMM-lasso & Non-causal & 0.8 & 0.01 & 0.7716 \\ 
+\bottomrule
+\end{tabularx}
+\caption{Pearson correlation between average SNP selection and absolute difference in standardized allele frequencies across methods. Coarse 2 Independent Subpopulation structure, dichotomous-discordant effects, $\eta = 0.5$.}
+\label{tab:pop_inf}
+\end{table}
 
-The presence of this trend for the lasso, and the lack thereof for LMM-lasso and PC-lasso, illustrates the underlying mechanism leading to the superior TPRs of LMM-lasso and PC-lasso compared to that of the lasso in Table \ref{tab:var_sel}.
+Underscoring the results from Figure \ref{fig:mse} and Table \ref{tab:var_sel}, we see that in the absence of environmental confounding, none of the three methods demonstrates a significant association between selection proportion and differences in allele frequencies. Table \ref{tab:pop_inf} displays the Pearson correlation coefficients and associated p-values in order to quantify these relationships. 
+
+In the presence of confounding, however, the LMM-lasso and PC-lasso methods are able to remain robust to allele frequency differences, \anna{while the ordinary lasso demonstrates a statistically significant positive correlation for both causal ($r = 0.46, p = 0.0009$) and non-causal ($r = 0.12, p = 0.0003$) SNPs}. The presence of this trend for the lasso, and the lack thereof for LMM-lasso and PC-lasso, illustrates the underlying mechanism leading to the superior TPRs of LMM-lasso and PC-lasso compared to that of the lasso in Table \ref{tab:var_sel}.
 
 %------------------------------%
 \subsection{LMM-lasso outperforms PC-lasso for finer population structures}
