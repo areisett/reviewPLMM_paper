@@ -381,7 +381,7 @@ $\eta$ & $\xi$ & \multicolumn{1}{c}{Method} & 1D Linear Admixture & Independent 
 \subsection{\anna{PC-lasso and LMM-lasso reduce bias towards selecting population-informative SNPs}}
 %------------------------------%
 
-In the previous section we saw how in the presence of confounding, LMM-lasso and PC-lasso outperform the ordinary lasso in terms of selection accuracy. Additionally, as we described in Section \ref{sec:example}, subpopulation differences in allele frequencies are known to have the potential to lead to spurious associations. As such it is of interest to characterize these methods' selection accuracy in terms of how robust they are to allele frequency differences. 
+In the previous section we saw how in the presence of confounding, LMM-lasso and PC-lasso outperform the ordinary lasso in selection accuracy. Additionally, as we described in Section \ref{sec:example}, subpopulation differences in allele frequencies are known to have the potential to lead to spurious associations. As such it is of interest to characterize these methods' selection accuracy in terms of how robust they are to allele frequency differences. 
 
 In order to assess the behavior of these methods in this context, we conducted a simulation using the parameter settings presented in Figure \ref{fig:mse} and Table \ref{tab:var_sel} and a modified version of the Empirical data. In order to quantify the absolute difference in subpopulation-specific allele frequencies in an straightforward, interpretable manner, we limited the Empirical data to that of the white and African American subpopulations. Figure \ref{fig:pop_inf} shows the relationship between a given SNP's false positive rate (FPR) and its absolute difference in standardized allele frequency between the two supopulations. 
 
@@ -411,6 +411,7 @@ eta & xi & Method & $r_s$ \\
 \label{tab:pop_inf}
 \end{table}
 
+\begin{comment}
 \anna{Another way to quantify this...(?)}
 \begin{table}[H]
 \centering
@@ -428,17 +429,14 @@ xi & chunks & lasso & lasso\_pca10 & plmm\_lasso \\
 \end{tabular}
 \caption{Max FPR for each method, $\xi$, and level of difference (low, med, high)}
 \end{table}
+\end{comment}
 
-In the absence of environmental confounding, the lasso demonstrates a moderately positive correlation with allele frequency differences ($r_s = 0.34$), while the PC-lasso and LMM-lasso methods are negatively correlated with allele frequency differences. 
-
-Overall, however, the FPR does not exceed 0.39, 0.19, and 0.22 for the lasso, PC-lasso, and LMM-lasso methods, respectively.  
+\anna{Table \ref{tab:pop_inf} displays the Spearman's rank correlation coefficient for each of these scenarios.} In the absence of environmental confounding, the lasso demonstrates a moderately positive correlation with allele frequency differences ($r_s = 0.34$), while the PC-lasso and LMM-lasso methods are negatively correlated with allele frequency differences. Overall, however, the FPR does not exceed 0.39, 0.19, and 0.22 for the lasso, PC-lasso, and LMM-lasso methods, respectively.  
 %\anna{We attribute these associations to the presence of population structure (in other words, correlated observations) and thus artificially shrunken errors in the case of the lasso. For PC-lasso and LMM-lasso, the absence of a non-genetic mechanism by which population structure directly affects the outcome, results in a slight over-correction for both, resulting in their moderately negative correlations. }
 
-Table \ref{tab:pop_inf} displays the Spearman's rank correlation coefficient for each of these scenarios. 
+In the presence of confounding, however, lasso's correlation with allele frequency increases ($r_s = 0.78$), and particularly struggles to correctly select the most population-informative SNPs. PC-lasso and LMM-lasso are able to remain more robust to allele frequency differences, yet remain somewhat negatively correlated with allele frequency differences. This is advantageous in preventing dramatically high FPRs in the presence of highly population-informative SNPs.
 
-In the presence of confounding, however, lasso's correlation with allele frequency increases, and particularly struggles to correctly select the most population-informative SNPs. PC-lasso and LMM-lasso are able to remain more robust to allele frequency differences, yet remain somewhat negatively correlated with allele frequency differences. This is is advantageous in preventing dramatically high FPRs in the presence of highly population-informative SNPs.
-
-In both scenarios, LMM-lasso is more robust to allele frequency differences than PC-lasso due to the presence of \anna{apparent cryptic relatedness (?)} \anna{max absolute kinship? histograms of off-diag kinship?} in the Empirical data. This echoes the superior TPRs of LMM-lasso compared to that of the PC-lasso in the case of the Empirical data in Table \ref{tab:var_sel}.
+In both scenarios, LMM-lasso is more robust to allele frequency differences than PC-lasso due to the presence of \anna{cryptic relatedness in addition to population structure in the Empirical data.} \anna{max absolute kinship? histograms of off-diag kinship?} This echoes the superior TPRs of LMM-lasso compared to that of the PC-lasso in the case of the Empirical data in Table \ref{tab:var_sel}.
 
 %------------------------------%
 \subsection{LMM-lasso outperforms PC-lasso for finer population structures}
