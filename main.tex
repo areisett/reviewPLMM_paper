@@ -315,9 +315,7 @@ For the fully simulated data, two subpopulation structures were considered, whic
 
 \subsubsection{Patterns of environmental effects}
 
-For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation, or founding population membership, which assigns the corresponding environmental effect found in $\bgamma$. Various $\bgamma$ patterns were considered in order to investigate the effects of distinct and complex patterns of environmental confounding. Firstly, we considered two different patterns of effect magnitudes, which we refer to as exponential and dichotomous. We use the term dichotomous to describe two effect sizes each experienced by half of the population, regardless of the number of subpopulations, while exponential effects refer to a unique effect size for each subpopulation with exponentially increasing magnitudes. Secondly, we considered whether individuals in genetically similar subpopulations would experience similar environmental effects. We refer to environmental effects that are similar among genetically similar subpopulations as concordant, and to those that are not as discordant. \anna{We examined these but found they didn't make a huge difference in performance so we don't focus on them.}
-
-% For example, a geographic environmental exposure such as the air quality described in our motivating example is likely to be similar among genetically related individuals due to concordance between genetic clusters and geography. However, behavior-based environmental exposures may be less likely to be shared by subpopulations which are genetically and geographically similar. As an example, \citet{ng2014smoking} found considerable within-region variation in smoking rates in Africa, Asia, and South America. 
+For each $\bX$ matrix, $\bZ$ was a corresponding incidence matrix of 1s and 0s identifying subpopulation, or founding population membership, which assigns the corresponding environmental effect found in $\bgamma$. Various $\bgamma$ patterns were considered in order to investigate the effects of distinct and complex patterns of environmental confounding. Firstly, we considered two different patterns of effect magnitudes, which we refer to as exponential and dichotomous. We use the term dichotomous to describe two effect sizes each experienced by half of the population, regardless of the number of subpopulations, while exponential effects refer to a unique effect size for each subpopulation with exponentially increasing magnitudes. Secondly, we considered whether individuals in genetically similar subpopulations would experience similar environmental effects. We refer to environmental effects that are similar among genetically similar subpopulations as concordant, and to those that are not as discordant. \anna{We examined all combinations of these patterns of environmental effects, but found they did not result in appreciable differences in performance. We thus focus our attention elsewhere.}
 
 \subsubsection{Tuning parameter selection}
 Selection of the tuning parameter $\lambda$ plays an important role in all penalized regression methods, with many possible approaches. Here, for each model, we selected the $\lam$ value such that 50 SNPs were selected (recall that 50 is also the true number of causal SNPs). This method for selecting $\lambda$ was chosen in an attempt to compare the performance of all methods fairly, and as a strategy to evaluate methods in terms of variable selection, as it allows for direct comparison of the first 50 variables each method lets into the model.
@@ -350,13 +348,9 @@ We begin by comparing the ordinary lasso, PC-lasso, and LMM-lasso as the level o
 
 The bottom row of Figure \ref{fig:mse} shows the MSE when $\xi = 0.8$. In this case, both PC-lasso and LMM-lasso clearly outperform the ordinary lasso. This improvement is more substantial in the Empirical and Independent Subpopulations data than in the 1D Linear Admixture data. This is due to the fact that the Independent Subpopulations and Empirical data sets are characterized by nonoverlapping genetic subpopulations, meaning that a greater proportion of the environmental effect is in the column space of $\boldsymbol{P}_{\bX}$. We can quantify the proportion of the environmental component in the column space of $\boldsymbol{P}_{\bX}$ for each data type using the CP metric defined in \eqref{eqn:ratio} of Section \ref{sec:sim_env_conf}. Here, we have CP $= 0.47, 0.99$ for the 1D Linear Admixture and Independent Subpopulations, respectively. The large CP of the Independent Subpopulations model reflects the extreme confounding and estimation bias for this data, for which the PC-lasso and LMM-lasso methods are able to correct. Meanwhile, the less dramatic improvement in MSE for the 1D Linear Admixture data by the PC-lasso and LMM-lasso methods confirms what we know from this data's substantially smaller CP value; that there is less confounding and bias which can be corrected for. 
 
-Due to the differing sample sizes and subpopulation structures, a direct comparison of the Empirical data, which has a CP $= 0.87$, with those from the simulated data sets is not straightforward. We note that the CP decreases in the presence of subpopulations of unequal sizes and with more outbred subpopulations as is the case in the Empirical data.
+Due to the differing sample sizes and subpopulation structures, a direct comparison of the Empirical data, which has a CP $= 0.87$, with those from the simulated data sets is not straightforward. We note that the CP decreases in the presence of subpopulations of unequal sizes and with more complex population structure as is the case in the Empirical data.
 
-% \anna{MSPE here (?)}
-
-% \anna{talk about karl rohe stuff here - if anywhere}
-
-In addition to MSE, these methods' performance was also assessed in terms of variable selection using the true positive rate (TPR) \anna{technically this is true sign rate - only estimates with the correct sign are counted. Explain this? Calculate overall selection instead?} for the first 50 variables each method allowed into the model. Table \ref{tab:var_sel} displays the average TPR for the same settings as in Figure \ref{fig:mse}. The TPRs echo the MSE results in that lasso and LMM-lasso perform comparably in the absence of environmental confounding across all data types, while the addition of the 10 unpenalized PCs leads to a slight decrease in TPR in this setting for the 1D Linear Admixture and Independent Subpopulations data sets. In the presence of environmental confounding, both LMM-lasso and PC-lasso achieve substantial improvements in TPR over the ordinary lasso. As with the MSE data, these improvements are more substantial in the Independent Subpopulations and Empirical data sets than in the 1D Linear Admixture data.
+In addition to MSE, these methods' performance was also assessed in terms of variable selection using the true positive rate (TPR) for the first 50 variables each method allowed into the model. \anna{Throughout this work, we refer to a selection as true positive only if it is selected and the sign of the coefficient is estimated correctly.} Table \ref{tab:var_sel} displays the average TPR for the same settings as in Figure \ref{fig:mse}. The TPRs echo the MSE results in that lasso and LMM-lasso perform comparably in the absence of environmental confounding across all data types, while the addition of the 10 unpenalized PCs leads to a slight decrease in TPR in this setting for the 1D Linear Admixture and Independent Subpopulations data sets. In the presence of environmental confounding, both LMM-lasso and PC-lasso achieve substantial improvements in TPR over the ordinary lasso. As with the MSE data, these improvements are more substantial in the Independent Subpopulations and Empirical data sets than in the 1D Linear Admixture data.
 
 \begin{table}[H]
 \centering
@@ -383,14 +377,33 @@ $\eta$ & $\xi$ & \multicolumn{1}{c}{Method} & 1D Linear Admixture & Independent 
 
 In the previous section we saw how in the presence of confounding, LMM-lasso and PC-lasso outperform the ordinary lasso in selection accuracy. Additionally, as we described in Section \ref{sec:example}, subpopulation differences in allele frequencies are known to have the potential to lead to spurious associations. As such it is of interest to characterize these methods' selection accuracy in terms of how robust they are to allele frequency differences. 
 
-In order to assess the behavior of these methods in this context, we conducted a simulation using the parameter settings presented in Figure \ref{fig:mse} and Table \ref{tab:var_sel} and a modified version of the Empirical data. In order to quantify the absolute difference in subpopulation-specific allele frequencies in an straightforward, interpretable manner, we limited the Empirical data to that of the white and African American subpopulations. Figure \ref{fig:pop_inf} shows the relationship between a given SNP's false positive rate (FPR) and its absolute difference in standardized allele frequency between the two supopulations. 
+In order to assess the behavior of these methods in this context, we conducted a simulation using the parameter settings presented in Figure \ref{fig:mse} and Table \ref{tab:var_sel} and a modified version of the Empirical data. In order to quantify the absolute difference in subpopulation-specific allele frequencies in an straightforward, interpretable manner, we limited the Empirical data to that of the white and African American subpopulations. Figure \ref{fig:pop_inf} summarizes the relationship between a given SNP's false positive rate (FPR) and its absolute difference in MAF between the two supopulations. The top panel of Figure \ref{fig:pop_inf} summarizes the marginal relationship between FPR and MAF differences, while the lower panel shows the association between SNPs falsely selected by each method and MAF differences.  
 
  \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.9]{figures/pop_inf_snps_loess.png}
-    \caption{\anna{Non-causal SNP selection / SNP FPR (?)} in the presence of varying levels of population informative SNPs and environmental confounding for two Empirical subpopulations, dichotomous-discordant effects, $\eta = 0.5$.}
+    \includegraphics[width = \textwidth]{figures/pop_inf_snps.png}
+    \caption{\anna{Association of population informative nature of SNPs and false selection across methods in the presence and absence of environmental confounding for two Empirical subpopulations, dichotomous-discordant effects, $\eta = 0.5$.}}
     \label{fig:pop_inf}
 \end{figure}
+
+%\begin{figure}[H]
+%\begin{subfigure}{\textwidth}
+%  \centering
+%  % include first image
+%  \includegraphics[scale = 0.9]{figures/pop_inf_snps_loess.png}  
+%  \caption{FPR in the presence of varying levels of population informative SNPs.}
+%  \label{fig:pop_inf_scatter}
+%\end{subfigure}
+%\begin{subfigure}{\textwidth}
+%  \centering
+%  % include second image
+%  \includegraphics[scale = 0.9]{figures/pop_inf_snps_box.png}  
+%  \caption{Absolute allele frequency differences of falsely selected, non-causal SNPs across methods.}
+%  \label{fig:pop_inf_box}
+%\end{subfigure}
+%\caption{Association of population informative nature of SNPs and false selection across methods in the presence and absence of environmental confounding for for two Empirical subpopulations, dichotomous-discordant effects, $\eta = 0.5$.}
+%\label{fig:pop_inf}
+%\end{figure}
 
 \anna{maybe no table ? If table, make more like table 1}
 \begin{table}[H]
@@ -399,47 +412,21 @@ In order to assess the behavior of these methods in this context, we conducted a
   \hline
 eta & xi & Method & $r_s$ \\ 
   \hline
-0.5 & 0.0 & lasso & 0.34 \\ 
-  0.5 & 0.0 & PC-lasso & -0.92 \\ 
-  0.5 & 0.0 & LMM-lasso & -0.89 \\ 
-  0.5 & 0.8 & lasso & 0.78 \\ 
-  0.5 & 0.8 & PC-lasso & -0.82 \\ 
-  0.5 & 0.8 & LMM-lasso & -0.67 \\ 
+0.5 & 0.0 & lasso & 0.42 \\ 
+  0.5 & 0.0 & PC-lasso & -0.77 \\ 
+  0.5 & 0.0 & LMM-lasso & -0.71 \\ 
+  0.5 & 0.8 & lasso & 0.67 \\ 
+  0.5 & 0.8 & PC-lasso & -0.61 \\ 
+  0.5 & 0.8 & LMM-lasso & -0.34 \\ 
    \hline
 \end{tabular}
-\caption{Spearman's rank correlation coefficient between \anna{non-causal SNP selection / SNP FPR (?)} and absolute difference in standardized allele frequencies across methods.}
+\caption{\anna{Spearman's rank correlation coefficient between SNP FPR and absolute difference in standardized allele frequencies across methods.}}
 \label{tab:pop_inf}
 \end{table}
 
-\begin{comment}
-\anna{Another way to quantify this...(?)}
-\begin{table}[H]
-\centering
-\begin{tabular}{rlrrr}
-  \hline
-xi & chunks & lasso & lasso\_pca10 & plmm\_lasso \\ 
-  \hline
-0.0 & 1 & 0.108 & 0.187 & 0.135 \\ 
-  0.0 & 2 & 0.394 & 0.132 & 0.221 \\ 
-  0.0 & 3 & 0.214 & 0.049 & 0.071 \\ 
-  0.8 & 1 & 0.005 & 0.437 & 0.161 \\ 
-  0.8 & 2 & 0.504 & 0.188 & 0.348 \\ 
-  0.8 & 3 & 0.966 & 0.084 & 0.157 \\ 
-   \hline
-\end{tabular}
-\caption{Max FPR for each method, $\xi$, and level of difference (low, med, high)}
-\end{table}
-\end{comment}
+\anna{Table \ref{tab:pop_inf} displays the Spearman's rank correlation coefficient for each of these scenarios.} In the absence of environmental confounding, the lasso demonstrates a moderately positive correlation with allele frequency differences ($r_s = 0.42$), while the PC-lasso and LMM-lasso methods are negatively correlated with allele frequency differences. Overall, however, the FPR does not exceed 0.39, 0.19, and 0.22 for the lasso, PC-lasso, and LMM-lasso methods, respectively.  
 
-
-\anna{Table \ref{tab:pop_inf} displays the Spearman's rank correlation coefficient for each of these scenarios.} In the absence of environmental confounding, the lasso demonstrates a moderately positive correlation with allele frequency differences ($r_s = 0.34$), while the PC-lasso and LMM-lasso methods are negatively correlated with allele frequency differences. Overall, however, the FPR does not exceed 0.39, 0.19, and 0.22 for the lasso, PC-lasso, and LMM-lasso methods, respectively.  
-%\anna{We attribute these associations to the presence of population structure (in other words, correlated observations) and thus artificially shrunken errors in the case of the lasso. For PC-lasso and LMM-lasso, the absence of a non-genetic mechanism by which population structure directly affects the outcome, results in a slight over-correction for both, resulting in their moderately negative correlations. }
-
-In the presence of confounding, however, lasso's correlation with allele frequency increases ($r_s = 0.78$), and particularly struggles to correctly select the most population-informative SNPs. PC-lasso and LMM-lasso are able to remain more robust to allele frequency differences, yet remain somewhat negatively correlated with allele frequency differences. This is advantageous in preventing dramatically high FPRs in the presence of highly population-informative SNPs.
-
-\anna{LMM-lasso seems to exhibit even stronger control of this than PC-lasso.}
-
-%In both scenarios, LMM-lasso is more robust to allele frequency differences than PC-lasso due to the presence of \anna{finer grained relatedness in addition to population stratification in the Empirical data.} This echoes the superior TPRs of LMM-lasso compared to that of the PC-lasso in the case of the Empirical data in Table \ref{tab:var_sel}.
+In the presence of confounding, however, lasso's correlation with allele frequency increases ($r_s = 0.67$), and particularly struggles to correctly select the most population-informative SNPs. PC-lasso and LMM-lasso are able to remain more robust to allele frequency differences, yet remain somewhat negatively correlated with allele frequency differences. This is advantageous in preventing dramatically high FPRs in the presence of highly population-informative SNPs. From a marginal perspective, LMM-lasso seems to exhibit even stronger control of this than PC-lasso. This echoes the superior TPRs of LMM-lasso compared to those of the PC-lasso for the Empirical data in Table \ref{tab:var_sel}. Conditional on selection, however, LMM-lasso may be more likely to confuse MAF differences with true signal.
 
 %------------------------------%
 \subsection{LMM-lasso outperforms PC-lasso for finer population structures}
