@@ -341,7 +341,7 @@ We begin by comparing the ordinary lasso, PC-lasso, and LMM-lasso as the level o
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = \textwidth]{figures/beta_mse.png}
+    \includegraphics[width = \textwidth]{figures/beta_mse.eps}
     \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with coarse subpopulation structure and dichotomous-discordant environmental effects.}
     \label{fig:mse}
 \end{figure}
@@ -379,9 +379,10 @@ In the previous section we saw how in the presence of confounding, LMM-lasso and
 
 In order to assess the behavior of these methods in this context, we conducted a simulation using the parameter settings presented in Figure \ref{fig:mse} and Table \ref{tab:var_sel} and a modified version of the Empirical data. In order to quantify the absolute difference in subpopulation-specific allele frequencies in an straightforward, interpretable manner, we limited the Empirical data to that of the white and African American subpopulations. Figure \ref{fig:pop_inf} summarizes the relationship between a given SNP's false positive rate (FPR) and its absolute difference in MAF between the two supopulations. The top panel of Figure \ref{fig:pop_inf} summarizes the marginal relationship between FPR and MAF differences, while the lower panel shows the association between SNPs falsely selected by each method and MAF differences.  
 
+\anna{only boxplot, no table}
  \begin{figure}[H]
     \centering
-    \includegraphics[width = \textwidth]{figures/pop_inf_snps.png}
+    \includegraphics[width = \textwidth]{figures/pop_inf_snps.eps}
     \caption{\anna{Association of population informative nature of SNPs and false selection across methods in the presence and absence of environmental confounding for two Empirical subpopulations, dichotomous-discordant effects, $\eta = 0.5$.}}
     \label{fig:pop_inf}
 \end{figure}
