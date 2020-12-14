@@ -11,11 +11,6 @@
 \usepackage{tkz-euclide}
 \usepackage{lscape}
 % \usepackage{endfloat}
-\usepackage{xr-hyper}
-\usepackage{hyperref}
-%\externaldocument[supp-]{genetic_epi_supplement}
-% \externaldocument[supp-]{genetic_epi_supplement}
-
 
 % table packages and commands
 \usepackage{booktabs}
@@ -80,25 +75,14 @@
 \newcommand{\T}{\text{T}}
 \newcommand{\lam}{\lambda}
 
-\title{A comparative analysis of penalized linear mixed models in structured genetic data}
+\title{Supplementary Materials}
 \author{Anna Reisetter \qquad Patrick Breheny\\
   Department of Biostatistics\\University of Iowa}
 \date{\today}
 
 \begin{document}
-\maketitle
+% \maketitle
 
-\begin{abstract}
-Many genetic studies that aim to identify genetic variants associated with complex phenotypes are subject to unobserved confounding factors, such as environmental heterogeneity. This poses a challenge to detecting associations of interest and is known to induce spurious associations when left unaccounted for. Penalized linear mixed models (LMMs) are an attractive method to correct for unobserved confounding. These methods correct for varying levels of relatedness and population structure by modeling it as a random effect with a covariance structure estimated from observed genetic data. Despite an extensive literature on penalized regression and LMMs separately, the two are rarely discussed together. The aim of this review is to do so while rigorously examining the statistical properties of penalized LMMs. Specifically, the ability of penalized LMMs to accurately estimate fixed, sparse genetic effects in the presence of environmental heterogeneity, for which population structure may serve as a proxy, has not been well studied. In order to clarify the importance yet subtle distinction between population structure and environmental heterogeneity, we present a detailed review of relevant concepts and methods. In addition, we evaluate the performance of penalized LMMs and competing methods in terms of estimation and selection accuracy in the presence of a number of confounding structures.
-\end{abstract}
-
-\input{main}
-
-\newpage
-\bibliographystyle{ims}
-\bibliography{references}
-
-\newpage
 \input{supplement}
 
 \end{document}
