@@ -51,7 +51,7 @@ In the context of our air quality example, this means that we assume air quality
 \begin{tikzpicture}[baseline=(current  bounding  box.center)]
     \node (1) at (0,0) {Population Stratification};
     \node (2) [right = of 1] {Environment};
-    \node (3) [below = of 1] {Observbed SNPs};
+    \node (3) [below = of 1] {Observed SNPs};
     \node (4) [below = of 2] {Phenotype};
     \path[bidirected, -] (1) edge (2);
     \path (1) edge (3);
@@ -226,7 +226,7 @@ where $\bXT{^\prime} = \bU^\T \bX{^\prime}$, so that all of the data are transfo
 
 %------------------------------%
 
-Different variance component estimation methods lead to different estimates of $\bW$ and two distinct LMM-lasso variants: LMM-lasso-Rakitsch and LMM-lasso-ggmix. LMM-lasso-Rakitsch uses a two-step procedure for estimating the variance components, $\sigmaee$ and $\delta := \sigmaee / \sigmagg$ \citep{Rakitsch2012}. These variance components and the corresponding weights are estimated once under the assumption of a null model. A lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \citep{glmnet} or \texttt{ncvreg} \citep{ncvreg}. LMM-lasso-ggmix iteratively updates $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm \citep{bhatnagar2020simultaneous}. This iterative update scheme prevents the use of standard lasso software, but is implemented in the \texttt{R} package \texttt{ggmix} \citep{ggmix}. We further discuss differences between these methods in Section \ref{sec:results}.
+Different variance component estimation methods lead to different estimates of $\bW$ and two distinct LMM-lasso variants: LMM-lasso-Rakitsch and LMM-lasso-ggmix. LMM-lasso-Rakitsch uses a two-step procedure for estimating the variance components, $\sigmaee$ and $\delta := \sigmaee / \sigmagg$ \citep{Rakitsch2012}. These variance components and the corresponding weights are estimated once under the assumption of a null model. A lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \citep{glmnet} or \texttt{ncvreg} \citep{ncvreg}. LMM-lasso-ggmix iteratively updates $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm \citep{bhatnagar2020simultaneous}. This iterative update scheme prevents the use of standard lasso software, but is implemented in the \texttt{R} package \texttt{ggmix}. We further discuss differences between these methods in Section \ref{sec:results}.
 
 %------------------------------%
 \subsection{Relationship between PC-lasso and LMM-lasso}
@@ -463,3 +463,7 @@ We considered two implementations of the LMM-lasso method: LMM-lasso-Rakitsch an
 Although the purpose of this article is to elucidate the manner in which failing to correct for unobserved environmental effects can bias SNP effect estimates, equation \eqref{eqn:partition_e} also highlights the manner in which such unobserved environmental effects can lead to substantial bias in narrow-sense heritability estimates using SNP data. In particular, these estimates are likely to be inflated by the quantity $\boldsymbol{\tau}$ unless steps are taken to address population structure. A detailed treatment of narrow-sense heritability estimation is beyond the scope of this paper, but we hope this emphasizes the broad implications and importance of distinguishing between population structure and environmental effects.
 
 Finally, we note that this article has focused entirely on the lasso as a penalization scheme. This is reasonable, as it is the most widely used method. However, many other penalized regression approaches have been developed that aim to reduce bias, better account for correlation between features, and to account for the grouping of SNPs into genes. All of these approaches are potentially attractive avenues for future research into GWAS methodology.
+
+\subsection*{Data Availability}
+
+Data sharing is not applicable to this article as no new data were collected or analyzed in this study.
