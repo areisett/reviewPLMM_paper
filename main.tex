@@ -45,26 +45,26 @@ As an example, consider a genome wide association study (GWAS) to assess genetic
 
 This mechanism of environmental confounding is summarized in the directed acyclic graph displayed in diagram \eqref{diag:ps_env}. The undirected dashed line between population stratification and environmental exposure indicates that while we assume these elements are correlated, we do not assume any causal direction. Otherwise stated, we do not assume that environmental factors directly influence population-specific allele frequencies, or vice versa, only that the two may be related. In the context of our air quality example, this means that we assume air quality is not directly altering individuals' allele frequencies, nor are allele frequencies causing individuals to move to regions of better or worse air quality. Genetic relatedness and environmental effects may become associated over time for any number of complex reasons beyond the scope of this paper. However, as we will discuss, many methods of correcting for population structure rely on this relationship and do not formally differentiate between effects of population structure and those of environment. Such methods assume that genetic relatedness serves as an accurate proxy for environmental exposures, which may or may not be the case depending on the exposure and population in question.
 
-\begin{equation}
-\centering
-\begin{tikzpicture}[baseline=(current  bounding  box.center)]
-    \node (1) at (0,0) {Population Stratification};
-    \node (2) [right = of 1] {Environment};
-    \node (3) [below = of 1] {Observbed SNPs};
-    \node (4) [below = of 2] {Phenotype};
-    \path[bidirected, -] (1) edge (2);
-    \path (1) edge (3);
-    \path (2) edge (4);
-    \path (3) edge (4);
-\end{tikzpicture}
-\label{diag:ps_env}
-\end{equation}
-
 %\begin{equation}
 %\centering
-%\includegraphics{figures/tikz1.eps}
+%\begin{tikzpicture}[baseline=(current  bounding  box.center)]
+%    \node (1) at (0,0) {Population Stratification};
+%    \node (2) [right = of 1] {Environment};
+%    \node (3) [below = of 1] {Observbed SNPs};
+%    \node (4) [below = of 2] {Phenotype};
+%    \path[bidirected, -] (1) edge (2);
+%    \path (1) edge (3);
+%    \path (2) edge (4);
+%    \path (3) edge (4);
+%\end{tikzpicture}
 %\label{diag:ps_env}
 %\end{equation}
+
+\begin{equation}
+\centering
+\includegraphics{figures/tikz1.eps}
+\label{diag:ps_env}
+\end{equation}
 
 An additional source of confounding in genetic studies that we will briefly mention is that of confounding due to genetic background. This occurs in univariate association methods when a non-causal SNP is tested for association with a trait of interest, and that SNP is correlated with a causal SNP. As \citet{vilhjalmsson2012nature} note, any trait that has some genetic basis will be subject to genetic background effects, just as traits that are influenced by the environment may be subject to environmental confounding. Given the importance of both genetic and environmental contributions to many complex phenotypes, both genetic background and environmental confounding are important factors in our ability to identify true causal genetic relationships between SNPs and phenotype. LD pruning is commonly employed to reduce confounding due to genetic background in univariate association testing. However, we will focus on methods which address this via genomewide multivariate analysis.
 
