@@ -45,26 +45,26 @@ As an example, consider a genome wide association study (GWAS) to assess genetic
 
 This mechanism of environmental confounding is summarized in the directed acyclic graph displayed in diagram \eqref{diag:ps_env}. The undirected dashed line between population stratification and environmental exposure indicates that while we assume these elements are correlated, we do not assume any causal direction. Otherwise stated, we do not assume that environmental factors directly influence population-specific allele frequencies, or vice versa, only that the two may be related. In the context of our air quality example, this means that we assume air quality is not directly altering individuals' allele frequencies, nor are allele frequencies causing individuals to move to regions of better or worse air quality. Genetic relatedness and environmental effects may become associated over time for any number of complex reasons beyond the scope of this paper. However, as we will discuss, many methods of correcting for population structure rely on this relationship and do not formally differentiate between effects of population structure and those of environment. Such methods assume that genetic relatedness serves as an accurate proxy for environmental exposures, which may or may not be the case depending on the exposure and population in question.
 
-%\begin{equation}
-%\centering
-%\begin{tikzpicture}[baseline=(current  bounding  box.center)]
-%    \node (1) at (0,0) {Population Stratification};
-%    \node (2) [right = of 1] {Environment};
-%    \node (3) [below = of 1] {Observbed SNPs};
-%    \node (4) [below = of 2] {Phenotype};
-%    \path[bidirected, -] (1) edge (2);
-%    \path (1) edge (3);
-%    \path (2) edge (4);
-%    \path (3) edge (4);
-%\end{tikzpicture}
-%\label{diag:ps_env}
-%\end{equation}
-
 \begin{equation}
 \centering
-\includegraphics{figures/tikz1.eps}
+\begin{tikzpicture}[baseline=(current  bounding  box.center)]
+    \node (1) at (0,0) {Population Stratification};
+    \node (2) [right = of 1] {Environment};
+    \node (3) [below = of 1] {Observbed SNPs};
+    \node (4) [below = of 2] {Phenotype};
+    \path[bidirected, -] (1) edge (2);
+    \path (1) edge (3);
+    \path (2) edge (4);
+    \path (3) edge (4);
+\end{tikzpicture}
 \label{diag:ps_env}
 \end{equation}
+
+%\begin{equation}
+%\centering
+%\includegraphics{figures/dag1.png}
+%\label{diag:ps_env}
+%\end{equation}
 
 An additional source of confounding in genetic studies that we will briefly mention is that of confounding due to genetic background. This occurs in univariate association methods when a non-causal SNP is tested for association with a trait of interest, and that SNP is correlated with a causal SNP. As \citet{vilhjalmsson2012nature} note, any trait that has some genetic basis will be subject to genetic background effects, just as traits that are influenced by the environment may be subject to environmental confounding. Given the importance of both genetic and environmental contributions to many complex phenotypes, both genetic background and environmental confounding are important factors in our ability to identify true causal genetic relationships between SNPs and phenotype. LD pruning is commonly employed to reduce confounding due to genetic background in univariate association testing. However, we will focus on methods which address this via genomewide multivariate analysis.
 
@@ -346,7 +346,7 @@ Figure \ref{fig:mse} presents these results for all three data types in a 1:1 SN
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = \textwidth]{figures/beta_mse.eps}
+    \includegraphics[width = \textwidth]{figures/beta_mse.png}
     \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with coarse subpopulation structure and dichotomous-discordant environmental effects.}
     \label{fig:mse}
 \end{figure}
@@ -384,7 +384,7 @@ In order to assess the behavior of these methods in this context, we conducted a
 
 \begin{figure}[H]
 \centering
-\includegraphics[width = \textwidth]{figures/pop_inf_snps_box.eps}
+\includegraphics[width = \textwidth]{figures/pop_inf_snps_box.png}
 \caption{Absolute allele frequency differences of selected, non-causal SNPs across methods, in the presence and absence of environmental confounding for two Empirical subpopulations, dichotomous-discordant effects, $\eta = 0.5$.}
 \label{fig:pop_inf}
 \end{figure}
@@ -403,7 +403,7 @@ Although PC-lasso and LMM-lasso outperform the ordinary lasso in the presence of
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.9]{figures/mse_diff_subpops.eps}
+    \includegraphics[scale = 0.9]{figures/mse_diff_subpops.png}
     \caption{Relative performance of LMM-lasso, PC-lasso for fine and coarse subpopulation structures and varying levels of environmental confounding with Independent Subpopulations data, $\eta = 0.5$, and dichotomous-discordant environmental effects. }
     \label{fig:big_vs_small}
 \end{figure}
@@ -430,7 +430,7 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = \textwidth]{figures/eta_beta_hat.eps}
+    \includegraphics[width = \textwidth]{figures/eta_beta_hat.png}
      \caption{$\bbeta$ and $\eta$ estimation accuracy of LMM-lasso-Rakitsch and LMM-lasso-ggmix for varying $\eta$ levels and sample sizes with Independent Subpopulations data, coarse subpopulation structure, $\xi = 0.8$, and dichotomous-discordant environmental effect structure.}
     \label{fig:eta_beta_mse}
 \end{figure}
