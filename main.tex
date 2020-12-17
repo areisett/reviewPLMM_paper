@@ -188,15 +188,12 @@ Conversely, LMM-lasso models $\bZ\bgamma$ as a random effect, which corresponds 
     \label{eqn:lmm_reg}
     \by &= \bX_0\bbeta_0 + \bX\bbeta + \bX\bgamma+ \beps, \\
     \beps &\sim N(\boldsymbol{0}, \sigmaee \bI) \\
- \bgamma &\sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI) \Rightarrow \bX \bgamma \sim N(\boldsymbol{0}, \sigmagg \bK),
+ \bgamma &\sim N(\boldsymbol{0}, p^{-1} \sigmass \bI) \Rightarrow \bX \bgamma \sim N(\boldsymbol{0}, \sigmass \bK),
   \end{aligned}
 \end{equation}
-where $\sigmagg$ is the additive genetic variance, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation paramaterizes the model in terms of $\bu=\bX\bgamma$, which yields an equivalent model. 
-$$ \beps \sim N(\boldsymbol{0}, \sigmaee \bI) $$
-$$ \bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI) \Rightarrow \bX \bgamma \sim N(\boldsymbol{0}, \sigmagg \bK), $$
-where $\sigmagg$ is the \anna{additive genetic variance}, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation paramaterizes the model in terms of $\bu=\bX\bgamma$, which yields an equivalent model. 
+where $\sigmass$ determines the size of the structured component to the variance, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation paramaterizes the model in terms of $\bu=\bX\bgamma$, which yields an equivalent model. 
 
-We will first derive the LMM-lasso objective function in the absence of unpenalized covariates for the sake of notational simplicity. Following equation \eqref{eqn:lmm_reg}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmagg \textbf{K} + \sigmaee \textbf{I}$. LMM-lasso uses the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generlized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
+We will first derive the LMM-lasso objective function in the absence of unpenalized covariates for the sake of notational simplicity. Following equation \eqref{eqn:lmm_reg}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmass \textbf{K} + \sigmaee \textbf{I}$. LMM-lasso uses the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generlized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
 
 \begin{equation}
 \label{eqn:rtY_distn}
@@ -206,13 +203,13 @@ and thus an ordinary lasso model can be fit on the transformed data, ($\bV^{-\fr
 
 Using the decomposition of $\bK$ described in equation \eqref{eqn:k}, we can gain further insight into the mechanism of this transformation. Note that $\bV^{-1}$ can be expressed using the following matrix factorization 
 \begin{align*}
-    \bV^{-1} &= (\sigmagg \bK + \sigmaee \bI)^{-1}\\
-    &=(\sigmagg \bU \bD^2 \bU^\T + \sigmaee \bU \bU^\T)^{-1}\\
-    &= (\bU (\sigmagg \bD^2 + \sigmaee \bI) \bU^\T)^{-1}\\
-    &=\bU (\sigmagg \bD^2 + \sigmaee \bI)^{-1} \bU^\T\\
+    \bV^{-1} &= (\sigmass \bK + \sigmaee \bI)^{-1}\\
+    &=(\sigmass \bU \bD^2 \bU^\T + \sigmaee \bU \bU^\T)^{-1}\\
+    &= (\bU (\sigmass \bD^2 + \sigmaee \bI) \bU^\T)^{-1}\\
+    &=\bU (\sigmass \bD^2 + \sigmaee \bI)^{-1} \bU^\T\\
     &=\bU \bW^2 \bU^\T.
 \end{align*}
-By incorporating these decompositions, the transformed data can be expressed as $\bW \bXT$ and $\bW \byT$, respectively, where $\bXT = \bU^\T \bX$, $\byT = \bU^\T \by$, $\bW = \text{diag}\{w_1, ... w_n\}$, and $w_i$ corresponds to the square root of the $i$th element of the diagonal matrix $(\sigmagg \bD^2 + \sigmaee \bI)^{-1}$. Together, this yields the objective function
+By incorporating these decompositions, the transformed data can be expressed as $\bW \bXT$ and $\bW \byT$, respectively, where $\bXT = \bU^\T \bX$, $\byT = \bU^\T \by$, $\bW = \text{diag}\{w_1, ... w_n\}$, and $w_i$ corresponds to the square root of the $i$th element of the diagonal matrix $(\sigmass \bD^2 + \sigmaee \bI)^{-1}$. Together, this yields the objective function
 \begin{equation}
 \label{eqn:lmm_obj}
 Q(\bbeta | \bXT, \byT, \bW) = || \bW (\byT - \bXT \bbeta)||_2^2 + \lambda || \bbeta ||_1.
@@ -229,7 +226,7 @@ where $\bXT{^\prime} = \bU^\T \bX{^\prime}$, so that all of the data are transfo
 
 %------------------------------%
 
-Different variance component estimation methods lead to different estimates of $\bW$ and two distinct LMM-lasso variants: LMM-lasso-Rakitsch and LMM-lasso-ggmix. LMM-lasso-Rakitsch uses a two-step procedure for estimating the variance components, $\sigmaee$ and $\delta := \sigmaee / \sigmagg$ \citep{Rakitsch2012}. These variance components and the corresponding weights are estimated once under the assumption of a null model. A lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \citep{glmnet} or \texttt{ncvreg} \citep{ncvreg}. LMM-lasso-ggmix iteratively updates $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm \citep{bhatnagar2020simultaneous}. This iterative update scheme prevents the use of standard lasso software, but is implemented in the \texttt{R} package \texttt{ggmix}. We further discuss differences between these methods in Section \ref{sec:results}.
+Different variance component estimation methods lead to different estimates of $\bW$ and two distinct LMM-lasso variants: LMM-lasso-Rakitsch and LMM-lasso-ggmix. LMM-lasso-Rakitsch uses a two-step procedure for estimating the variance components, $\sigmaee$ and $\delta := \sigmaee / \sigmass$ \citep{Rakitsch2012}. These variance components and the corresponding weights are estimated once under the assumption of a null model. A lasso model can then be fit on the transformed data to estimate $\boldsymbol{\beta}$ using standard software for coordinate descent, such as \texttt{glmnet} \citep{glmnet} or \texttt{ncvreg} \citep{ncvreg}. LMM-lasso-ggmix iteratively updates $\widehat{\boldsymbol{\beta}}$ and the variance components via a block coordinate descent algorithm \citep{bhatnagar2020simultaneous}. This iterative update scheme prevents the use of standard lasso software, but is implemented in the \texttt{R} package \texttt{ggmix}. We further discuss differences between these methods in Section \ref{sec:results}.
 
 %------------------------------%
 \subsection{Relationship between PC-lasso and LMM-lasso}
@@ -242,7 +239,7 @@ Using the result of the decomposition from \eqref{eqn:k}, $\bK = p^{-1} \bR \bR^
     \label{eqn:pc_lmm_equiv}
     \by &= \bX_0 \bbeta_0 + \bX \bbeta + \bR \bgamma + \beps \\
     \beps &\sim N(\boldsymbol{0}, \sigmaee \bI) \\
-    \bgamma &\sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI) \Rightarrow \bR \bgamma \sim N(\boldsymbol{0}, \sigmagg \bK).
+    \bgamma &\sim N(\boldsymbol{0}, p^{-1} \sigmass \bI) \Rightarrow \bR \bgamma \sim N(\boldsymbol{0}, \sigmass \bK).
   \end{aligned}
 \end{equation}
 Based on the relationship between equations \eqref{eqn:pca_reg} and \eqref{eqn:pc_lmm_equiv}, we can see that modeling the principal components of $\bK$ as fixed or random effects relies on the same underlying regression model. However, while the LMM includes all the principal components, only $k < n$ are included in the fixed effects model. 
@@ -274,7 +271,7 @@ To illustrate this concept mathematically, consider the ordinary least squares (
     &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\bX\bbeta + \bX\bgamma + \beps) \notag\\
     &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\bX\bgamma + \beps) \bX  (\bX^\T \bX)^{-1} \label{eqn:variance}.
 \end{align}
-Treating the environmental effects as random with $\bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmagg \bI)$, equations \eqref{eqn:expectation} and \eqref{eqn:variance} yield $\mathbb{E}(\bbetaHat) = \bbeta$, and $\mathbb{V}(\bbetaHat) = p^{-1}\sigmagg\bI + \sigmaee (\bX^\T \bX)^{-1}$, respectively. Treating them as fixed, on the other hand, we have $\mathbb{E}(\bbetaHat) = \bbeta + \bgamma$ and $\mathbb{V}(\bbetaHat) = \sigmaee (\bX^\T \bX)^{-1}$. Treating $\bgamma$ as random gives the misleading impression that the unadjusted association between SNP and phenotype is unbiased.
+Treating the environmental effects as random with $\bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmass \bI)$, equations \eqref{eqn:expectation} and \eqref{eqn:variance} yield $\mathbb{E}(\bbetaHat) = \bbeta$, and $\mathbb{V}(\bbetaHat) = p^{-1}\sigmass\bI + \sigmaee (\bX^\T \bX)^{-1}$, respectively. Treating them as fixed, on the other hand, we have $\mathbb{E}(\bbetaHat) = \bbeta + \bgamma$ and $\mathbb{V}(\bbetaHat) = \sigmaee (\bX^\T \bX)^{-1}$. Treating $\bgamma$ as random gives the misleading impression that the unadjusted association between SNP and phenotype is unbiased.
 
 Let us then decompose the environmental effects $\bZ \bgamma$ into two parts: a component that can be projected onto the column space of $\bX$ and a component that cannot. Let $\P_{\bX} = \bX (\bX^\T \bX)^{-1} \bX^\T$ denote the projection matrix of $\bX$, with $\mathcal{C}(\P_{\bX})$ and $\mathcal{N}(\P_{\bX})$ denoting the column and null spaces of $\P_{\bX}$, respectively. Then there exist $\boldsymbol{\tau}, \boldsymbol{\psi}$ such that $\bZ \bgamma = \bX \boldsymbol{\tau + \psi}$, where $\bX \boldsymbol{\tau} \in \mathcal{C}(\P_{\bX})$ and $\boldsymbol{\psi} \in \mathcal{N}(\P_{\bX})$.  This in turn means that
 \begin{equation}
@@ -312,7 +309,7 @@ where $\by$ represents the synthetic phenotype, $\bgamma$ is a fixed quantity (s
     \label{eqn:parition_y}
     \mathbb{V}(\by) = \eta + (1 - \eta) \xi + (1-\eta)(1-\xi).
 \end{equation}
-In \eqref{eqn:parition_y}, $\eta$ defines the proportion of the variance of $\by$ attributable to additive genetic factors, commonly referred to as the narrow-sense heritability. %, $h^2 = \sigmagg/(\sigmagg + \sigmaee)$. 
+In \eqref{eqn:parition_y}, $\eta$ defines the proportion of the variance of $\by$ attributable to additive genetic factors, commonly referred to as the narrow-sense heritability. %, $h^2 = \sigmass/(\sigmass + \sigmaee)$. 
 The parameter $\eta$ also describes the data-generating model's signal to noise ratio (SNR), while $\xi$ partitions the remaining variance of $\by$ into latent environmental heterogeneity and random noise. So, for example $\eta = 0.5$ and $\xi = 0.8$ corresponds to a 1:1 SNR, and means that 50\% of the variability in $\by$ is due to additive genetic effects, 40\% due to unobserved environmental effects, and the remaining 10\% due to other factors.
 
 \subsubsection{Genotypes}
@@ -461,7 +458,7 @@ Our simulations experiments reveal, unsurprisingly, that PC-lasso and LMM-lasso 
 
 We considered two implementations of the LMM-lasso method: LMM-lasso-Rakitsch and LMM-lasso-ggmix, which differ in their variance estimation procedures and computational implementations. Although both methods perform similarly in terms of estimating $\bbeta$, the much greater computational efficiency and numerical stability of LMM-lasso-Rakitsch make it a more attractive choice in most scenarios, although LMM-lasso-ggmix may be useful if the objective of the analysis is to accurately estimate narrow-sense heritability.
 
-\citet{Rakitsch2012} parameterize their model in terms of the variance components $\sigmagg$ and $\delta := \sigmaee / \sigmagg$ as previously discussed, however, we have implemented the LMM-lasso-Rakitsch method using an equivalent but more interpretable parameterization in terms of $\eta$ and $\sigmaee$ in the \texttt{R} package, \texttt{penalizedLMM}, available on the author's github repository \url{https://github.com/areisett/penalizedLMM}.
+\citet{Rakitsch2012} parameterize their model in terms of the variance components $\sigmass$ and $\delta := \sigmaee / \sigmass$ as previously discussed, however, we have implemented the LMM-lasso-Rakitsch method using an equivalent but more interpretable parameterization in terms of $\eta$ and $\sigmaee$ in the \texttt{R} package, \texttt{penalizedLMM}, available on the author's github repository \url{https://github.com/areisett/penalizedLMM}.
 
 Although the purpose of this article is to elucidate the manner in which failing to correct for unobserved environmental effects can bias SNP effect estimates, equation \eqref{eqn:partition_e} also highlights the manner in which such unobserved environmental effects can lead to substantial bias in narrow-sense heritability estimates using SNP data. In particular, these estimates are likely to be inflated by the quantity $\boldsymbol{\tau}$ unless steps are taken to address population structure. A detailed treatment of narrow-sense heritability estimation is beyond the scope of this paper, but we hope this emphasizes the broad implications and importance of distinguishing between population structure and environmental effects.
 
