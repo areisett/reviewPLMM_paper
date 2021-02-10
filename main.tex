@@ -267,8 +267,8 @@ To illustrate this concept mathematically, consider the ordinary least squares (
     \mathbb{E}(\bbetaHat) &= (\bX^\T \bX)^{-1} \bX^\T \mathbb{E}(\by) \notag \\
     &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{E}(\bX\bbeta + \bX\bgamma + \beps) \label{eqn:expectation}\\
     &\quad \notag\\
-    \mathbb{V}(\bbetaHat) &= (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\by) \notag\\
-    &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\bX\bbeta + \bX\bgamma + \beps) \notag\\
+    \mathbb{V}(\bbetaHat) &= (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\by) \bX  (\bX^\T \bX)^{-1} \notag\\
+    &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\bX\bbeta + \bX\bgamma + \beps) \bX  (\bX^\T \bX)^{-1} \notag\\
     &=  (\bX^\T \bX)^{-1} \bX^\T \mathbb{V}(\bX\bgamma + \beps) \bX  (\bX^\T \bX)^{-1} \label{eqn:variance}.
 \end{align}
 Treating the environmental effects as random with $\bgamma \sim N(\boldsymbol{0}, p^{-1} \sigmass \bI)$, equations \eqref{eqn:expectation} and \eqref{eqn:variance} yield $\mathbb{E}(\bbetaHat) = \bbeta$, and $\mathbb{V}(\bbetaHat) = p^{-1}\sigmass\bI + \sigmaee (\bX^\T \bX)^{-1}$, respectively. Treating them as fixed, on the other hand, we have $\mathbb{E}(\bbetaHat) = \bbeta + \bgamma$ and $\mathbb{V}(\bbetaHat) = \sigmaee (\bX^\T \bX)^{-1}$. Treating $\bgamma$ as random gives the misleading impression that the unadjusted association between SNP and phenotype is unbiased.
