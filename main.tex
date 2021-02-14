@@ -11,7 +11,7 @@
 
 One method for analyzing data in the presence of correlated loci is LD pruning, which involves sequentially thinning SNPs that exceed a correlation threshold, so that only variants that are relatively independent are used in modeling and testing procedures.
 %LD pruning can be an important preprocessing step in a GWAS analysis, for which there exist a variety of algorithms and methods.
-An alternative solution is the use of multivariate methods such as multiple linear regression, which adjusts for and estimates the effects of numerous variants simultaneously. However, classical multivariate approaches rely on data with more observations than unknown parameters. This is typically infeasible in genome-wide studies where the number of variants greatly exceeds the number of individuals. Penalized regression methods make such problems tractable by constraining the solution space of coefficient estimates. The lasso is a widely used penalized regression method \citep{tibshirani1996regression}. It relies on an assumption of sparsity; in other words, that many features will have no effect. Thus, although the total number of features may be large, the number that actually affect the outcome will be small. This allows coefficient estimation and variable selection to be accomplished simultaneously, and provides considerable computational advantages that scale up well to very large data sets. These features make the lasso attractive for the analysis of high-dimensional genetic data where identifying the variants most highly associated with a particular trait is often of interest. Although separately testing each SNP is still the most common way of analyzing GWAS data, the use of lasso and related methods is increasing in use due to computational advances that make it practical to apply on a genome-wide scale \citep{qian2020fast, prive2018efficient}. \anna{More background on lasso}
+An alternative solution is the use of multivariate methods such as multiple linear regression, which adjusts for and estimates the effects of numerous variants simultaneously. However, classical multivariate approaches rely on data with more observations than unknown parameters. This is typically infeasible in genome-wide studies where the number of variants greatly exceeds the number of individuals. Penalized regression methods make such problems tractable by constraining the solution space of coefficient estimates. The lasso is a widely used penalized regression method \citep{tibshirani1996regression}. \anna{More background on lasso} It relies on an assumption of sparsity; in other words, that many features will have no effect. Thus, although the total number of features may be large, the number that actually affect the outcome will be small. This allows coefficient estimation and variable selection to be accomplished simultaneously, and provides considerable computational advantages that scale up well to very large data sets. These features make the lasso attractive for the analysis of high-dimensional genetic data where identifying the variants most highly associated with a particular trait is often of interest. Although separately testing each SNP is still the most common way of analyzing GWAS data, the use of lasso and related methods is increasing in use due to computational advances that make it practical to apply on a genome-wide scale \citep{qian2020fast, prive2018efficient}. 
 
 As with multiple linear regression models, lasso penalized regression assumes independent observations and uncorrelated errors. In the presence of population structure or cryptic relatedness, however, samples are correlated, violating this assumption. If unaccounted for, this dependency can result in the identification of spurious associations. Though methods to correct for population stratification and cryptic relatedness have been extensively investigated, the majority of this work has focused on plant and animal breeding data, a setting which affords much greater experimental control than studies of human genetics \citep{Amin2007, hoffman2013correcting, price2006principal, Rakitsch2012, bhatnagar2020simultaneous, Sillanpaeae2011}. While many standard correction techniques may in principle be applied to human genetic data, their performance has not been well-studied within the context of human ancestry and confounding arising from observational study \citep{lawson2019population, barton2019population}.  
 
@@ -85,10 +85,10 @@ New statistical methods to control for the effects of confounding due to populat
     \node (3) [below = of 1] {Observed SNPs};
     \node (4) [below = of 2] {Phenotype};
     \path[bidirected, -] (1) edge (2);
-    \path[red, line width = 0.5] (1) edge (3);
+    \path[line width = 0.5] (1) edge (3);
     \path (2) edge (4);
     \path (3) edge (4);
-    \tkzMarkSegment[color=red,pos=.5,mark=x](1,3)
+    \tkzMarkSegment[pos=.5,mark=x](1,3)
 \end{tikzpicture}
 %\caption{The causal pathway between the environment and observed SNPs may be indirectly blocked by many methods that attempt to reduce confounding due to population structure.}
 \label{diag:ps_env_block}
@@ -105,11 +105,11 @@ In the presence of environmental heterogeneity which affects the phenotype of in
     \node (2) [right = of 1] {Environment};
     \node (3) [below = of 1] {Observed SNPs};
     \node (4) [below = of 2] {Phenotype};
-    \path[bidirected, -, red] (1) edge (2);
+    \path[bidirected, -] (1) edge (2);
     \path (1) edge (3);
     \path (2) edge (4);
     \path (3) edge (4);
-    \tkzMarkSegment[color=red,pos=.5,mark=x](1,2)
+    \tkzMarkSegment[pos=.5,mark=x](1,2)
 \end{tikzpicture}
 %\caption{The causal pathway between the environment and observed SNPs may be blocked if genetic information does not serve as an accurate proxy for it.}
 \label{diag:ps_env_block2}
