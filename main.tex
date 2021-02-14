@@ -257,7 +257,7 @@ Whether modeled as a fixed or random effect, the underlying effect of $\bZ \bgam
 %------------------------------%
 \subsection{Software}
 \label{sec:software}
-\anna{More discussion of software. Add a small section? R-based Software for lasso, pc-lasso, ggmix, plmm, PLINK functions, KING, snpRelate}
+\anna{More discussion of software. Add a small section? R-based Software for lasso, pc-lasso, ggmix, plmm, PLINK functions, KING, snpRelate. Remove other mentions of software in other places and put them here}
 
 %------------------------------%
 \subsection{Partitioning the effects of environmental confounding}
@@ -335,11 +335,14 @@ In our simulations, $\bZ$ is a matrix of indicator functions identifying subpopu
 
 Selection of the tuning parameter $\lambda$ plays an important role in all penalized regression methods, with many possible approaches. Here, for each model, we selected the $\lam$ value such that 50 SNPs were selected (recall that 50 is also the true number of causal SNPs). This method for selecting $\lambda$ was chosen in an attempt to compare the performance of all methods fairly, and as a strategy to evaluate methods in terms of variable selection, as it allows for direct comparison of the first 50 variables each method lets into the model.
 
-\anna{penalty parameter selection; also a tough one. We need to say more, but not a great deal is known.}
+Although cross-validation (CV) and information criterion-based methods are commonly used to select $\lambda$ values, in this context they have the potential to result in misleading comparisons. Because lasso, PC-lasso, and LMM-lasso use different likelihoods, an information-criterion-based approach such as BIC would not lend itself to comparable results across methods. Meanwhile, whether cross-validation is advisable or not in the presence of dependent samples is an open question \citep{roberts2017cross}. \anna{We include a more detailed discussion of methods of penalty parameter selection for penalized LMMs to section \ref{sec:discussion}.}
 
-Although cross-validation and information criterion-based methods are commonly used to select $\lambda$ values, in this context they have the potential to result in misleading comparisons. Because lasso, PC-lasso, and LMM-lasso use different likelihoods, an information-criterion-based approach such as BIC would not lend itself to comparable results across methods. Meanwhile, whether cross-validation is advisable or not in the presence of dependent samples is an open question \citep{roberts2017cross}.
+A total of 1000 simulations were performed for each unique combination of parameters, datatype, subpopulation structure, and environmental effect structure. \anna{maybe cut this and include in figure/table captions instead since they requested that for fig1/tab1}
 
-A total of 1000 simulations were performed for each unique combination of parameters, datatype, subpopulation structure, and environmental effect structure. 
+
+%------------------------------%
+\subsection{\anna{Genomewide case study}}
+%------------------------------%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -464,6 +467,20 @@ We considered two implementations of the LMM-lasso method: LMM-lasso-Rakitsch an
 \citet{Rakitsch2012} parameterize their model in terms of the variance components $\sigmass$ and $\delta := \sigmaee / \sigmass$ as previously discussed, however, we have implemented the LMM-lasso-Rakitsch method using an equivalent but more interpretable parameterization in terms of $\eta$ and $\sigmaee$ in the \texttt{R} package, \texttt{penalizedLMM}, available on the author's github repository \url{https://github.com/areisett/penalizedLMM}.
 
 Although the purpose of this article is to elucidate the manner in which failing to correct for unobserved environmental effects can bias SNP effect estimates, equation \eqref{eqn:partition_e} also highlights the manner in which such unobserved environmental effects can lead to substantial bias in narrow-sense heritability estimates using SNP data. In particular, these estimates are likely to be inflated by the quantity $\boldsymbol{\tau}$ unless steps are taken to address population structure. A detailed treatment of narrow-sense heritability estimation is beyond the scope of this paper, but we hope this emphasizes the broad implications and importance of distinguishing between population structure and environmental effects.
+
+\anna{\textbf{penalty parameter selection; also a tough one. We need to say more, but not a great deal is known.}}
+
+The nature of the simulations and analyses in this work have allowed us to select penalty parameters based on the true number of causal features in a model, which allows for fair comparison across methods. In a real data scenario, the true number of causal SNPs would not be known a priori. As such, appropriate methods for penalty parameter selection in penalized LMMs are worth additional discussion. As of yet there is no clear consensus on the optimal way to select a penalty parameter for penalized LMMs. 
+
+Several authors have used the Bayesian information criterion (BIC) for variable selection in mixed models \cite{bondell2010joint, schelldorfer2011estimation}. However it has been shown that the Akaike information criterion (AIC) and BIC may perform poorly in the high-dimensional setting \citep{fan2013tuning}. The high-dimensional BIC introduced by \citet{fan2013tuning} penalizes model parameters more severely in an attempt to perform better in high dimensional settings. \citep{bhatnagar2020simultaneous} employs this high-dimensional BIC as its default method to select $\lambda$.
+
+Subsampling approaches, such as CV and stability selection, are another common class of variable selection methods often preferred to information criterion-based approaches. \anna{cite? It seems like you see CV done way more often...} \citet{Rakitsch2012} used stability selection to evaluate the significance of individual SNPs \citep{meinshausen2010stability}. \citet{guo2019combining} used a combination of both methods for feature selection, first selecting several $\lambda$ values via CV, and then using these penalty parameters for stability selection and final feature selection. 
+
+As previously mentioned, however, the advisability of subsampling methods in the presence of correlated observations remains an open question \citep{roberts2017cross, jia2012preconditioning}. A rigorous assessment of penalty parameter selection in the context of penalized LMMs is beyond the scope of this work, but worthy of further investigation.
+
+\anna{I don't think we should bring up the idea of CV/subsampling on original vs transformed data in this paper at all - I think it's just confusing without a lot of additional explanation.}
+
+
 
 Finally, we note that this article has focused entirely on the lasso as a penalization scheme. This is reasonable, as it is the most widely used method. However, many other penalized regression approaches have been developed that aim to reduce bias, better account for correlation between features, and to account for the grouping of SNPs into genes. All of these approaches are potentially attractive avenues for future research into GWAS methodology.
 
