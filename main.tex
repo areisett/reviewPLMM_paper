@@ -375,7 +375,7 @@ Figure \ref{fig:mse} presents these results for all three data types in a 1:1 SN
 \begin{figure}[H]
     \centering
     \includegraphics[width = \textwidth]{figures/beta_mse.png}
-    \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with 4 subpopulations.}
+    \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with 4 subpopulations. Mean and 1 SE bars displayed for 1000 replications.}
     \label{fig:mse}
 \end{figure}
 
@@ -398,7 +398,7 @@ $\eta$ & $\xi$ & \multicolumn{1}{c}{Method} & 1D Linear Admixture & Independent 
 & &  LMM-lasso & 0.28 (0.05) & 0.39 (0.06) & 0.61 (0.06) \\ 
 \bottomrule
 \end{tabularx}
-\caption{True positive rates, mean (SD), for different data types in the absence ($\xi = 0$) and presence ($\xi = 0.8$) of environmental effects. For the data sets with simulated genotypes, 4 subpopulations are present.}
+\caption{True positive rates, defined as the proportion of the 50 causal SNPs which are selected with the correct sign, for different data types in the absence ($\xi = 0$) and presence ($\xi = 0.8$) of environmental effects. For the data sets with simulated genotypes, 4 subpopulations are present. Mean (SD) of 1000 replications.}
 \label{tab:var_sel}
 \end{table}
 
@@ -413,7 +413,7 @@ In order to assess the behavior of these methods in this context, we conducted a
 \begin{figure}[hbt]
 \centering
 \includegraphics[scale = 0.9]{figures/pop_inf_snps_box.png}
-\caption{Absolute allele frequency differences of selected, non-causal SNPs across methods, in the presence and absence of environmental confounding for two Empirical subpopulations, $\eta = 0.5$.}
+\caption{Absolute allele frequency differences of selected, non-causal SNPs across methods, in the presence and absence of environmental confounding for two Empirical subpopulations, $\eta = 0.5$, 1000 replications.}
 \label{fig:pop_inf}
 \end{figure}
 
@@ -430,7 +430,7 @@ Although PC-lasso and LMM-lasso outperform the ordinary lasso in the presence of
 \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.9]{figures/mse_diff_subpops.png}
-    \caption{Relative performance of LMM-lasso, PC-lasso for fine and coarse subpopulation structures and varying levels of environmental confounding with Independent Subpopulations, $\eta = 0.5$. }
+    \caption{Relative performance of LMM-lasso, PC-lasso for fine and coarse subpopulation structures and varying levels of environmental confounding with Independent Subpopulations, $\eta = 0.5$, 1000 replications.}
     \label{fig:big_vs_small}
 \end{figure}
 
@@ -457,7 +457,7 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 \begin{figure}[H]
     \centering
     \includegraphics[width = \textwidth]{figures/eta_beta_hat.png}
-     \caption{Estimation accuracy and computing time of LMM-lasso-Rakitsch and LMM-lasso-ggmix for $\bbeta$ and $\eta$ for varying $\eta$ levels and sample sizes with Independent Subpopulations data, coarse subpopulation structure, $\xi = 0.8$.}
+     \caption{Estimation accuracy and computing time of LMM-lasso-Rakitsch and LMM-lasso-ggmix for $\bbeta$ and $\eta$ for varying $\eta$ levels and sample sizes with Independent Subpopulations data, coarse subpopulation structure, $\xi = 0.8$, 1000 replications.}
     \label{fig:eta_beta_mse}
 \end{figure}
 
