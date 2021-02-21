@@ -341,7 +341,7 @@ Although cross-validation (CV) and information criterion-based methods are commo
 
 
 %------------------------------%
-\subsection{\anna{Genomewide analysis case study}}
+\subsection{\anna{Genomewide analysis}}
 %------------------------------%
 
 %------------------------------%
@@ -455,6 +455,24 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
     \includegraphics[width = \textwidth]{figures/eta_beta_hat.png}
      \caption{Estimation accuracy and computing time of LMM-lasso-Rakitsch and LMM-lasso-ggmix for $\bbeta$ and $\eta$ for varying $\eta$ levels and sample sizes with Independent Subpopulations data, coarse subpopulation structure, $\xi = 0.8$, 1000 replications.}
     \label{fig:eta_beta_mse}
+\end{figure}
+
+%------------------------------%
+\subsection{\anna{Genome-wide analysis case study}}
+%------------------------------%
+
+\begin{figure}[hbt]
+\centering
+\includegraphics[scale = 0.9]{figures/genomewide_prc.png}
+\caption{Precision recall curves across all $\lambda$ values from the Empirical genome-wide analysis. Single replication, $\eta = 0.5, \xi = 0.8$.}
+\label{fig:gw_prc}
+\end{figure}
+
+\begin{figure}[hbt]
+\centering
+\includegraphics[scale = 0.9]{figures/genomewide_pop_inf_snps.png}
+\caption{Absolute correlation of selected, non-causal SNPs with the first principal component of the data in Empirical genome-wide analysis. Selection is calculated across all $\lambda$ values for a single replication. $\eta = 0.5, \xi = 0.8$.}
+\label{fig:gw_pop_inf}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
