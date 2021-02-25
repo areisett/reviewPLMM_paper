@@ -370,7 +370,7 @@ Figure \ref{fig:mse} presents these results for all three data types in a 1:1 SN
 \begin{figure}[H]
     \centering
     \includegraphics[width = \textwidth]{figures/beta_mse.png}
-    \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with 4 subpopulations. Mean and 1 SE bars displayed for 1000 replications.}
+    \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with 4 subpopulations. Mean and 1 standard error (SE) bars displayed for 1000 replications.}
     \label{fig:mse}
 \end{figure}
 
@@ -463,15 +463,15 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 \begin{figure}[hbt]
 \centering
 \includegraphics[scale = 0.9]{figures/genomewide_prc.png}
-\caption{Precision recall curves across all $\lambda$ values from the Empirical genome-wide analysis. Single replication, $\eta = 0.5, \xi = 0.8$.}
+\caption{Precision recall curves across $\lambda$ values from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_prc}
 \end{figure}
 
 \begin{figure}[hbt]
 \centering
-\includegraphics[scale = 0.9]{figures/genomewide_pop_inf_snps.png}
-\caption{Absolute correlation of selected, non-causal SNPs with the first principal component of the data in Empirical genome-wide analysis. Selection is calculated across all $\lambda$ values for a single replication. $\eta = 0.5, \xi = 0.8$.}
-\label{fig:gw_pop_inf}
+\includegraphics[scale = 0.9]{figures/genomewide_pc1_corr.png}
+\caption{Pathwise absolute correlation of selected, non-causal SNPs with the first principal component of the data in Empirical genome-wide analysis. Plotted line is the mean absolute correlation of all incorrectly selected SNPs for a particular $\lambda$ value, with shaded region for $\pm$ 1 SE. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
+\label{fig:gw_pc1_corr}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
