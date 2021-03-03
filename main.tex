@@ -44,29 +44,14 @@ In this review we focus on methods to account for unobserved dependence between 
 As an example, consider a genome wide association study (GWAS) to assess genetic variants associated with lung cancer in a sample comprised of subjects from two distinct subpopulations, A and B. Assume the minor allele of SNP $X$ is more common in subpopulation B compared to subpopulation A, but has no direct effect on lung cancer. Also suppose these subpopulations are geographically segregated in a such a way that subpopulation A is exposed to good air quality, and subpopulation B to poor air quality, and that air quality does have a direct effect on lung cancer. A GWAS of data from these subpopulations would likely find SNP $X$ to be significantly associated with lung cancer. This spurious association is does not arise from the presence of population stratification itself, but because that stratification is related to a causal environmental exposure. Indeed, if subpopulations A and B were not subject to different air qualities, all else being equal, SNP $X$ would not be associated with the phenotype.
 
 This mechanism of environmental confounding is summarized in the directed acyclic graph displayed in diagram \eqref{diag:ps_env}. The undirected dashed line between population stratification and environmental exposure indicates that while we assume these elements are correlated, we do not assume any causal direction.
-%Otherwise stated, we do not assume that environmental factors directly influence population-specific allele frequencies, or vice versa, only that the two may be related.
+
 In the context of our air quality example, this means that we assume air quality is not directly altering individuals' allele frequencies, nor are allele frequencies causing individuals to move to regions of better or worse air quality, only that they are now correlated. Genetic relatedness and environmental effects may become associated over time for any number of complex reasons beyond the scope of this paper. However, as we will discuss, many methods of correcting for population structure rely on this relationship and do not formally differentiate between effects of population structure and those of environment. Such methods assume that genetic relatedness serves as an accurate proxy for environmental exposures, which may or may not be the case depending on the exposure and population in question.
 
 \begin{equation}
 \centering
-\begin{tikzpicture}[baseline=(current  bounding  box.center)]
-    \node (1) at (0,0) {Population Stratification};
-    \node (2) [right = of 1] {Environment};
-    \node (3) [below = of 1] {Observed SNPs};
-    \node (4) [below = of 2] {Phenotype};
-    \path[bidirected, -] (1) edge (2);
-    \path (1) edge (3);
-    \path (2) edge (4);
-    \path (3) edge (4);
-\end{tikzpicture}
+\includegraphics{figures/dag1.eps}
 \label{diag:ps_env}
 \end{equation}
-
-%\begin{equation}
-%\centering
-%\includegraphics{figures/dag1.png}
-%\label{diag:ps_env}
-%\end{equation}
 
 A different type of confounding in genetic studies that we will briefly mention is due to genetic background. This occurs in univariate association methods when a non-causal SNP is tested for association with a trait of interest, and that SNP is correlated with a causal SNP. As \citet{vilhjalmsson2012nature} note, any trait that has some genetic basis will be subject to genetic background effects, just as traits that are influenced by the environment may be subject to environmental confounding. Given the importance of both genetic and environmental contributions to many complex phenotypes, both genetic background and environmental confounding are important factors in our ability to identify true causal genetic relationships between SNPs and phenotype. As mentioned earlier, LD pruning is a common approach to reduce confounding due to genetic background in univariate association testing. Here, we focus on methods which address this via genomewide multivariate analysis.
 
@@ -80,38 +65,16 @@ New statistical methods to control for the effects of confounding due to populat
 
 \begin{equation}
 \centering
-\begin{tikzpicture}[baseline=(current  bounding  box.center)]
-    \node (1) at (0,0) {Population Stratification};
-    \node (2) [right = of 1] {Environment};
-    \node (3) [below = of 1] {Observed SNPs};
-    \node (4) [below = of 2] {Phenotype};
-    \path[bidirected, -] (1) edge (2);
-    \path[line width = 0.5] (1) edge (3);
-    \path (2) edge (4);
-    \path (3) edge (4);
-    \tkzMarkSegment[pos=.5,mark=x](1,3)
-\end{tikzpicture}
+\includegraphics{figures/dag2.eps}
 \label{diag:ps_env_block}
 \end{equation}
 
-%Whether or not such methods are effective at reducing confounding effects depends upon whether population structure can be accurately inferred.
 As mentioned earlier, population structure only leads to confounding if it is correlated with a causal effect in the environment.
 In the presence of environmental heterogeneity which affects the phenotype of interest in a manner that is orthogonal to population structure, SNP-phenotype associations will not be confounded. This is due to the absence of a causal pathway between population stratification and environment, as depicted in diagram \eqref{diag:ps_env_block2}. In such a scenario, failing to account for unobserved environmental effects is likely to result in greater variability, but SNP effect estimates will remain unbiased \citep{greenland1999causal}. We will discuss this fact in greater detail in Section \ref{sec:partition}.
 
 \begin{equation}
 \centering
-\begin{tikzpicture}[baseline=(current  bounding  box.center)]
-    \node (1) at (0,0) {Population Stratification};
-    \node (2) [right = of 1] {Environment};
-    \node (3) [below = of 1] {Observed SNPs};
-    \node (4) [below = of 2] {Phenotype};
-    \path[bidirected, -] (1) edge (2);
-    \path (1) edge (3);
-    \path (2) edge (4);
-    \path (3) edge (4);
-    \tkzMarkSegment[pos=.5,mark=x](1,2)
-\end{tikzpicture}
-%\caption{The causal pathway between the environment and observed SNPs may be blocked if genetic information does not serve as an accurate proxy for it.}
+\includegraphics{figures/dag3.eps}
 \label{diag:ps_env_block2}
 \end{equation}
 
@@ -153,7 +116,7 @@ where $|| \boldsymbol{\beta} ||_1 = \sum_{j=1}^p |\beta_j|$ denotes the $\ell_1$
 
 %------------------------------%
 \subsection{LMM and PC models}
-\label{Sec:lmm-and-pc}
+\label{sec:lmm-and-pc}
 
 To describe and compare PC-lasso and LMM-lasso, we consider an $n \times p$ matrix of genotype data $\bG$ for $n$ subjects and $p$ SNPs, where each $G_{ij} \in \{ 0, 1, 2 \}$ enumerates the number of allele copies subject $i$ has for SNP $j$. In order to equitably compare SNP effects across differing allele frequencies, in practice $\bG$ is standardized; not doing so introduces a bias in which common SNPs are more likely to be selected. We denote the standardized version of this genotype matrix as $\bX$, where each $X_{ij} = (G_{ij} - 2 \pi_j) / \sqrt{2\pi_j (1 - \pi_j)}$ and $\pi_j$ is the minor allele frequency (MAF) of SNP $j$ \citep{zhang2015principal, price2006principal}. Additionally, $\bX_0$ represents an $n \times p_0$ matrix of unpenalized covariates and the intercept. At a minimum, $\bX_0$ will be an $n \times 1$ vector of 1s to represent the intercept, in which case $\bbeta_0 \equiv \beta_0$ is the scalar intercept. However, $\bX_0$ may additionally include observed covariates such as age, sex, or smoking history, which are included in the model without penalty. We assume that the $n \times 1$ vector of continuous phenotype values, $\by$, can be expressed as the sum of these covariates, additive SNP effects, environmental effects, and observational noise, and consider the linear model,
 \begin{equation}
@@ -264,8 +227,7 @@ Whether modeled as a fixed or random effect, the underlying effect of $\bZ \bgam
 \subsection{Partitioning the effects of environmental confounding}
 \label{sec:partition}
 
-In Section~\ref{Sec:correcting-structure}, we remarked that population structure only leads to confounding if it is correlated with the
-environment, and in Section~\ref{Sec:lmm-and-pc}, we remarked that in LMM modeling, a typical albeit somewhat mysterious assumption is that $\bZ=\bX$.  Here, we provide explicit mathematical justifications for those statements.  In doing so, we derive a partitioning relationship that illustrates how LMMs achieve bias reduction due to environmental confounding.
+In Section~\ref{Sec:correcting-structure}, we remarked that population structure only leads to confounding if it is correlated with the environment, and in Section~\ref{sec:lmm-and-pc}, we remarked that in LMM modeling, a typical albeit somewhat mysterious assumption is that $\bZ=\bX$.  Here, we provide explicit mathematical justifications for those statements.  In doing so, we derive a partitioning relationship that illustrates how LMMs achieve bias reduction due to environmental confounding.
 
 We begin by noting that in the GWAS context, the $\bgamma$ term in \eqref{eqn:model} is a fixed effect, although treated as ``random'' in the linear mixed model.  This is done because the confounding environmental effects are unobserved; by considering them to be random, we can integrate over their unknown effects and obtain a marginal likelihood.  However, in terms of a repeated sampling perspective, they are fixed.  If repeated samples were drawn from the same populations, the confounding environmental effects would remain the same, not randomly change from sample to sample.  
 
@@ -343,7 +305,7 @@ Although cross-validation (CV) and information criterion-based methods are commo
 \subsection{\anna{Genome-wide analysis}}
 %------------------------------%
 
-To illustrate the statistical properties our simulations aim to elucidate on a more realistic scale, we present an analysis of the full Empirical genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives} with a synthetic phenotype as a pseudo-real data example or case study. We generate the synthetic phenotype as in \eqref{eqn:sim} using 50,000 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and environmental effects ($\xi = 0.8$).
+To illustrate the statistical properties demonstrated by our simulations on a more realistic scale, we present an analysis of the full Empirical genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives} with a synthetic phenotype as a pseudo-real data case study. We generate the synthetic phenotype as in \eqref{eqn:sim} using 50,000 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$).
 
 %------------------------------%
 \subsection{\anna{Software}}
@@ -372,7 +334,7 @@ Figure \ref{fig:mse} presents these results for all three data types in a 1:1 SN
 \begin{figure}[H]
     \centering
     \includegraphics[width = \textwidth]{figures/beta_mse.png}
-    \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with 4 subpopulations. Mean and 1 standard error (SE) bars displayed for 1000 replications.}
+    \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with 4 subpopulations. Mean and standard error (SE) bars displayed for 1000 replications.}
     \label{fig:mse}
 \end{figure}
 
@@ -407,7 +369,7 @@ As described earlier in the manuscript, correlation between environmental effect
 
 In order to assess the behavior of these methods in this context, we conducted a simulation using Empirical genotypes, but restricted to just two subpopulations, Caucasian and African-American.  A total of 1000 SNPs were chosen such that the selected SNPs' absolute difference in MAF between the two subpopulations ranged uniformly from 0 to 0.5. As in the earlier simulations, a 1:1 SNR ($\eta = 0.5$) was used to simulate the phenotype.
 
-\begin{figure}[hbt]
+\begin{figure}[H]
 \centering
 \includegraphics[scale = 0.9]{figures/pop_inf_snps_box.png}
 \caption{Absolute allele frequency differences of selected, non-causal SNPs across methods, in the presence and absence of environmental confounding for two Empirical subpopulations, $\eta = 0.5$, 1000 replications.}
