@@ -336,7 +336,7 @@ Figure \ref{fig:mse} presents these results for all three data types in a 1:1 SN
 
 The bottom row of Figure \ref{fig:mse} shows the MSE when $\xi = 0.8$ (substantial environmental effects). In this case, both PC-lasso and LMM-lasso clearly outperform the ordinary lasso. This improvement is more substantial in the Empirical and Independent Subpopulations data than in the 1D Linear Admixture data. This is because there is less overlap between subpopulations than in the admixture data, meaning that a greater proportion of the environmental effect is in the column space of $\P_{\bX}$. We can quantify this proportion using the CP metric defined in \eqref{eqn:ratio}. Here, we have CP = 0.47, 0.87, and 0.99 for the 1D Linear Admixture, Empirical, and Independent Subpopulations, respectively. The large CP of the Empirical and Independent Subpopulations shows that the environmental effect is more highly correlated with genotype, and therefore has more potential for introducing bias into the estimation of SNP effects; the PC-lasso and LMM-lasso methods correct for this effect, while ordinary lasso does not.  This phenomenon occurs in 1D Linear Admixture setting as well, although the phenomenon is less pronounced because, while the total environmental effect is the same in all three settings, in the admixture setting 53\% of the environmental effect is uncorrelated with genotype and therefore does not introduce bias.
 
-In addition to MSE, these methods' performance was also assessed in terms of variable selection using the true positive rate (TPR) for the first 50 variables each method allowed into the model. \anna{Throughout, we use ``true positive'' to mean both that the SNP was selected and that its direction was estimated correctly.} Table \ref{tab:var_sel} displays the average TPR for the same settings as in Figure \ref{fig:mse}. The TPRs echo the MSE results in that lasso and LMM-lasso perform comparably in the absence of environmental confounding across all data types, with PC-lasso slightly less accurate at identifying causal SNPs. In the presence of environmental confounding, both LMM-lasso and PC-lasso achieve substantial improvements in TPR over the ordinary lasso. As with the MSE data, these improvements are more substantial in the Independent Subpopulations and Empirical data sets than in the 1D Linear Admixture data.
+In addition to MSE, these methods' performance was also assessed in terms of variable selection using the true positive rate (TPR) for the first 50 variables each method allowed into the model. Throughout, we use ``true positive'' to mean both that the SNP was selected and that its direction was estimated correctly. Table \ref{tab:var_sel} displays the average TPR for the same settings as in Figure \ref{fig:mse}. The TPRs echo the MSE results in that lasso and LMM-lasso perform comparably in the absence of environmental confounding across all data types, with PC-lasso slightly less accurate at identifying causal SNPs. In the presence of environmental confounding, both LMM-lasso and PC-lasso achieve substantial improvements in TPR over the ordinary lasso. As with the MSE data, these improvements are more substantial in the Independent Subpopulations and Empirical data sets than in the 1D Linear Admixture data.
 
 \begin{table}[H]
 \centering
@@ -424,33 +424,42 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To illustrate the statistical properties demonstrated by our simulations on a more realistic genome-wide scale, we present an analysis of the full Empirical genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives} and a synthetic phenotype as a pseudo-real data case study. We generate the synthetic phenotype as in \eqref{eqn:sim} using 50,000 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$). In order to compare all methods' performance fairly and completely, we present results for the entirety of each method's $\lambda$ path.
+To illustrate the statistical properties demonstrated by our simulations on a more realistic genome-wide scale, we present an analysis of the full Empirical genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives} and a synthetic phenotype as a pseudo-real data case study. We generate the synthetic phenotype as in \eqref{eqn:sim} using 100 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$). In order to compare methods fairly and completely, we consider results across the entirety of each methods' $\lambda$ path, indexed by the number of selected variables for interpretatiblity.
 
 %------------------------------%
 \subsection{\anna{LMM-lasso identifies causal SNPs with greater precision than lasso}}
 %------------------------------%
+
+Selection accuracy was evaluated using selection precision. All $\beta > 0$ and we calculate precision = $\#\{ \beta > 0 \cap \widehat{\beta} \ne 0  \}/\#\{ \widehat{\beta} \ne 0 \}$ in order to ensure SNPs were not only selected, but their directions estimated correctly. Figure~\ref{fig:gw_prc} displays each method's precision for the corresponding number of selected SNPs.
 \begin{figure}[H]
 \centering
 \includegraphics[scale = 0.9]{figures/genomewide_prc_p1=100.png}
-\caption{Precision values for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
+\caption{Precision for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_prc}
 \end{figure}
 
-$$\text{Precision }= \frac{\#\{ \beta > 0 \cap \widehat{\beta} \ne 0  \}}{\#\{ \widehat{\beta} \ne 0 \}}$$
+PC-lasso and LMM-lasso consistently outperform the ordinary lasso in selection accuracy, particularly for the first $\approx$ 100 SNPs each method allows into the model. For the most part, PC-lasso selects SNPs outperforms LMM-lasso in this setting as well. All methods struggle as the model becomes less sparse and the number of selected SNPs approaches $n$. 
 
 
 %------------------------------%
-\subsection{\anna{PC-lasso and LMM-lasso increase estimation accuracy}}
+\subsection{\anna{PC-lasso and LMM-lasso increase genome-wide estimation accuracy}}
 %------------------------------%
+
+Estimation accuracy was assessed via MSE, as defined in Section~\ref{sec:sim-mse}. Figure~\ref{fig:gw_mse} displays this value for each method and number of selected SNPs.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale = 0.9]{figures/genomewide_mse_p1=100.png}
-\caption{Pathwise MSE from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
+\caption{MSE for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_mse}
 \end{figure}
 
-\noindent\anna{should the y-axes on this and the below fig match? i.e. both be number of selected snps, or both be lambda indices?}\\
+In accordance with previous simulation results in Section~\ref{sec:sim-mse}, the ordinary lasso results in biased estimates compared to PC and LMM-lasso. This bias is most dramatic for the first $\approx$ 100 SNPs selected by each method. Both PC-lasso and LMM-lasso produce more accurate estimates than the ordinary lasso for any number of selected SNPs. 
+
+%PC-lasso and LMM-lasso coincide in MSE for the first few selected variables, for the most part, however, PC-lasso outperforms LMM-lasso. 
+
+% This is an interesting result in contrast to that observed in the third panel of Figure~\ref{fig:mse}, where we analyzed a subset of the Empirical data using 50 causal SNPs and LMM-lasso slightly outperformed PC-lasso. It seems that in the genome-wide setting the coarse, subpopulation-based structure dominates the subtle relatedness present in the sample
+
 
 %------------------------------%
 \subsection{\anna{PC-lasso and LMM-lasso reduce selection bias in genome-wide data}}
@@ -458,16 +467,16 @@ $$\text{Precision }= \frac{\#\{ \beta > 0 \cap \widehat{\beta} \ne 0  \}}{\#\{ \
 
 A central issue explored in this work has been the potential for population stratification and environmental confounding to lead to the identification of spurious associations. In Section~\ref{sec:sel_bias} we characterized the three lasso methods (ordinary, PC and LMM) in terms of their susceptibility to this type of selection bias in a simplified setting of two subpopulations. We now examine these methods' performance in a genome-wide data set with greater structural complexity. 
 
-\anna{rewrite to reflect that the x-axis is number of selected snps, not lambda indices. update results / discussion as necessary based on final p1 chosen} Figure \ref{fig:gw_pc1_corr} displays the mean absolute correlation of the non-causal SNPs selected for a particular $\lambda$ value with the first principal component (PC1) of the Empirical data for each method across the full $\lambda$ path. The corresponding shaded regions indicate the SE about the mean. Overall, these bounds are largest early on in each $\lambda$ path, where only a few SNPs are be selected, but narrow as $\lambda$ increases and more variables are allowed to enter the model.\anna{Do I need to explain why we are using correlation with the first PC as a proxy for MAF difference or is this obvious?} The absolute correlation with PC1 is used as a measure of how population-informative the selected SNPs are given the complex Empirical data structure compared to that in Section~\ref{sec:sel_bias}.
+Figure \ref{fig:gw_pc1_corr} displays the mean absolute correlation of the non-causal SNPs selected for a selected SNPs with the first principal component (PC1) of the Empirical data for each number of incorrectly selected SNPs. The corresponding shaded regions indicate the SE about the mean. \anna{Do I need to explain why we are using correlation with the first PC as a proxy for MAF difference or is this obvious?} The absolute correlation with PC1 is used as a measure of how population-informative the selected SNPs are given the complex Empirical data structure compared to that in Section~\ref{sec:sel_bias}.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale = 0.9]{figures/genomewide_pc1_corr_p1=100.png}
-\caption{Absolute correlation of selected, non-causal SNPs with the first principal component (PC1) of the data in Empirical genome-wide analysis. Plotted line is the mean absolute correlation of all incorrectly selected SNPs for a particular number of incorrectly selected SNPs, with shaded region indicating SE bounds. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
+\caption{Absolute correlation of selected, non-causal SNPs with the first principal component (PC1) of the Empirical genome-wide data for each method and number of selected SNPs. The plotted line is the mean absolute correlation of all incorrectly selected SNPs for a particular selection number, with shaded region indicating SE bounds. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_pc1_corr}
 \end{figure}
 
-The ordinary lasso is clearly most susceptible to selecting non-causal SNPs due to their association with population structure. This corresponds to the simulation results shown in Section~\ref{sec:sel_bias}, though in Figure \ref{fig:gw_pc1_corr} we more plainly see that this bias persists across the $\lambda$ path. Likewise, PC-lasso most effectively controls this type of selection bias. This is to be expected given that we are assessing the population-informative nature of incorrectly selected SNPs via correlation with PC1, which is explicitly adjusted for in the PC-lasso method. LMM-lasso yields a substantial improvement compared to the ordinary lasso in controlling this selection bias. 
+The ordinary lasso is clearly most susceptible to selecting non-causal SNPs due to their association with population structure. This corresponds to the simulation results shown in Section~\ref{sec:sel_bias}, though in Figure \ref{fig:gw_pc1_corr} we more plainly see that this bias persists regardless of the number of variables allowed into the model. Likewise, PC-lasso and LMM-lasso both effectively control this type of selection bias. PC-lasso's effective control of bias in this setting is to be expected, given that we are assessing the population-informative nature of incorrectly selected SNPs via correlation with PC1, which is explicitly adjusted for in the PC-lasso method. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
@@ -481,13 +490,13 @@ In this work, we reviewed the concept of population structure in a framework whi
 
 Our simulation experiments reveal, unsurprisingly, that PC-lasso and LMM-lasso outperform the ordinary lasso whenever environmental confounding effects are present. However, in the absence of such effects, PC-lasso may hinder estimation accuracy. Additionally, we find that LMM-lasso consistently outperforms PC-lasso, especially when the population structure is more complex. These results indicate that LMM-lasso is a more robust method in practice when the nature of the population structure is unknown.
 
-We considered two implementations of the LMM-lasso method: LMM-lasso-Rakitsch and LMM-lasso-ggmix, which differ in their variance estimation procedures and computational implementations. Although both methods perform similarly in terms of estimating $\bbeta$, the much greater computational efficiency and numerical stability of LMM-lasso-Rakitsch make it a more attractive choice in most scenarios, although LMM-lasso-ggmix may be useful if the objective of the analysis is to accurately estimate variance components.
+\anna{The results of a genome-wide analysis of Empirical data agree with the findings of our simulation experiments, in particular that PC-lasso and LMM-lasso are able to substantially reduce selection bias compared to the ordinary lasso. Although PC-lasso was found to outperform LMM-lasso in terms of precision and estimation accuracy in this analysis, because the Empirical data consists of three distinct racial groups, its RRM (Supplementary Figure~\ref{fig:empirical}) demonstrates predominantly coarse population structure. Given our results in Section~\ref{sec:sim-fine-coarse}, we would expect LMM-lasso to outperform PC-lasso in the analysis of more finely structured genome-wide data.}
 
-\anna{\textbf{Additional genome-wide results based on other figures we decide to include.} The results of a genome-wide analysis of Empirical data agree with the findings of our simulation experiments, in particular that PC-lasso and LMM-lasso are able to substantially reduce selection bias compared to the ordinary lasso. Although PC-lasso was found to control this selection bias most effectively, it should be noted that because the Empirical data consists of three distinct ethnic groups, its RRM (Figure~\ref{fig:empirical}) demonstrates predominantly coarse population structure. Given our results in Section~\ref{sec:sim-fine-coarse}, we might expect LMM-lasso to provide greater improvement over the ordinary lasso in the analysis of more finely structured genome-wide data.}
+We considered two implementations of the LMM-lasso method: LMM-lasso-Rakitsch and LMM-lasso-ggmix, which differ in their variance estimation procedures and computational implementations. Although both methods perform similarly in terms of estimating $\bbeta$, the much greater computational efficiency and numerical stability of LMM-lasso-Rakitsch make it a more attractive choice in most scenarios, although LMM-lasso-ggmix may be useful if the objective of the analysis is to accurately estimate variance components.
 
 Although the purpose of this article is to elucidate the manner in which failing to correct for unobserved environmental effects can bias SNP effect estimates, equation \eqref{eqn:partition_e} also highlights the manner in which such unobserved environmental effects can lead to substantial bias in narrow-sense heritability estimates using SNP data. In particular, these estimates are likely to be inflated by the quantity $\boldsymbol{\tau}$ unless steps are taken to address population structure. A detailed treatment of narrow-sense heritability estimation is beyond the scope of this paper, but we hope this emphasizes the broad implications and importance of distinguishing between population structure and environmental effects.
 
-\anna{The nature of the simulations and analyses in this work have allowed us to select penalty parameters based on the true number of causal features in a model, which allows for fair comparison across methods. In a real data scenario, the true number of causal SNPs would not be known a priori. As such, appropriate methods for penalty parameter selection in penalized LMMs are worth additional discussion. Penalized LMMs are a special case of what is more broadly known in the statistical literature as a preconditioned lasso algorithm, which refers to the pre-multiplication of $\bX$ and $\by$ by some matrix prior to running the ordinary lasso. At present the theoretical understanding of these algorithms remains fairly poor \citep{wauthier2013comparative}, and there is no clear consensus on the optimal way to select a penalty parameter for such algorithms.}
+\anna{The nature of the simulations and analyses in this work have allowed us to select penalty parameters based on the true number of causal features in a model, which allows for fair comparison across methods. In a real data scenario, the true number of causal SNPs would not be known a priori. As such, appropriate methods for penalty parameter selection in penalized LMMs are worth additional discussion. Penalized LMMs are a special case of what is more broadly known in the statistical literature as a preconditioned lasso algorithm. This refers to the pre-multiplication of $\bX$ and $\by$ by some matrix prior to running the ordinary lasso. At present the theoretical understanding of these algorithms remains fairly poor \citep{wauthier2013comparative}, and there is no consensus on the optimal way to select a penalty parameter for such algorithms.}
 
 \anna{Several authors have used the Bayesian information criterion (BIC) for variable selection in mixed models \citep{bondell2010joint, schelldorfer2011estimation}. However it has been shown that the Akaike information criterion (AIC) and BIC may perform poorly in the high-dimensional setting \citep{fan2013tuning}. The high-dimensional BIC introduced by \citet{fan2013tuning} penalizes model parameters more severely in an attempt to perform better in high dimensional settings. \citet{bhatnagar2020simultaneous} employs this high-dimensional BIC as its default method to select $\lambda$.}
 
