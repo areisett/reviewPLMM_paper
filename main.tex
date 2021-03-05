@@ -431,28 +431,25 @@ To illustrate the statistical properties demonstrated by our simulations on a mo
 %------------------------------%
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.9]{figures/genomewide_prc.png}
+\includegraphics[scale = 0.6]{figures/genomewide_prc_p1=100.png}
+\includegraphics[scale = 0.6]{figures/genomewide_prc_p1=500.png}
+\includegraphics[scale = 0.6]{figures/genomewide_prc_p1=1000.png}
 \caption{Precision values for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_prc}
-\end{figure}
-
-$$\text{Precision }= 1 - \frac{\#\{ \beta = 0 \cap \widehat{\beta} \ne 0  \}}{\#\{ \widehat{\beta} \ne 0 \}} = \frac{\#\{ \beta \ne 0 \cap \widehat{\beta} \ne 0  \}}{\#\{ \widehat{\beta} \ne 0 \}}$$
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale = 0.9]{figures/genomewide_prc2.png}
-\caption{Precision values for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
-\label{fig:gw_prc2}
 \end{figure}
 
 $$\text{Precision }= \frac{\#\{ \beta > 0 \cap \widehat{\beta} \ne 0  \}}{\#\{ \widehat{\beta} \ne 0 \}}$$
 
 
-\anna{Why is pc-lasso doing so terribly? \textbf{original bad seed + depends on how you're defining precision... selects a lot of true snps but often they have the wrong sign}}\\
+%------------------------------%
+\subsection{\anna{PC-lasso and LMM-lasso increase estimation accuracy}}
+%------------------------------%
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.9]{figures/genomewide_mse.png}
+\includegraphics[scale = 0.6]{figures/genomewide_mse_p1=100.png}
+\includegraphics[scale = 0.6]{figures/genomewide_mse_p1=500.png}
+\includegraphics[scale = 0.6]{figures/genomewide_mse_p1=1000.png}
 \caption{Pathwise MSE from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_mse}
 \end{figure}
@@ -465,12 +462,14 @@ $$\text{Precision }= \frac{\#\{ \beta > 0 \cap \widehat{\beta} \ne 0  \}}{\#\{ \
 
 A central issue explored in this work has been the potential for population stratification and environmental confounding to lead to the identification of spurious associations. In Section~\ref{sec:sel_bias} we characterized the three lasso methods (ordinary, PC and LMM) in terms of their susceptibility to this type of selection bias in a simplified setting of two subpopulations. We now examine these methods' performance in a genome-wide data set with greater structural complexity. 
 
-Figure \ref{fig:gw_pc1_corr} displays the mean absolute correlation of the non-causal SNPs selected for a particular $\lambda$ value with the first principal component (PC1) of the Empirical data for each method across the full $\lambda$ path. The corresponding shaded regions indicate the SE about the mean. Overall, these bounds are largest early on in each $\lambda$ path, where only a few SNPs are be selected, but narrow as $\lambda$ increases and more variables are allowed to enter the model.\anna{Do I need to explain why we are using correlation with the first PC as a proxy for MAF difference or is this obvious?} The absolute correlation with PC1 is used as a measure of how population-informative the selected SNPs are given the complex Empirical data structure compared to that in Section~\ref{sec:sel_bias}.
+\anna{rewrite to reflect that the x-axis is number of selected snps, not lambda indices. update results / discussion as necessary based on final p1 chosen} Figure \ref{fig:gw_pc1_corr} displays the mean absolute correlation of the non-causal SNPs selected for a particular $\lambda$ value with the first principal component (PC1) of the Empirical data for each method across the full $\lambda$ path. The corresponding shaded regions indicate the SE about the mean. Overall, these bounds are largest early on in each $\lambda$ path, where only a few SNPs are be selected, but narrow as $\lambda$ increases and more variables are allowed to enter the model.\anna{Do I need to explain why we are using correlation with the first PC as a proxy for MAF difference or is this obvious?} The absolute correlation with PC1 is used as a measure of how population-informative the selected SNPs are given the complex Empirical data structure compared to that in Section~\ref{sec:sel_bias}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.9]{figures/genomewide_pc1_corr.png}
-\caption{Pathwise absolute correlation of selected, non-causal SNPs with the first principal component (PC1) of the data in Empirical genome-wide analysis. Plotted line is the mean absolute correlation of all incorrectly selected SNPs for a particular $\lambda$ value, with shaded region indicating SE bounds. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
+\includegraphics[scale = 0.6]{figures/genomewide_pc1_corr_p1=100.png}
+\includegraphics[scale = 0.6]{figures/genomewide_pc1_corr_p1=500.png}
+\includegraphics[scale = 0.6]{figures/genomewide_pc1_corr_p1=1000.png}
+\caption{Absolute correlation of selected, non-causal SNPs with the first principal component (PC1) of the data in Empirical genome-wide analysis. Plotted line is the mean absolute correlation of all incorrectly selected SNPs for a particular number of incorrectly selected SNPs, with shaded region indicating SE bounds. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_pc1_corr}
 \end{figure}
 
