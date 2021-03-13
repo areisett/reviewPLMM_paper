@@ -295,7 +295,7 @@ The parameter $\eta$ also describes the data-generating model's signal to noise 
 \subsubsection{Genotypes}
 \label{sec:subpopulation_structure}
 
-We generated three varieties of genotype matrices $\bG$, which were then standardized to yield the corresponding $\bX$ matrix: (1) simulated SNP data from admixed subpopulations \citep{Ochoa2016}, (2) simulated SNP data from independent subpopulations \citep{Ochoa2016}, and (3) \anna{a subset of} real genome-wide SNP data from known Caucasian ($n = 417$), African American ($n = 134$), and Hispanic ($n = 37$) subpopulations \citep{larkin2015objectives}. We refer to these as 1D Linear Admixture, Independent Subpopulations, and Empirical, respectively. For all data types, there are $p = 1000$ total SNPs, 50 of which have causal effects. For the simulated 1D Linear Admixture and Independent Subpopulations data $n = 200$ unless otherwise specified, and $n = 588$ for the Empirical data. 
+We generated three varieties of genotype matrices $\bG$, which were then standardized to yield the corresponding $\bX$ matrix: (1) simulated SNP data from admixed subpopulations \citep{Ochoa2016}, (2) simulated SNP data from independent subpopulations \citep{Ochoa2016}, and (3) a subset of real genome-wide SNP data from known Caucasian ($n = 417$), African American ($n = 134$), and Hispanic ($n = 37$) subpopulations \citep{larkin2015objectives}. We refer to these as 1D Linear Admixture, Independent Subpopulations, and Empirical, respectively. For all data types, there are $p = 1000$ total SNPs, 50 of which have causal effects. For the simulated 1D Linear Admixture and Independent Subpopulations data $n = 200$ unless otherwise specified, and $n = 588$ for the Empirical data. 
 
 For the fully simulated data, two subpopulation structures were considered, which we refer to as ``fine'' and ``coarse''.  We define a coarse structure to be one characterized by a few large subpopulations intended to model large-scale environmental heterogeneity and population stratification, such as that described in our motivating air quality example. Conversely, we define a fine structure to be one characterized by many small subpopulations, representing a continuum of environmental heterogeneity. Whether fine or coarse, the simulated data were generated such that subpopulations (also known as founding populations) are of equal size. We note that the distinction between fine and coarse structure is an entirely different concept than the level of admixture in the simulated data. It is the size of the subpopulations, not the level of admixture, that determines what we refer to as fine or coarse structure. For example, both the Independent Subpopulation and 1D Linear Admixture simulated data may be comprised of fine or coarse structure. However, the subpopulations will be more distinct in the Independent Subpopulation data than in the 1D Linear Admixed data. The Empirical data is comprised of three racial subpopulations; one relatively large, one small, and one in the middle. Thus it represents a hybrid of our simulated coarse and fine structures, with little apparent admixture. Supplementary Figures \ref{fig:admixed} - \ref{fig:empirical} illustrate the simulated kinship structures, as well as that for the Empirical SNP data. 
 
@@ -329,7 +329,7 @@ All analyses and simulations were performed using R version 3.6.3. The ordinary 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\anna{Simulation results}} \label{sec:results}
+\section{Simulation results} \label{sec:results}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -434,16 +434,18 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\anna{Genome-wide case study}} \label{sec:gw_cs}
+\section{Genome-wide case study} \label{sec:gw_cs}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To illustrate the statistical properties demonstrated by our simulations on a more realistic genome-wide scale, we present an analysis of the full Empirical genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives} and a synthetic phenotype as a pseudo-real data case study. We generate the synthetic phenotype as in \eqref{eqn:sim} using 100 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$). In order to compare methods fairly and completely, we consider results across the entirety of each methods' $\lambda$ path, indexed by the number of selected variables for interpretatiblity.
+To illustrate the statistical properties demonstrated by our simulations on a more realistic genome-wide scale, we present an analysis of the full Empirical genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives} and a synthetic phenotype as a semi-real data case study. We generate the synthetic phenotype as in \eqref{eqn:sim} using 100 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$). In order to compare methods fairly and completely, we consider results across the entirety of each methods' $\lambda$ path, indexed by the number of selected variables for interpretability.
 
 %------------------------------%
-\subsection{\anna{LMM-lasso identifies causal SNPs with greater precision than lasso}}
+\subsection{LMM- and PC-lasso identify causal SNPs more accurately than lasso}
 %------------------------------%
+
+\pb{uh, what? This formula does NOT require sign to be correct.  What's right, the formula or the text?}
 
 Selection accuracy was evaluated using selection precision. All $\beta > 0$ and we calculate precision = $\#\{ \beta > 0 \cap \widehat{\beta} \ne 0  \}/\#\{ \widehat{\beta} \ne 0 \}$ in order to ensure SNPs were not only selected, but their directions estimated correctly. Figure~\ref{fig:gw_prc} displays each method's precision for the corresponding number of selected SNPs.
 \begin{figure}[H]
