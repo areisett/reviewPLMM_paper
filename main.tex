@@ -344,7 +344,7 @@ Figure \ref{fig:mse} presents these results for all three data types in a 1:1 SN
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = \textwidth]{figures/beta_mse.png}
+    \includegraphics[width = \textwidth]{figures/figure_01.png}
     \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with 4 subpopulations. Mean and standard error (SE) bars displayed for 1000 replications.}
     \label{fig:mse}
 \end{figure}
@@ -382,7 +382,7 @@ In order to assess the behavior of these methods in this context, we conducted a
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.9]{figures/pop_inf_snps_box.png}
+\includegraphics[scale = 0.9]{figures/figure_02.png}
 \caption{Absolute allele frequency differences of selected, non-causal SNPs across methods, in the presence and absence of environmental confounding for two Empirical subpopulations, $\eta = 0.5$, 1000 replications.}
 \label{fig:pop_inf}
 \end{figure}
@@ -399,7 +399,7 @@ Although PC-lasso and LMM-lasso outperform the ordinary lasso in the presence of
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.9]{figures/mse_diff_subpops.png}
+    \includegraphics[scale = 0.9]{figures/figure_03.png}
     \caption{Relative performance of LMM-lasso, PC-lasso for fine and coarse subpopulation structures and varying levels of environmental confounding with Independent Subpopulations, $\eta = 0.5$, 1000 replications.}
     \label{fig:big_vs_small}
 \end{figure}
@@ -426,7 +426,7 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = \textwidth]{figures/eta_beta_hat.png}
+    \includegraphics[width = \textwidth]{figures/figure_04.png}
      \caption{Estimation accuracy and computing time of LMM-lasso-Rakitsch and LMM-lasso-ggmix for $\bbeta$ and $\eta$ for varying $\eta$ levels and sample sizes with Independent Subpopulations data, coarse subpopulation structure, $\xi = 0.8$, 1000 replications.}
     \label{fig:eta_beta_mse}
 \end{figure}
@@ -452,7 +452,7 @@ To illustrate the statistical properties demonstrated by our simulations on a mo
 Selection accuracy was evaluated using selection precision. All $\beta > 0$ and we calculate precision = $\#\{ \beta > 0 \cap \widehat{\beta} \ne 0  \}/\#\{ \widehat{\beta} \ne 0 \}$ in order to ensure SNPs were not only selected, but their directions estimated correctly. Figure~\ref{fig:gw_prc} displays each method's precision for the corresponding number of selected SNPs.
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.9]{figures/genomewide_prc_p1=100.png}
+\includegraphics[scale = 0.9]{figures/figure_05.png}
 \caption{\pb{I feel like we should stop this at 200.  The 100-400 range dominates this plot and what I get from this figure is: all the methods are equally bad.} Precision for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_prc}
 \end{figure}
@@ -467,7 +467,7 @@ Estimation accuracy was assessed via MSE, as defined in Section~\ref{sec:sim-mse
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.9]{figures/genomewide_mse_p1=100.png}
+\includegraphics[scale = 0.9]{figures/figure_06.png}
 \caption{MSE for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_mse}
 \end{figure}
@@ -488,7 +488,7 @@ Figure \ref{fig:gw_pc1_corr} displays the mean absolute correlation of the non-c
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.9]{figures/genomewide_pc1_corr_p1=100.png}
+\includegraphics[scale = 0.9]{figures/figure_07.png}
 \caption{Absolute correlation of selected, non-causal SNPs with the first principal component (PC1) of the Empirical genome-wide data for each method and number of selected SNPs. The plotted line is the mean absolute correlation of all incorrectly selected SNPs for a particular selection number, with shaded region indicating SE bounds. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_pc1_corr}
 \end{figure}

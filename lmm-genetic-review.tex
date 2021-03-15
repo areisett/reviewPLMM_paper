@@ -6,10 +6,13 @@
 \usepackage{comment}
 \usepackage{float}
 \usepackage{color}
-\usepackage{tikz}
-\usepackage{tikz-cd}
+%\usepackage{tikz}
+%\usepackage{tikz-cd}
 \usepackage{tkz-euclide}
 \usepackage{lscape}
+%%% UNCOMMENT THIS WHEN DONE EDITING TO PUT FIGS AT END
+%\usepackage{endfloat}
+\usepackage{epstopdf}
 
 % table packages and commands
 \usepackage{booktabs}
@@ -18,32 +21,13 @@
 \renewcommand\tabularxcolumn[1]{m{#1}} % for vertical centering in tables
 \newcolumntype{Y}{>{\centering\arraybackslash}X} % centering for X columns
 
-% Tikz settings optimized for causal graphs.
-% Just copy-paste this part
-\usetikzlibrary{shapes,decorations,decorations.markings,arrows,calc,arrows.meta,fit,positioning}
-\tikzset{
-    -Latex,auto,node distance =1 cm and 3 cm,semithick,
-    state/.style ={ellipse, draw, minimum width = 0.7 cm},
-    point/.style = {circle, draw, inner sep=0.04cm,fill,node contents={}},
-    bidirected/.style={Latex-Latex,dashed},
-    el/.style = {inner sep=2pt, align=left, sloped},
-    strike through/.append style={
-    decoration={markings, mark=at position 0.5 with {
-    \draw[-] ++ (-4pt,-4pt) -- (4pt,4pt);}
-  },postaction={decorate}}
-}
-
 \usepackage{subcaption}
 \usepackage{url}
 \allowdisplaybreaks
 \usepackage{natbib}
-%\usepackage{biblatex}
-%\AtEveryCitekey{%
-%  \clearfield{note}%
-%}
+
 \newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
-\usetikzlibrary{arrows}
 \providecommand{\pb}[1]{\textcolor{red}{#1}}
 \providecommand{\anna}[1]{\textcolor{blue}{#1}}
 \newcommand{\bbeta}[1][]{\boldsymbol{\beta}{#1}}
@@ -75,7 +59,6 @@
 \newcommand{\lam}{\lambda}
 \providecommand{\real}{\mathbb{R}}
 
-%\title{A comparative analysis of penalized linear mixed models in structured genetic data}
 \title{Penalized linear mixed models for structured genetic data}
 \author{Anna Reisetter \qquad Patrick Breheny\\
   Department of Biostatistics\\University of Iowa}
@@ -86,7 +69,6 @@
 
 \begin{abstract}
 Many genetic studies that aim to identify genetic variants associated with complex phenotypes are subject to unobserved confounding factors arising from environmental heterogeneity. This poses a challenge to detecting associations of interest and is known to induce spurious associations when left unaccounted for. Penalized linear mixed models (LMMs) are an attractive method to correct for unobserved confounding. These methods correct for varying levels of relatedness and population structure by modeling it as a random effect with a covariance structure estimated from observed genetic data. Despite an extensive literature on penalized regression and LMMs separately, the two are rarely discussed together. The aim of this review is to do so while examining the statistical properties of penalized LMMs in the genetic association setting. Specifically, the ability of penalized LMMs to accurately estimate genetic effects in the presence of environmental confounding has not been well studied. In order to clarify the important yet subtle distinction between population structure and environmental heterogeneity, we present a detailed review of relevant concepts and methods. In addition, we evaluate the performance of penalized LMMs and competing methods in terms of estimation and selection accuracy in the presence of a number of confounding structures.
-% in the presence of confounding due to varying levels of environmental heterogeneity and relatedness.
 \end{abstract}
 
 \input{main}
