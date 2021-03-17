@@ -439,37 +439,30 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 
 To illustrate the statistical properties demonstrated by our simulations on a more realistic genome-wide scale, we present an analysis of the full Empirical genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives} and a synthetic phenotype as a semi-real data case study. We generate the synthetic phenotype as in \eqref{eqn:sim} using 100 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$). In order to compare methods fairly and completely, we consider results across the entirety of each methods' $\lambda$ path, indexed by the number of selected variables for interpretability.
 
-\pb{How do you feel about combining Sections 5.1 + 5.2, and Figures 5 + 6?  Each section seems really short to me.}
-\anna{Fine with combining Sections 5.1 + 5.2 - I'm not sure what you mean by combine Figures 5 + 6. Keep one and not the other? Combine into a panel with parts (a) and (b)?}
-
 %------------------------------%
 \subsection{LMM- and PC-lasso identify causal SNPs more accurately than lasso}
 %------------------------------%
 
-Selection accuracy was evaluated using selection precision. \anna{All $\beta > 0$ and we calculate precision = $\#\{ \beta > 0 \cap \widehat{\beta} > 0  \}/\#\{ \widehat{\beta} \ne 0 \}$ in order to ensure SNPs were not only selected, but their directions estimated correctly.} Figure~\ref{fig:gw_prc} displays each method's precision for the corresponding number of selected SNPs.
-\begin{figure}[H]
-\centering
-\includegraphics[scale = 0.9]{figures/figure_05.png}
-\caption{Precision for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
-\label{fig:gw_prc}
-\end{figure}
+Selection accuracy was evaluated using precision. \anna{All $\beta > 0$ and we calculate precision = $\#\{ \beta > 0 \cap \widehat{\beta} > 0  \}/\#\{ \widehat{\beta} \ne 0 \}$ in order to ensure SNPs were not only selected, but their directions estimated correctly.} Figure~\ref{fig:gw_prc} displays each method's precision for the corresponding number of selected SNPs. PC-lasso and LMM-lasso consistently outperform the ordinary lasso in selecting causal SNPs, particularly for the first $\approx$ 100 SNPs each method allows into the model. For the most part, PC-lasso outperforms LMM-lasso in this setting as well. None of the method are able to accurately select more than about 100 SNPs.  However, because the ordinary lasso does not account for environmental confounding, it cannot reliable select \emph{any} SNPs: the first \anna{38} SNPs selected were all false positives.
 
-PC-lasso and LMM-lasso consistently outperform the ordinary lasso in selecting causal SNPs, particularly for the first $\approx$ 100 SNPs each method allows into the model. For the most part, PC-lasso outperforms LMM-lasso in this setting as well. None of the method are able to accurately select more than about 100 SNPs.  However, because the ordinary lasso does not account for environmental confounding, it cannot reliable select \emph{any} SNPs: the first \pb{XXX} SNPs selected were all false positives.
-
-Estimation accuracy was assessed via MSE, as defined in Section~\ref{sec:sim-mse}. Figure~\ref{fig:gw_mse} displays this value for each method and number of selected SNPs.
+Estimation accuracy was assessed via MSE, as defined in Section~\ref{sec:sim-mse}. Figure~\ref{fig:gw_mse} displays this value for each method and number of selected SNPs. In accordance with previous simulation results in Section~\ref{sec:sim-mse}, the ordinary lasso results in biased estimates compared to PC and LMM-lasso. This bias is most dramatic for the first $\approx$ 100 SNPs selected by each method. For any number of selected SNPs, however, both PC-lasso and LMM-lasso produce much more accurate estimates than the ordinary lasso.
 
 \begin{figure}[H]
-\centering
-\includegraphics[scale = 0.9]{figures/figure_06.png}
-\caption{MSE for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
-\label{fig:gw_mse}
+     \centering
+     \begin{subfigure}[b]{0.475\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/figure_05.png}
+         \caption{Precision for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
+        \label{fig:gw_prc}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.475\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/figure_06.png}
+         \caption{MSE for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
+        \label{fig:gw_mse}
+     \end{subfigure}
 \end{figure}
-
-In accordance with previous simulation results in Section~\ref{sec:sim-mse}, the ordinary lasso results in biased estimates compared to PC and LMM-lasso. This bias is most dramatic for the first $\approx$ 100 SNPs selected by each method. For any number of selected SNPs, however, both PC-lasso and LMM-lasso produce much more accurate estimates than the ordinary lasso.
-
-%PC-lasso and LMM-lasso coincide in MSE for the first few selected variables, for the most part, however, PC-lasso outperforms LMM-lasso. 
-
-% This is an interesting result in contrast to that observed in the third panel of Figure~\ref{fig:mse}, where we analyzed a subset of the Empirical data using 50 causal SNPs and LMM-lasso slightly outperformed PC-lasso. It seems that in the genome-wide setting the coarse, subpopulation-based structure dominates the subtle relatedness present in the sample
 
 %------------------------------%
 \subsection{PC-lasso and LMM-lasso reduce selection bias in genome-wide data}
