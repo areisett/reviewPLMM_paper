@@ -50,7 +50,7 @@ In the context of our air quality example, this means that we assume air quality
 
 \begin{equation}
 \centering
-\includegraphics{figures/dag1.eps}
+\includegraphics{figures/dag1.pdf}
 \label{diag:ps_env}
 \end{equation}
 
@@ -66,7 +66,7 @@ New statistical methods to control for the effects of confounding due to populat
 
 \begin{equation}
 \centering
-\includegraphics{figures/dag2.eps}
+\includegraphics{figures/dag2.pdf}
 \label{diag:ps_env_block}
 \end{equation}
 
@@ -75,7 +75,7 @@ In the presence of environmental heterogeneity which affects the phenotype of in
 
 \begin{equation}
 \centering
-\includegraphics{figures/dag3.eps}
+\includegraphics{figures/dag3.pdf}
 \label{diag:ps_env_block2}
 \end{equation}
 
@@ -336,7 +336,7 @@ Figure \ref{fig:mse} presents these results for all three data types in a 1:1 SN
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = \textwidth]{figures/figure_01.png}
+    \includegraphics[width = \textwidth]{figures/figure_01.pdf}
     \caption{Estimation accuracy of different methods for different data types in the presence and absence of environmental confounding with 4 subpopulations. Mean and standard error (SE) bars displayed for 1000 replications.}
     \label{fig:mse}
 \end{figure}
@@ -374,7 +374,7 @@ In order to assess the behavior of these methods in this context, we conducted a
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.9]{figures/figure_02.png}
+\includegraphics[scale = 0.9]{figures/figure_02.pdf}
 \caption{Absolute allele frequency differences of selected, non-causal SNPs across methods, in the presence and absence of environmental confounding for two Empirical subpopulations, $\eta = 0.5$, 1000 replications.}
 \label{fig:pop_inf}
 \end{figure}
@@ -391,7 +391,7 @@ Although PC-lasso and LMM-lasso outperform the ordinary lasso in the presence of
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.9]{figures/figure_03.png}
+    \includegraphics[scale = 0.9]{figures/figure_03.pdf}
     \caption{Relative performance of LMM-lasso, PC-lasso for fine and coarse subpopulation structures and varying levels of environmental confounding with Independent Subpopulations, $\eta = 0.5$, 1000 replications.}
     \label{fig:big_vs_small}
 \end{figure}
@@ -418,7 +418,7 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = \textwidth]{figures/figure_04.png}
+    \includegraphics[width = \textwidth]{figures/figure_04.pdf}
      \caption{Estimation accuracy and computing time of LMM-lasso-Rakitsch and LMM-lasso-ggmix for $\bbeta$ and $\eta$ for varying $\eta$ levels and sample sizes with Independent Subpopulations data, coarse subpopulation structure, $\xi = 0.8$, 1000 replications.}
     \label{fig:eta_beta_mse}
 \end{figure}
@@ -439,32 +439,15 @@ To determine whether the statistical properties demonstrated by our simulations 
 
 We begin by comparing the accuracy of ordinary lasso, LMM-lasso, and PC-lasso in terms of their ability to identify causal variants as well as their ability to estimate the effects of all SNPs.
 
-To quantify selection accuracy, we calculated the precision according to $\#\{ \beta > 0 \cap \widehat{\beta} > 0  \}/\#\{ \widehat{\beta} \ne 0 \}$ in order to ensure SNPs were not only selected, but the direction of effect was estimated correctly (in our example, all causal $\beta$ values were positive). \anna{Figure~\ref{fig:gw_prc}} displays each method's precision ($1 -$ the false discovery rate) for the corresponding number of selected SNPs. PC-lasso and LMM-lasso consistently outperform the ordinary lasso in selecting causal SNPs, particularly over the first $\approx$ 100 SNPs allowed into the model. For the most part, PC-lasso outperforms LMM-lasso in this setting as well. None of the methods are able to accurately select more than a few causal SNPs with this sample size.  However, because the ordinary lasso does not account for environmental confounding, it cannot reliable select \emph{any} SNPs: the first 38 SNPs selected were all false positives.
+To quantify selection accuracy, we calculated the precision according to $\#\{ \beta > 0 \cap \widehat{\beta} > 0  \}/\#\{ \widehat{\beta} \ne 0 \}$ in order to ensure SNPs were not only selected, but the direction of effect was estimated correctly (in our example, all causal $\beta$ values were positive). Figure~\ref{fig:gw_prc_mse}(a) displays each method's precision ($1 -$ the false discovery rate) for the corresponding number of selected SNPs. PC-lasso and LMM-lasso consistently outperform the ordinary lasso in selecting causal SNPs, particularly over the first $\approx$ 100 SNPs allowed into the model. For the most part, PC-lasso outperforms LMM-lasso in this setting as well. None of the methods are able to accurately select more than a few causal SNPs with this sample size.  However, because the ordinary lasso does not account for environmental confounding, it cannot reliable select \emph{any} SNPs: the first 38 SNPs selected were all false positives.
 
-Estimation accuracy was assessed via MSE, as defined in Section~\ref{sec:sim-mse}, and is presented in \anna{Figure~\ref{fig:gw_mse}}. In accordance with previous simulation results in Section~\ref{sec:sim-mse}, the ordinary lasso results in biased estimates compared to PC and LMM-lasso. This bias is most dramatic for the first $\approx$ 100 SNPs selected by each method. For any number of selected SNPs, however, both PC-lasso and LMM-lasso produce much more accurate estimates than the ordinary lasso.
-
-\anna{Make sure this gets an overall figure number}
-\pb{I still don't see an overall figure number?}
+Estimation accuracy was assessed via MSE, as defined in Section~\ref{sec:sim-mse}, and is presented in Figure~\ref{fig:gw_prc_mse}(b). In accordance with previous simulation results in Section~\ref{sec:sim-mse}, the ordinary lasso results in biased estimates compared to PC and LMM-lasso. This bias is most dramatic for the first $\approx$ 100 SNPs selected by each method. For any number of selected SNPs, however, both PC-lasso and LMM-lasso produce much more accurate estimates than the ordinary lasso.
 
 \begin{figure}[H]
-     \centering
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figures/figure_05a.pdf}
-         \caption{Precision for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
-        \label{fig:gw_prc}
-     \end{subfigure}
-    \hfill
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figures/figure_05b.pdf}
-         \caption{MSE for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
-        \label{fig:gw_mse}
-     \end{subfigure}
-     \begin{subfigure}[b]{0.15\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figures/figure_05c.pdf}
-     \end{subfigure}
+\centering
+\includegraphics[scale = 0.9]{figures/figure_05.pdf}
+\caption{Precision and MSE for each method and number of selected SNPs from the Empirical genome-wide analysis. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
+\label{fig:gw_prc_mse}
 \end{figure}
 
 %------------------------------%
@@ -477,7 +460,7 @@ Figure \ref{fig:gw_pc1_corr} displays the mean absolute correlation of the non-c
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.9]{figures/figure_07.png}
+\includegraphics[scale = 0.9]{figures/figure_06.pdf}
 \caption{Absolute correlation of selected, non-causal SNPs with the first principal component (PC1) of the Empirical genome-wide data for each method and number of selected SNPs. The plotted line is the mean absolute correlation of all incorrectly selected SNPs for a particular selection number, with shaded region indicating SE bounds. Single replication case study with $\eta = 0.5, \xi = 0.8$.}
 \label{fig:gw_pc1_corr}
 \end{figure}
