@@ -431,17 +431,21 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To illustrate the statistical properties demonstrated by our simulations on a more realistic genome-wide scale, we present an analysis of the full Empirical genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives} and a synthetic phenotype as a semi-real data case study. We generate the synthetic phenotype as in \eqref{eqn:sim} using 100 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$). In order to compare methods fairly and completely, we consider results across the entirety of each methods' $\lambda$ path, indexed by the number of selected variables for interpretability.
+To determine whether the statistical properties demonstrated by our simulations hold in for a genome-wide analysis, we analyzed the full genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives}; a subset of this data was included in the earlier simulations, labeled ``Empirical''.  A synthetic phenotype was generated as in \eqref{eqn:sim} using 100 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$). In order to compare methods fairly and completely, we consider results across the entirety of each method's path.
 
 %------------------------------%
 \subsection{LMM- and PC-lasso identify causal SNPs more accurately than lasso}
 %------------------------------%
 
-Selection accuracy was evaluated using precision. All $\beta > 0$ and we calculate precision = $\#\{ \beta > 0 \cap \widehat{\beta} > 0  \}/\#\{ \widehat{\beta} \ne 0 \}$ in order to ensure SNPs were not only selected, but their directions estimated correctly. \anna{Figure~\ref{fig:gw_prc}} displays each method's precision for the corresponding number of selected SNPs. PC-lasso and LMM-lasso consistently outperform the ordinary lasso in selecting causal SNPs, particularly for the first $\approx$ 100 SNPs each method allows into the model. For the most part, PC-lasso outperforms LMM-lasso in this setting as well. None of the method are able to accurately select more than about 100 SNPs.  However, because the ordinary lasso does not account for environmental confounding, it cannot reliable select \emph{any} SNPs: the first 38 SNPs selected were all false positives.
+We begin by comparing the accuracy of ordinary lasso, LMM-lasso, and PC-lasso in terms of their ability to identify causal variants as well as their ability to estimate the effects of all SNPs.
 
-Estimation accuracy was assessed via MSE, as defined in Section~\ref{sec:sim-mse}. \anna{Figure~\ref{fig:gw_mse}} displays this value for each method and number of selected SNPs. In accordance with previous simulation results in Section~\ref{sec:sim-mse}, the ordinary lasso results in biased estimates compared to PC and LMM-lasso. This bias is most dramatic for the first $\approx$ 100 SNPs selected by each method. For any number of selected SNPs, however, both PC-lasso and LMM-lasso produce much more accurate estimates than the ordinary lasso.
+To quantify selection accuracy, we calculated the precision according to $\#\{ \beta > 0 \cap \widehat{\beta} > 0  \}/\#\{ \widehat{\beta} \ne 0 \}$ in order to ensure SNPs were not only selected, but the direction of effect was estimated correctly (in our example, all causal $\beta$ values were positive). \anna{Figure~\ref{fig:gw_prc}} displays each method's precision ($1 -$ the false discovery rate) for the corresponding number of selected SNPs. PC-lasso and LMM-lasso consistently outperform the ordinary lasso in selecting causal SNPs, particularly over the first $\approx$ 100 SNPs allowed into the model. For the most part, PC-lasso outperforms LMM-lasso in this setting as well. None of the methods are able to accurately select more than a few causal SNPs with this sample size.  However, because the ordinary lasso does not account for environmental confounding, it cannot reliable select \emph{any} SNPs: the first 38 SNPs selected were all false positives.
+
+Estimation accuracy was assessed via MSE, as defined in Section~\ref{sec:sim-mse}, and is presented in \anna{Figure~\ref{fig:gw_mse}}. In accordance with previous simulation results in Section~\ref{sec:sim-mse}, the ordinary lasso results in biased estimates compared to PC and LMM-lasso. This bias is most dramatic for the first $\approx$ 100 SNPs selected by each method. For any number of selected SNPs, however, both PC-lasso and LMM-lasso produce much more accurate estimates than the ordinary lasso.
 
 \anna{Make sure this gets an overall figure number}
+\pb{I still don't see an overall figure number?}
+
 \begin{figure}[H]
      \centering
      \begin{subfigure}[b]{0.4\textwidth}
