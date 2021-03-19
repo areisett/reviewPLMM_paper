@@ -4,3 +4,5 @@
 *.lof
 *.blg
 *.toc
+*.gz
+*.bib.bak
