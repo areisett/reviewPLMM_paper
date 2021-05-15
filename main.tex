@@ -373,7 +373,7 @@ In order to assess the behavior of these methods in this context, we conducted a
 \label{fig:pop_inf}
 \end{figure}
 
-Figure \ref{fig:pop_inf} summarizes each method's tendency to select spurious associations driven by differences in MAF between populations.  Even in the absence of environmental effects, the ordinary lasso shows a preference for selecting population-informative SNPs, while PC-lasso and LMM-lasso are reluctant to select such SNPs (recall that with this design, the median MAF difference between populations is 0.25).  In the presence of confounding, however, the lasso shows an overwhelming tendency to select population-informative SNPs.  Its false positive selections are almost always the ones with the largest differences between populations.  PC-lasso and LMM-lasso, on the other, show no such such selection bias.
+Figure \ref{fig:pop_inf} summarizes each method's tendency to select spurious associations driven by differences in MAF between populations.  Even in the absence of environmental effects, the ordinary lasso shows a preference for selecting population-informative SNPs, while PC-lasso and LMM-lasso are reluctant to select such SNPs (recall that with this design, the median MAF difference between populations is 0.25).  In the presence of confounding, however, the lasso shows an overwhelming tendency to select population-informative SNPs.  Its false positive selections are almost always the ones with the largest differences between populations.  PC-lasso and LMM-lasso, on the other, show no such selection bias.
 
 
 %------------------------------%
@@ -425,7 +425,7 @@ The underlying reason for this is that the RRM becomes ill-conditioned when $n >
 %------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To determine whether the statistical properties demonstrated by our simulations hold in for a genome-wide analysis, we analyzed the full genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives}; a subset of this data was included in the earlier simulations, labeled ``Empirical''.  A synthetic phenotype was generated as in \eqref{eqn:sim} using 100 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$). In order to compare methods fairly and completely, we consider results across the entirety of each method's path.
+To determine whether the statistical properties demonstrated by our simulations hold in a genome-wide analysis, we analyzed the full genomic data ($n=588, p=526,266$) from \citet{larkin2015objectives}; a subset of this data was included in the earlier simulations, labeled ``Empirical''.  A synthetic phenotype was generated as in \eqref{eqn:sim} using 100 causal SNPs, a 1:1 SNR ($\eta = 0.5$), and substantial environmental effects ($\xi = 0.8$). In order to compare methods fairly and completely, we consider results across the entirety of each method's path.
 
 %------------------------------%
 \subsection{LMM- and PC-lasso identify causal SNPs more accurately than lasso}
