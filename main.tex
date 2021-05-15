@@ -163,7 +163,7 @@ Conversely, LMM-lasso models $\bZ\bgamma$ as a random effect, which corresponds 
  \bgamma &\sim N(\boldsymbol{0}, p^{-1} \sigmass \bI) \Rightarrow \bX \bgamma \sim N(\boldsymbol{0}, \sigmass \bK),
   \end{aligned}
 \end{equation}
-where $\sigmass$ determines the size of the structured component to the variance, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation parameterizes the model in terms of $\bu=\bX\bgamma$, which yields an equivalent model. 
+where $\sigmass$ determines the size of the structured component to the variance, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation parameterizes the model in terms of $\bu=\bX\bgamma$, which yields an equivalent model. We note that model~\eqref{eqn:lmm_reg} assumes independent, additive SNP effects, with no epistatic nor dominance effects. In addition, the lack of a random effect for the unpenalized component of the model, $\X_0 \bb_0$, means we assume equal variances for these unpenalized effects.
 
 We will first derive the LMM-lasso objective function in the absence of unpenalized covariates for the sake of simplicity. Following equation \eqref{eqn:lmm_reg}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmass \textbf{K} + \sigmaee \textbf{I}$. LMM-lasso uses the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generalized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
 
