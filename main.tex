@@ -124,7 +124,7 @@ To describe and compare PC-lasso and LMM-lasso, we consider an $n \times p$ matr
     \label{eqn:model}
     \by = \bX_0 \bbeta_0 + \bX\bbeta + \bZ\bgamma + \beps
 \end{equation}
-where $\bbeta_0$ is a $p_0 \times 1$ vector which includes the intercept term and the effects of any unpenalized covariates, $\bbeta$ is a $p \times 1$ vector of SNP effects, $\bgamma$ is a $q \times 1$ vector of environmental effects, $\bZ$ is an $n \times q$ matrix that allocates environmental effects among subjects, and $\beps \sim N(\boldsymbol{0}, \sigmaee \bI_n)$. Often it is assumed that subjects belong to $q \le p$ subpopulations, and $\bZ$ is a corresponding incidence matrix of 0s and 1s. However, this is not the only possibility.
+where $\bbeta_0$ is a $p_0 \times 1$ vector which includes the intercept term and the effects of any unpenalized covariates, $\bbeta$ is a $p \times 1$ vector of SNP effects, $\bgamma$ is a $q \times 1$ vector of environmental effects, $\bZ$ is an $n \times q$ matrix that allocates environmental effects among subjects, and $\beps \sim N(\boldsymbol{0}, \sigmaee \bI_n)$. While it is important to standardize $\bG$ so that all SNP coefficients are equally penalized by the LMM model, the standardization of unpenalized features is irrelevant. Often it is assumed that subjects belong to $q \le p$ subpopulations, and $\bZ$ is a corresponding incidence matrix of 0s and 1s. However, this is not the only possibility. 
 
 A key feature which differentiates \eqref{eqn:model} from traditional linear mixed models is that in our setting, $\bZ$ is not observed directly, although we still wish to correct for it in order to remove the effects of confounding influences. A common convention is to assume $\bZ = \bX$ \citep{wang2018multiplex, lippert2011fast, yang2014advantages}; we will discuss the rationale for this approach in Section~\ref{sec:partition}.  This, in turn, motivates the methods by which LMM-lasso and PC-lasso attempt to model unobserved confounding effects using observed genetic data.
 
@@ -163,7 +163,7 @@ Conversely, LMM-lasso models $\bZ\bgamma$ as a random effect, which corresponds 
  \bgamma &\sim N(\boldsymbol{0}, p^{-1} \sigmass \bI) \Rightarrow \bX \bgamma \sim N(\boldsymbol{0}, \sigmass \bK),
   \end{aligned}
 \end{equation}
-where $\sigmass$ determines the size of the structured component to the variance, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation parameterizes the model in terms of $\bu=\bX\bgamma$, which yields an equivalent model. We note that model~\eqref{eqn:lmm_reg} assumes independent, additive SNP effects, with no epistatic nor dominance effects. In addition, the lack of a random effect for the unpenalized component of the model, $\bX_0 \bbeta_0$, means we assume equal variances for these unpenalized effects.
+where $\sigmass$ determines the size of the structured component to the variance, and we assume $\beps \independent \bgamma$. Rather than assuming anything about $\bgamma$ directly, a common representation parameterizes the model in terms of $\bu=\bX\bgamma$, which yields an equivalent model. We note that model~\eqref{eqn:lmm_reg} assumes independent, additive SNP effects, with no epistatic or dominance effects. 
 
 We will first derive the LMM-lasso objective function in the absence of unpenalized covariates for the sake of simplicity. Following equation \eqref{eqn:lmm_reg}, in the absence of unpenalized covariates the LMM assumes $\by \sim N(\bX \bbeta, \bV)$, where $\bV = \sigmass \textbf{K} + \sigmaee \textbf{I}$. LMM-lasso uses the covariance structure of the errors and properties of the multivariate normal distribution to transform the original data and diagonalize the errors in a manner akin to generalized least squares (GLS). Specifically, left-multiplying the original data by $\bV^{-1/2}$ yields 
 
@@ -188,13 +188,13 @@ Q(\bbeta | \bXT, \byT, \bW) = || \bW (\byT - \bXT \bbeta)||_2^2 + \lambda || \bb
 \end{equation}
 In the presence of an intercept and unpenalized covariates, \eqref{eqn:rtY_distn} becomes 
 \begin{equation}
-\bV^{-\frac{1}{2}}\by \sim N\left(\bV^{-\frac{1}{2}} \bX{^\prime} \bbeta{^\prime}, \bI \right),
+\bV^{-\frac{1}{2}}\by \sim N\left(\bV^{-\frac{1}{2}} \bX{^\dagger} \bbeta{^\dagger}, \bI \right),
 \end{equation}
-where $\bX{^\prime} = \begin{bmatrix} \bX_0 & \bX \end{bmatrix}$ and $\bbeta{^\prime} = \begin{bmatrix} \bbeta_0^\T & \bbeta^\T \end{bmatrix}^\T$. This in turn leads the objective function
+where $\bX{^\dagger} = \begin{bmatrix} \bX_0 & \bX \end{bmatrix}$ and $\bbeta{^\dagger} = \begin{bmatrix} \bbeta_0^\T & \bbeta^\T \end{bmatrix}^\T$. This in turn leads the objective function
 \begin{equation}
-Q(\bbeta | \bXT{^\prime}, \byT, \bW) = || \bW (\byT - \bXT{^\prime} \bbeta{^\prime})||_2^2 + \lambda || \bbeta ||_1,
+Q(\bbeta | \bXT{^\dagger}, \byT, \bW) = || \bW (\byT - \bXT{^\dagger} \bbeta{^\dagger})||_2^2 + \lambda || \bbeta ||_1,
 \end{equation}
-where $\bXT{^\prime} = \bU^\T \bX{^\prime}$, so that all of the data are transformed, but only the elements of $\bbeta{^\prime}$ corresponding to SNPs are penalized. 
+where $\bXT{^\dagger} = \bU^\T \bX{^\dagger}$, so that all of the data are transformed, but only the elements of $\bbeta{^\dagger}$ corresponding to SNPs are penalized. 
 
 %------------------------------%
 
