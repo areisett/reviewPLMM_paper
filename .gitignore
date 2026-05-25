@@ -8,3 +8,6 @@
 *.bib.bak
 *.fff
 lmm-genetic-review.pdf
+.snakemake
+build
+supplement
